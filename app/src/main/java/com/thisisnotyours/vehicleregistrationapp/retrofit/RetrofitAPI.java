@@ -8,6 +8,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+////////
 
 public interface RetrofitAPI {
     //GET/POST 방식으로 json 데이터 읽어옴
