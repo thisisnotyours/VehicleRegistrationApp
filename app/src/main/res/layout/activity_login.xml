@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="차 량 등 록"
+                android:textColor="@color/main_background"
+                android:textSize="40dp"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="10dp">
+            <EditText
+                android:id="@+id/et_login_id"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:textSize="20dp"
+                android:textColor="@color/main_background"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
+                android:background="@drawable/layout_line_light_grey"
+                android:hint="아이디를 입력해주세요"
+                android:paddingLeft="20dp" />
+            <EditText
+                android:id="@+id/et_login_pw"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:textSize="20dp"
+                android:textColor="@color/main_background"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
+                android:password="true"
+                android:background="@drawable/layout_line_light_grey"
+                android:hint="비밀번호를 입력해주세요"
+                android:paddingLeft="20dp"
+                android:layout_marginTop="15dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="right"
+                android:paddingRight="5dp">
+                <CheckBox
+                    android:id="@+id/checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/checkbox"
+                    android:gravity="center_vertical"
+                    android:text="자동 로그인"
+                    android:textColor="@color/main_background" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="로 그 인"
+                android:textColor="@color/white"
+                android:textSize="25dp"
+                android:background="@drawable/btn_search_box"
+                android:layout_marginTop="20dp"/>
+        </LinearLayout>
+
+
+
+
+
+        <!--        <RelativeLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent">-->
+        <!--            <TextView-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:text="아이디"/>-->
+
+        <!--        </RelativeLayout>-->
+
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

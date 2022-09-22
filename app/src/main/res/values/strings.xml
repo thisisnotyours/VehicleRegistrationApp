@@ -1,0 +1,22 @@
+<resources>
+    <!--    <string name="app_name">AppMeterNordicBLE</string>-->
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="app_name">차량등록</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_menu">MenuActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="drive_toast">빈차일 때만 사용가능합니다.</string>
+    <string name="info_permission_overlay">다른화면위에 그리기라는 권한이 필요합니다.</string>
+    <string name="setting_dialog_ok">확인</string>
+    <string name="attendance_reminder">출근등록을 안하셨다면\n\n출근처리를 해주세요.</string>
+    <string name="attendance_notification">출근등록(사원번호입력) 후\n\n사용하여 주십시오</string>
+    <string name="edit_dialog">수정을 하려면 확인버튼을 눌러주세요</string>
+</resources>
