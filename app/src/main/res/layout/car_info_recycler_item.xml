@@ -293,6 +293,7 @@
                 android:textSize="16dp"
                 android:textStyle="bold" />
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tv_business_title"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
@@ -304,8 +305,8 @@
                 android:textColor="@color/blue"
                 android:textSize="16dp"
                 android:textStyle="bold" />
-
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tv_business"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -320,6 +321,7 @@
                 android:textSize="16dp"
                 android:textStyle="bold" />
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tv_unit_num_title"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
@@ -331,8 +333,8 @@
                 android:textColor="@color/blue"
                 android:textSize="16dp"
                 android:textStyle="bold" />
-
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tv_unit_num"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -347,6 +349,7 @@
                 android:textSize="16dp"
                 android:textStyle="bold" />
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tv_serial_num_title"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
@@ -358,8 +361,8 @@
                 android:textColor="@color/blue"
                 android:textSize="16dp"
                 android:textStyle="bold" />
-
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tv_serial_num"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

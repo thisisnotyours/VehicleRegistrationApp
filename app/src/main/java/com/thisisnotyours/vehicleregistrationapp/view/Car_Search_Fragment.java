@@ -26,6 +26,7 @@ import com.thisisnotyours.vehicleregistrationapp.item.CarInfoItems;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitAPI;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitHelper;
 import com.thisisnotyours.vehicleregistrationapp.vo.CarInfoListData;
+import com.thisisnotyours.vehicleregistrationapp.vo.CarInfoVO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,6 +69,8 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
 
         findViewIds(rootView);
 
+        searchBtn.performClick();
+
         return rootView;
     }//onCreateView..
 
@@ -93,6 +96,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                 MenuBuilder items;
                 recyclerItems.clear();
                 tvResultCnt.setText(recyclerItems.size()+"");
+                recyclerView.removeAllViews();
                 adapter.notifyDataSetChanged();
                 editTextValueReset(carNumEt);
                 editTextValueReset(companyNameEt);
@@ -124,7 +128,6 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         call.enqueue(new Callback<CarInfoListData>() {
             @Override
             public void onResponse(Call<CarInfoListData>call, Response<CarInfoListData> response) {
-                Toast.makeText(mContext, "응답받음", Toast.LENGTH_SHORT).show();
                 Log.d(log+"response", response.toString());  //code, message, url response
                 Log.d(log+"response_body", response.body().toString()); //객체 주소
 
@@ -139,25 +142,19 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                     recyclerItems = new ArrayList<>(); //리사이클러뷰 아이템 객체생성
 
                     for (int i=0; i<item.getCarInfoVOS().size(); i++) {
-                        Log.d(log+"item_"+i, item.getCarInfoVOS().get(i).getReg_dtti());
-                        Log.d(log+"item_"+i, item.getCarInfoVOS().get(i).getCompany_name());
-                        Log.d(log+"item_"+i, item.getCarInfoVOS().get(i).getCar_regnum());
-                        Log.d(log+"item_"+i, item.getCarInfoVOS().get(i).getType_name());
-                        Log.d(log+"item_"+i, item.getCarInfoVOS().get(i).getCar_vin());
-                        Log.d(log+"item_"+i, item.getCarInfoVOS().get(i).getCar_num());
-                        Log.d(log+"item_"+i, item.getCarInfoVOS().get(i).getDriver_id1());
-                        Log.d(log+"item_"+i, item.getCarInfoVOS().get(i).getDriver_id2());
-                        Log.d(log+"item_"+i, item.getCarInfoVOS().get(i).getDriver_id3());
-                        Log.d(log+"item_"+i, item.getCarInfoVOS().get(i).getMdn());
-                        Log.d(log+"item_"+i, item.getCarInfoVOS().get(i).getFare_name());
-                        Log.d(log+"item_"+i, item.getCarInfoVOS().get(i).getCity_name());
-                        Log.d(log+"item_"+i, item.getCarInfoVOS().get(i).getFirmware_name());
 
-                        setCarInfoListRecyclerItem(item, i);  //리사이클러뷰에 데이터 set
+                        try {
+                            setCarInfoListRecyclerItem(item, i);  //리사이클러뷰에 데이터 set
+
+                        }catch (IndexOutOfBoundsException e) {
+                            e.printStackTrace();
+                        }
+
                     }
 
                 }else {
                     Log.d(log+"response_fail", response.message());
+                    Toast.makeText(mContext, "서버와 연결이 원할하지 않습니다", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
@@ -167,6 +164,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
             }
         });
     }//carInfoList...
+
 
 
 
@@ -185,58 +183,65 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                 , item.getCarInfoVOS().get(i).getFare_name()
                 , item.getCarInfoVOS().get(i).getCity_name()
                 , item.getCarInfoVOS().get(i).getFirmware_name()));
+
         adapter = new CarInfoAdapter(getContext(), recyclerItems);
         recyclerView.setAdapter(adapter);
         tvResultCnt.setText(recyclerItems.size()+"");
 
         hideKeyboard(companyNameEt);
 
-        adapter.setMyLongClickListener((v, pos) -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setTitle(getString(R.string.edit_dialog))
-                    .setMessage("\n\n")
-                    .setCancelable(true)
-                    .setPositiveButton(getString(R.string.setting_dialog_ok)
-                            , new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Fragment fragment = null;
-                                    fragment = new Car_Registration_Fragment();
-                                    if (fragment != null) {
-                                        FragmentManager manager = getActivity().getSupportFragmentManager();
-                                        //fragment to fragment 데이터 전달
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("company_name", item.getCarInfoVOS().get(i).getCompany_name());
-                                        bundle.putString("car_regnum", item.getCarInfoVOS().get(i).getCar_regnum());
-                                        bundle.putString("car_type", item.getCarInfoVOS().get(i).getType_name());
-                                        bundle.putString("car_vin", item.getCarInfoVOS().get(i).getCar_vin());
-                                        bundle.putString("car_num", item.getCarInfoVOS().get(i).getCar_num());
-                                        bundle.putString("driver_id1", item.getCarInfoVOS().get(i).getDriver_id1());
-                                        bundle.putString("driver_id2", item.getCarInfoVOS().get(i).getDriver_id2());
-                                        bundle.putString("driver_id3", item.getCarInfoVOS().get(i).getDriver_id3());
-                                        bundle.putString("mdn", item.getCarInfoVOS().get(i).getMdn());
-                                        bundle.putString("fare_id", item.getCarInfoVOS().get(i).getFare_name());
-                                        bundle.putString("city_id", item.getCarInfoVOS().get(i).getCity_name());
-                                        bundle.putString("firmware_id", item.getCarInfoVOS().get(i).getFirmware_name());
-                                        FragmentTransaction transaction = manager.beginTransaction();
-                                        fragment.setArguments(bundle);
-                                        transaction.replace(R.id.frame_change, fragment);
-                                        transaction.commit();
-                                        MainActivity.register_car.setTextColor(getResources().getColor(R.color.blue));
-                                        MainActivity.register_car.setBackgroundResource(R.drawable.btn_gradi_white_line);
-                                        MainActivity.search_car.setTextColor(getResources().getColor(R.color.light_grey));
-                                        MainActivity.search_car.setBackgroundResource(R.drawable.btn_gradi_white);
+        adapter.setMyLongClickListener(new CarInfoAdapter.mItemLongClickListener() {
+            @Override
+            public void onItemLongClick(View v, int pos) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle(getString(R.string.edit_dialog))
+                        .setCancelable(true)
+                        .setPositiveButton(getString(R.string.setting_dialog_ok)
+                                , new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Fragment fragment = null;
+                                        fragment = new Car_Registration_Fragment();
+                                        if (fragment != null) {
+                                            FragmentManager manager = getActivity().getSupportFragmentManager();
+                                            //fragment to fragment 데이터 전달
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("company_name", item.getCarInfoVOS().get(pos).getCompany_name());
+                                            bundle.putString("car_regnum", item.getCarInfoVOS().get(pos).getCar_regnum());
+                                            bundle.putString("car_type", item.getCarInfoVOS().get(pos).getType_name());
+                                            bundle.putString("car_vin", item.getCarInfoVOS().get(pos).getCar_vin());
+                                            bundle.putString("car_num", item.getCarInfoVOS().get(pos).getCar_num());
+                                            bundle.putString("driver_id1", item.getCarInfoVOS().get(pos).getDriver_id1());
+                                            bundle.putString("driver_id2", item.getCarInfoVOS().get(pos).getDriver_id2());
+                                            bundle.putString("driver_id3", item.getCarInfoVOS().get(pos).getDriver_id3());
+                                            bundle.putString("mdn", item.getCarInfoVOS().get(pos).getMdn());
+                                            bundle.putString("fare_id", item.getCarInfoVOS().get(pos).getFare_name());
+                                            bundle.putString("city_id", item.getCarInfoVOS().get(pos).getCity_name());
+                                            bundle.putString("firmware_id", item.getCarInfoVOS().get(pos).getFirmware_name());
+
+                                            FragmentTransaction transaction = manager.beginTransaction();
+                                            fragment.setArguments(bundle);
+                                            transaction.replace(R.id.frame_change, fragment);
+                                            transaction.commit();
+                                            MainActivity.register_car.setTextColor(getResources().getColor(R.color.blue));
+                                            MainActivity.register_car.setBackgroundResource(R.drawable.btn_gradi_white_line);
+                                            MainActivity.search_car.setTextColor(getResources().getColor(R.color.light_grey));
+                                            MainActivity.search_car.setBackgroundResource(R.drawable.btn_gradi_white);
+                                        }
                                     }
-                                }
-                            }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
+                                }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
         });
+
+
         adapter.notifyDataSetChanged();
     }
 

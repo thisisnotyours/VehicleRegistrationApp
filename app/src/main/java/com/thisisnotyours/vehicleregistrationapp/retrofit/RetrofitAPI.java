@@ -1,7 +1,7 @@
 package com.thisisnotyours.vehicleregistrationapp.retrofit;
 import com.thisisnotyours.vehicleregistrationapp.vo.CarInfoListData;
 import com.thisisnotyours.vehicleregistrationapp.vo.CarInfoVO;
-import com.thisisnotyours.vehicleregistrationapp.vo.FareTypeListData;
+
 import java.util.Map;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -15,8 +15,10 @@ public interface RetrofitAPI {
 
     //로그인
     @POST("mobile_login")
-    Call<String> getLoginData(@Query("id") String id
-                            , @Query("pw") String pw);
+    Call<CarInfoListData> getLoginData(@Query("id") String id
+            , @Query("pw") String pw);
+//    Call<String> getLoginData(@Query("id") String id
+//                            , @Query("pw") String pw);
 
     //차량조회
     @GET("get-connection-info-app")
@@ -24,21 +26,21 @@ public interface RetrofitAPI {
 
     //요금조회
     @POST("get-fare-type")
-    Call<FareTypeListData> getFareType();
+    Call<CarInfoListData> getFareType();
 
     //시경계조회
     @POST("get-city-type")
-    Call<FareTypeListData> getCityType();
+    Call<CarInfoListData> getCityType();
 
     //벤사조회
     @POST("get-van-type")
-    Call<FareTypeListData> getVanType();
+    Call<CarInfoListData> getVanType();
 
     //차량등록
     @GET("put-car-info-app")
     Call<String> insertCarInfoData(@QueryMap Map<String, String> datas);
 
     //차량등록: 수정
-    @GET("")
-    Call<CarInfoVO> UpdateCarInfoData(@QueryMap Map<String, String> datas);
+    @GET("update-car-info-app")
+    Call<String> updateCarInfoData(@QueryMap Map<String, String> datas);
 }

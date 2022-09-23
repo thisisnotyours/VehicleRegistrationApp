@@ -55,16 +55,25 @@
                         android:textColor="@color/main_background"
                         android:textSize="18dp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_company_name_cnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_company_name"
+                        android:text="(2자리 이상)"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_toRightOf="@id/tv_company_name"
+                        android:layout_toRightOf="@id/tv_company_name_cnt"
                         android:text="*"
                         android:textColor="@color/red"
                         android:textSize="18dp"
                         android:textStyle="bold" />
-
                     <EditText
                         android:id="@+id/et_company_name"
                         android:layout_width="match_parent"
@@ -72,7 +81,106 @@
                         android:layout_below="@+id/tv_company_name"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/edit_box"
+                        android:hint="○○운수사"
+                        android:imeOptions="actionDone"
                         android:paddingLeft="20dp"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textSize="20dp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
+                    <TextView
+                        android:id="@+id/tv_mdn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2.  모뎀번호"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tv_mdn_cnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_mdn"
+                        android:text="(9자리)"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@id/tv_mdn_cnt"
+                        android:text="*"
+                        android:textColor="@color/red"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/et_mdn"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/tv_mdn"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/edit_box"
+                        android:hint="000000000"
+                        android:maxLength="9"
+                        android:imeOptions="actionDone"
+                        android:paddingLeft="20dp"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textSize="20dp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp">
+
+                    <TextView
+                        android:id="@+id/tv_car_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3.  차량번호"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tv_car_num_cnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_car_num"
+                        android:text="(9자리)"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@id/tv_car_num_cnt"
+                        android:text="*"
+                        android:textColor="@color/red"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/et_car_num"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/tv_car_num"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/edit_box"
+                        android:hint="서울00가0000"
+                        android:imeOptions="actionDone"
+                        android:maxLength="9"
+                        android:paddingLeft="20dp"
+                        android:singleLine="true"
+                        android:text=""
                         android:textSize="20dp" />
                 </RelativeLayout>
 
@@ -85,15 +193,24 @@
                         android:id="@+id/tv_car_type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2.  차량유형"
+                        android:text="4.  차량유형"
                         android:textColor="@color/main_background"
                         android:textSize="18dp"
                         android:textStyle="bold" />
                     <TextView
+                        android:id="@+id/tv_car_type_cnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_car_type"
+                        android:text="(택 1)"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp" />
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_toRightOf="@id/tv_car_type"
+                        android:layout_toRightOf="@id/tv_car_type_cnt"
                         android:text="*"
                         android:textColor="@color/red"
                         android:textSize="18dp"
@@ -128,39 +245,7 @@
                     </LinearLayout>
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp">
 
-                    <TextView
-                        android:id="@+id/tv_car_num"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="3.  차량번호"
-                        android:textColor="@color/main_background"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_toRightOf="@id/tv_car_num"
-                        android:text="*"
-                        android:textColor="@color/red"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/et_car_num"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_below="@+id/tv_car_num"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/edit_box"
-                        android:paddingLeft="20dp"
-                        android:textSize="20dp" />
-                </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -171,8 +256,27 @@
                         android:id="@+id/tv_car_vin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="4.  차대번호"
+                        android:text="5.  차대번호"
                         android:textColor="@color/main_background"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_car_vin_cnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_car_vin"
+                        android:text="(17자리)"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@id/tv_car_vin_cnt"
+                        android:text="*"
+                        android:textColor="@color/red"
                         android:textSize="18dp"
                         android:textStyle="bold" />
 
@@ -183,7 +287,11 @@
                         android:layout_below="@+id/tv_car_vin"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/edit_box"
+                        android:hint="000000000000000000000000000"
+                        android:maxLength="17"
+                        android:imeOptions="actionDone"
                         android:paddingLeft="20dp"
+                        android:singleLine="true"
                         android:textSize="20dp" />
                 </RelativeLayout>
 
@@ -191,19 +299,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp">
+
                     <TextView
                         android:id="@+id/tv_driver_id1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="5.  운전자 자격번호 1"
+                        android:text="6.  운전자 자격번호 1"
                         android:textColor="@color/main_background"
                         android:textSize="18dp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_driver_id1_cnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_driver_id1"
+                        android:text="(9자리)"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_toRightOf="@id/tv_driver_id1"
+                        android:layout_toRightOf="@id/tv_driver_id1_cnt"
                         android:text="*"
                         android:textColor="@color/red"
                         android:textSize="18dp"
@@ -226,8 +345,9 @@
                         android:layout_marginRight="5dp"
                         android:gravity="center_vertical"
                         android:text="더보기"
-                        android:textColor="@color/blue"
+                        android:textColor="@color/red"
                         android:textStyle="bold" />
+
                     <EditText
                         android:id="@+id/et_driver_id1"
                         android:layout_width="match_parent"
@@ -235,7 +355,11 @@
                         android:layout_below="@+id/tv_driver_id1"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/edit_box"
+                        android:hint="000000000"
+                        android:maxLength="9"
+                        android:imeOptions="actionDone"
                         android:paddingLeft="20dp"
+                        android:singleLine="true"
                         android:textSize="20dp" />
                 </RelativeLayout>
 
@@ -270,7 +394,9 @@
                         android:layout_marginTop="5dp"
                         android:background="@drawable/edit_box"
                         android:paddingLeft="20dp"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:maxLength="9"
+                        android:hint="000000000"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -279,7 +405,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginBottom="30dp">
                     <TextView
                         android:id="@+id/tv_driver_id3"
                         android:layout_width="wrap_content"
@@ -305,7 +431,9 @@
                         android:layout_marginTop="5dp"
                         android:background="@drawable/edit_box"
                         android:paddingLeft="20dp"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:hint="000000000"
+                        android:maxLength="9"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -316,19 +444,29 @@
                         android:id="@+id/tv_car_regnum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="6.  사업자번호"
+                        android:text="7.  사업자번호"
                         android:textColor="@color/main_background"
                         android:textSize="18dp"
                         android:textStyle="bold" />
                     <TextView
+                        android:id="@+id/tv_car_regnum_cnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_car_regnum"
+                        android:text="(10자)"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp" />
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_toRightOf="@id/tv_car_regnum"
+                        android:layout_toRightOf="@id/tv_car_regnum_cnt"
                         android:text="*"
                         android:textColor="@color/red"
                         android:textSize="18dp"
                         android:textStyle="bold" />
+
                     <EditText
                         android:id="@+id/et_car_regnum"
                         android:layout_width="match_parent"
@@ -336,8 +474,12 @@
                         android:layout_below="@+id/tv_car_regnum"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/edit_box"
+                        android:hint="0000000000"
+                        android:imeOptions="actionDone"
                         android:paddingLeft="20dp"
-                        android:textSize="20dp" />
+                        android:singleLine="true"
+                        android:textSize="20dp"
+                        android:maxLength="10"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -348,15 +490,24 @@
                         android:id="@+id/tv_fare_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="7.  요금"
+                        android:text="8.  요금"
                         android:textColor="@color/main_background"
                         android:textSize="18dp"
                         android:textStyle="bold" />
                     <TextView
+                        android:id="@+id/tv_fare_id_cnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_fare_id"
+                        android:text="(택 1)"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp" />
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_toRightOf="@id/tv_fare_id"
+                        android:layout_toRightOf="@id/tv_fare_id_cnt"
                         android:text="*"
                         android:textColor="@color/red"
                         android:textSize="18dp"
@@ -370,6 +521,7 @@
                         android:layout_marginTop="15dp"
                         android:layout_marginRight="10dp"
                         android:background="@drawable/ic_arrow_down_24" />
+
                     <Spinner
                         android:id="@+id/spinner_fare_id"
                         android:layout_width="match_parent"
@@ -389,15 +541,24 @@
                         android:id="@+id/tv_city_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="8.  시경계"
+                        android:text="9.  시경계"
                         android:textColor="@color/main_background"
                         android:textSize="18dp"
                         android:textStyle="bold" />
                     <TextView
+                        android:id="@+id/tv_city_id_cnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_city_id"
+                        android:text="(택 1)"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp" />
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_toRightOf="@id/tv_city_id"
+                        android:layout_toRightOf="@id/tv_city_id_cnt"
                         android:text="*"
                         android:textColor="@color/red"
                         android:textSize="18dp"
@@ -430,15 +591,24 @@
                         android:id="@+id/tv_firmware_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="9.  벤사"
+                        android:text="10.  벤사"
                         android:textColor="@color/main_background"
                         android:textSize="18dp"
                         android:textStyle="bold" />
                     <TextView
+                        android:id="@+id/tv_firmware_id_cnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_firmware_id"
+                        android:text="(택 1)"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp" />
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_toRightOf="@id/tv_firmware_id"
+                        android:layout_toRightOf="@id/tv_firmware_id_cnt"
                         android:text="*"
                         android:textColor="@color/red"
                         android:textSize="18dp"
@@ -466,6 +636,7 @@
 
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/unit_info_layout"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
@@ -488,48 +659,18 @@
                         android:textColor="@color/main_background"/>
                 </LinearLayout>
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
-                    <TextView
-                        android:id="@+id/tv_mdn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1.  모뎀번호"
-                        android:textColor="@color/main_background"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_toRightOf="@id/tv_mdn"
-                        android:text="*"
-                        android:textColor="@color/red"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
-                    <EditText
-                        android:id="@+id/et_mdn"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_below="@+id/tv_mdn"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/edit_box"
-                        android:paddingLeft="20dp"
-                        android:textSize="20dp" />
-                </RelativeLayout>
+
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp">
-
                     <TextView
                         android:id="@+id/tv_business"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2.  가맹점ID (코나)"
+                        android:text="11.  가맹점ID (코나)"
                         android:textColor="@color/main_background"
                         android:textSize="18dp"
                         android:textStyle="bold" />
@@ -540,10 +681,13 @@
                         android:layout_marginTop="5dp"
                         android:background="@drawable/edit_box"
                         android:paddingLeft="20dp"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:singleLine="true"
+                        android:imeOptions="actionDone"/>
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp">
@@ -551,7 +695,7 @@
                         android:id="@+id/tv_unit_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="3.  단말기번호 (코나)"
+                        android:text="12.  단말기번호 (코나)"
                         android:textColor="@color/main_background"
                         android:textSize="18dp"
                         android:textStyle="bold" />
@@ -562,10 +706,13 @@
                         android:layout_marginTop="5dp"
                         android:background="@drawable/edit_box"
                         android:paddingLeft="20dp"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:singleLine="true"
+                        android:imeOptions="actionDone"/>
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp">
@@ -573,7 +720,7 @@
                         android:id="@+id/tv_serial_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="4.  시리얼번호 (KM100)"
+                        android:text="13.  시리얼번호 (KM100)"
                         android:textColor="@color/main_background"
                         android:textSize="18dp"
                         android:textStyle="bold" />
@@ -584,7 +731,9 @@
                         android:layout_marginTop="5dp"
                         android:background="@drawable/edit_box"
                         android:paddingLeft="20dp"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:singleLine="true"
+                        android:imeOptions="actionDone"/>
                 </RelativeLayout>
 
                 <LinearLayout

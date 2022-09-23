@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.thisisnotyours.vehicleregistrationapp.R;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitAPI;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitHelper;
+import com.thisisnotyours.vehicleregistrationapp.vo.CarInfoListData;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button loginBtn;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
+    private boolean autoClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,17 +55,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         //저장된 로그인정보 있는지 확인
         pref = getSharedPreferences("auto_login", Activity.MODE_PRIVATE);
-        String autoId = pref.getString("id","");
-        String autoPw = pref.getString("pw","");
-        Log.d(log+"autoInfo_find", autoId+", "+autoPw);
+        String autoLoginId = pref.getString("id","");
+        String autoLoginPw = pref.getString("pw","");
+        String autoLoginName = pref.getString("name","");
+        String autoLoginUseYn = pref.getString("use_yn","");
+        String autoLoginRoles = pref.getString("roles","");
+//        Log.d(log+"autoInfo_find", autoId+", "+autoPw);
 
-        if (autoId.equals("") && autoPw.equals("")) {
-
+        if (autoLoginId.equals("") && autoLoginPw.equals("")) {
+            //저장된 로그인정보 없으면 - do nothing
         }else {
-            loginIdEdit.setText(autoId);
-            logInPwEdit.setText(autoPw);
+            //있으면 로그인버튼 자동클릭
+            loginIdEdit.setText(autoLoginId);
+            logInPwEdit.setText(autoLoginPw);
             loginBtn.performClick();
         }
+
 
 
         //자동로그인 체크박스
@@ -71,25 +78,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-                if (loginIdEdit.getText().toString().equals("") && logInPwEdit.getText().toString().equals("")) {
-                    Toast.makeText(mContext, "아이디와 비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
-                    checkBox.setChecked(false);
+                if (b == true) {
+                    autoClicked = true; //자동로그인 선택
                 }else {
-                    if (b == true) {
-                        pref = getSharedPreferences("auto_login", Activity.MODE_PRIVATE);
-                        editor = pref.edit();
-                        editor.putString("id", loginIdEdit.getText().toString());
-                        editor.putString("pw", logInPwEdit.getText().toString());
-                        editor.commit();
-                        Log.d(log+"autoInfo_save", pref.getString("id","")+", "+pref.getString("pw",""));
-                    }else {
-                        pref = getSharedPreferences("auto_login", Activity.MODE_PRIVATE);
-                        editor = pref.edit();
-                        editor.putString("id", "");
-                        editor.putString("pw", "");
-                        editor.commit();
-                        Log.d(log+"autoInfo_save", pref.getString("id","")+", "+pref.getString("pw",""));
-                    }
+                    autoClicked = false; //자동로그인 선택취소
                 }
             }
         });
@@ -99,58 +91,84 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:  //[로그인]버튼
-
-                checkLoginInfoData();
-
+                getLoginInfoData();   //로그인 정보
                 break;
         }
     }
 
 
-    //로그인정보 데이터 서버 fetching
-    private void checkLoginInfoData() {
+    //로그인 정보 서버 fetching
+    private void getLoginInfoData() {
         if (loginIdEdit.getText().toString().equals("") || logInPwEdit.getText().toString().equals("")) {
             Toast.makeText(mContext, "아이디와 비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
-        }else {
+        }
+        else {
             Retrofit retrofit = RetrofitHelper.getRetrofitInstance();
             RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
-            Call<String> call = retrofitAPI.getLoginData(loginIdEdit.getText().toString(), logInPwEdit.getText().toString());
+            Call<CarInfoListData> call = retrofitAPI.getLoginData(loginIdEdit.getText().toString(),logInPwEdit.getText().toString());
+//            Call<CarInfoListData> call = retrofitAPI.getLoginData("test","test");
 
-            call.enqueue(new Callback<String>() {
+            call.enqueue(new Callback<CarInfoListData>() {
                 @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    Log.d(log+"response", response.body());
+                public void onResponse(Call<CarInfoListData> call, Response<CarInfoListData> response) {
+                    Log.d(log+"response", response.body().toString());
                     Log.d(log+"response", response.toString());
 
                     if (response.isSuccessful()) {
-                        String str = response.body();
-                        Log.d(log+"response_str", str.toString());
+                        try {
+                            CarInfoListData str = response.body();
+                            Log.d(log+"response_str", str.toString());
 
-                        if (response.body().equals("Y")) {
-                            Intent i = new Intent(mContext, MainActivity.class);
-                            startActivity(i);
-                        }else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                            builder.setTitle("로그인 정보가 일치하지 않습니다.\n\n다시 입력해주세요.");
-                            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
+                            if (response.body().getUserInfoVOS().get(0).getUse_yn().equals("Y")) {
+                                if (autoClicked == true) {
+                                    pref = getSharedPreferences("auto_login", Activity.MODE_PRIVATE);
+                                    editor = pref.edit();
+                                    editor.putString("id", str.getUserInfoVOS().get(0).getId());
+                                    editor.putString("pw", str.getUserInfoVOS().get(0).getPw());
+                                    editor.putString("name", str.getUserInfoVOS().get(0).getName());
+                                    editor.putString("use_yn", str.getUserInfoVOS().get(0).getUse_yn());
+                                    editor.putString("roles", str.getUserInfoVOS().get(0).getRoles());
+                                    editor.commit();
+                                }else {
+                                    pref = getSharedPreferences("auto_login", Activity.MODE_PRIVATE);
+                                    editor = pref.edit();
+                                    editor.putString("id", "");
+                                    editor.putString("pw", "");
+                                    editor.putString("name", "");
+                                    editor.putString("use_yn", "");
+                                    editor.putString("roles", "");
+                                    editor.commit();
                                 }
-                            });
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
+//                                Log.d(log+"autoInfo_save", pref.getString("id","")+", "+pref.getString("pw",""));
+                                Intent i = new Intent(mContext, MainActivity.class);
+                                startActivity(i);
+                            }else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                                builder.setTitle("로그인 정보가 일치하지 않습니다.\n\n다시 입력해주세요.");
+                                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+                            }
+                        }catch (Exception e) {
+                            e.printStackTrace();
                         }
+
                     }
                 }
 
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    Toast.makeText(LoginActivity.this, "서버와 연결이 원할하지 않습니다", Toast.LENGTH_SHORT).show();
+                public void onFailure(Call<CarInfoListData> call, Throwable t) {
+                    Toast.makeText(LoginActivity.this, "다시 시도해주세요", Toast.LENGTH_SHORT).show();
                 }
             });
         }
-    }//checkLoginInfoData..
+
+    }
 
 
 

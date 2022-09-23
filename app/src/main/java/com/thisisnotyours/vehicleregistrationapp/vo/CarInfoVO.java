@@ -2,7 +2,11 @@ package com.thisisnotyours.vehicleregistrationapp.vo;
 
 public class CarInfoVO {
 
-    private String connInfoList;
+    private String id;
+    private String pw;
+    private String name;
+    private String use_yn;
+    private String roles;
     private String reg_dtti;
     private String mdn;     //모뎀번호
     private String car_vin; //차대번호/ 차마다 있는 고유번호
@@ -32,12 +36,44 @@ public class CarInfoVO {
     private String firmware_update;
     private String logfile_upload;
 
-    public String getConnInfoList() {
-        return connInfoList;
+    public String getId() {
+        return id;
     }
 
-    public void setConnInfoList(String connInfoList) {
-        this.connInfoList = connInfoList;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getPw() {
+        return pw;
+    }
+
+    public void setPw(String pw) {
+        this.pw = pw;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUse_yn() {
+        return use_yn;
+    }
+
+    public void setUse_yn(String use_yn) {
+        this.use_yn = use_yn;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
     }
 
     public String getReg_dtti() {
@@ -267,7 +303,11 @@ public class CarInfoVO {
     @Override
     public String toString() {
         return "CarInfoVO{" +
-                "connInfoList='" + connInfoList + '\'' +
+                "id='" + id + '\'' +
+                ", pw='" + pw + '\'' +
+                ", name='" + name + '\'' +
+                ", use_yn='" + use_yn + '\'' +
+                ", roles='" + roles + '\'' +
                 ", reg_dtti='" + reg_dtti + '\'' +
                 ", mdn='" + mdn + '\'' +
                 ", car_vin='" + car_vin + '\'' +

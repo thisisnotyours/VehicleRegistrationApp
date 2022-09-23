@@ -1,10 +1,13 @@
 package com.thisisnotyours.vehicleregistrationapp.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,14 +27,12 @@ import com.thisisnotyours.vehicleregistrationapp.R;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitAPI;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitHelper;
 import com.thisisnotyours.vehicleregistrationapp.vo.CarInfoListData;
-import com.thisisnotyours.vehicleregistrationapp.vo.CarInfoVO;
-import com.thisisnotyours.vehicleregistrationapp.vo.FareTypeListData;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,8 +58,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             , strMdn=""
             , strFareId=""
             , strCityId=""
-            , strFirmwareId=""
-            , strLogId="test";
+            , strFirmwareId="";
     private EditText etCompanyName
             , etCarNum
             , etCarVin
@@ -74,6 +74,8 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     private RelativeLayout layoutDriverId2, layoutDriverId3;
     private HashMap<String, String> keyDatas = new HashMap<>();
     private RetrofitAPI retrofitAPI = RetrofitHelper.getRetrofitInstance().create(RetrofitAPI.class);
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
 
     public Car_Registration_Fragment() {
         // Required empty public constructor
@@ -113,9 +115,12 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             checkDriverId(getArguments().getString("driver_id3"), "driver3");  //운전자자격번호3
 
             strMdn = getArguments().getString("mdn");  //모뎀번호
-            strFareId = getArguments().getString("fare_id");
-            strCityId = getArguments().getString("city_id");
-            strFirmwareId = getArguments().getString("firmware_id");
+            strFareId = getArguments().getString("fare_id");  //요금
+            if (strFareId == null) {
+                Log.d("strFareId>>","null  ");
+            }
+            strCityId = getArguments().getString("city_id");  //시경계
+            strFirmwareId = getArguments().getString("firmware_id"); //벤사
 
             //차량유형
             if (!getArguments().getString("car_type").equals("")) {
@@ -146,6 +151,11 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             btnType = "등록";
         }
 
+
+//        if (strFareId.equals("")) {
+//            Log.d("strFareId_empty_string", strFareId);
+//        }
+
         btnRegister.setText(btnType+" 완료");
 
         /* retrofit data fetching */
@@ -157,7 +167,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     }//onCreateView..
 
 
-
+    //운전자 자격번호 string '#' 빼고 set
     void checkDriverId(String driverId, String num) {
         if (driverId != null) {
             if (driverId.contains("#")) {
@@ -185,27 +195,32 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
     //요금 spinner set
     private void getFareTypeData() {
-        Call<FareTypeListData> call = retrofitAPI.getFareType();
-        call.enqueue(new Callback<FareTypeListData>() {
+        Call<CarInfoListData> call = retrofitAPI.getFareType();
+        call.enqueue(new Callback<CarInfoListData>() {
             @Override
-            public void onResponse(Call<FareTypeListData> call, Response<FareTypeListData> response) {
+            public void onResponse(Call<CarInfoListData> call, Response<CarInfoListData> response) {
 
                 if (response.isSuccessful()) {
-                    FareTypeListData item = response.body();
+
+                    CarInfoListData item = response.body();
+
                     try {
                         fareIdArr = new ArrayList<>();
 
                         for (int i=0; i<item.getFareTypeVOS().size(); i++) {
-
                             //등록인지 수정값인지 확인
-                            if (!strFareId.equals("")) {  //앞에서 넘어온 요금값
-                                if (strFareId.equals(item.getFareTypeVOS().get(i).getFare_name())) {  //앞에서 넘어온 요금값 position 확인
-                                    //position set
-                                    fareId_idx = i;
+                            if (strFareId != null) {  //앞에서 넘어온 요금값
+                                if (!strFareId.equals("")) {  //앞에서 넘어온 요금값
+                                    if (strFareId.equals(item.getFareTypeVOS().get(i).getFare_name())) {  //앞에서 넘어온 요금값 position 확인
+                                        //position set
+                                        fareId_idx = i;
+                                    }
                                 }
                             }
                             fareIdArr.add(item.getFareTypeVOS().get(i).getFare_name());
                         }
+
+                        Log.d(log+"fareIdArr", fareIdArr.toString());
 
                         //요금 스피너에 데이터 표출
                         fareIdAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, fareIdArr);
@@ -228,7 +243,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                 }else {}
             }
             @Override
-            public void onFailure(Call<FareTypeListData> call, Throwable t) {
+            public void onFailure(Call<CarInfoListData> call, Throwable t) {
                 Log.e(log+"call_fare_type_list", t.toString());
             }
         });
@@ -236,22 +251,25 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
     //시경계 spinner set
     private void getCityTypeData() {
-        Call<FareTypeListData> call = retrofitAPI.getCityType();
-        call.enqueue(new Callback<FareTypeListData>() {
+        Call<CarInfoListData> call = retrofitAPI.getCityType();
+        call.enqueue(new Callback<CarInfoListData>() {
             @Override
-            public void onResponse(Call<FareTypeListData> call, Response<FareTypeListData> response) {
+            public void onResponse(Call<CarInfoListData> call, Response<CarInfoListData> response) {
 
                 if (response.isSuccessful()) {
 
-                    FareTypeListData item = response.body();
+                    CarInfoListData item = response.body();
 
                     try {
                         cityIdArr = new ArrayList<>();
 
                         for (int t=0; t<item.getFareTypeVOS().size(); t++) {
-                            if (!strCityId.equals("")) {
-                                if (strCityId.equals(item.getFareTypeVOS().get(t).getCity_name())) {
-                                    cityId_idx = t;
+                            //등록인지 수정값인지 확인
+                            if (strCityId != null) {
+                                if (!strCityId.equals("")) {
+                                    if (strCityId.equals(item.getFareTypeVOS().get(t).getCity_name())) {
+                                        cityId_idx = t;
+                                    }
                                 }
                             }
                             cityIdArr.add(item.getFareTypeVOS().get(t).getCity_name());
@@ -279,7 +297,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             }
 
             @Override
-            public void onFailure(Call<FareTypeListData> call, Throwable t) {
+            public void onFailure(Call<CarInfoListData> call, Throwable t) {
 
             }
         });
@@ -287,16 +305,16 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
     //벤사 spinner set
     private void getFirmwareTypeData() {
-        Call<FareTypeListData> call = retrofitAPI.getVanType();
-        call.enqueue(new Callback<FareTypeListData>() {
+        Call<CarInfoListData> call = retrofitAPI.getVanType();
+        call.enqueue(new Callback<CarInfoListData>() {
             @Override
-            public void onResponse(Call<FareTypeListData> call, Response<FareTypeListData> response) {
+            public void onResponse(Call<CarInfoListData> call, Response<CarInfoListData> response) {
                 Log.d(log+"response", response.toString());
 
                 if (response.isSuccessful()) {
                     Log.d(log + "response_val", response.toString());
 
-                    FareTypeListData item = response.body();
+                    CarInfoListData item = response.body();
                     try {
                         Log.d(log + "response_item_size", item.getFareTypeVOS().size() + "");
                         Log.d(log + "response_item_value", item.getFareTypeVOS().toString());
@@ -304,10 +322,13 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                         firmwareIdArr = new ArrayList<>();
 
                         for (int y=0; y<item.getFareTypeVOS().size(); y++) {
-                            if (!strFirmwareId.equals("")) {
-                                if (strFirmwareId.equals(item.getFareTypeVOS().get(y).getFirmware_name())) {
-                                    Log.d(log+"strFirmwareId_find", item.getFareTypeVOS().get(y).getFirmware_id()+": "+item.getFareTypeVOS().get(y).getFirmware_name());
-                                    firmwareId_idx = y;
+                            //등록인지 수정값인지 확인
+                            if (strFirmwareId != null) {
+                                if (!strFirmwareId.equals("")) {
+                                    if (strFirmwareId.equals(item.getFareTypeVOS().get(y).getFirmware_name())) {
+                                        Log.d(log+"strFirmwareId_find", item.getFareTypeVOS().get(y).getFirmware_id()+": "+item.getFareTypeVOS().get(y).getFirmware_name());
+                                        firmwareId_idx = y;
+                                    }
                                 }
                             }
                             firmwareIdArr.add(item.getFareTypeVOS().get(y).getFirmware_name());
@@ -337,7 +358,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             }
 
             @Override
-            public void onFailure(Call<FareTypeListData> call, Throwable t) {
+            public void onFailure(Call<CarInfoListData> call, Throwable t) {
 
             }
         });
@@ -398,40 +419,24 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                 break;
             case R.id.tv_view_more_driver_id:    //운전자자격번호 [더보기]버튼
                 if (isClicked == true) {
-//                    ivDropDown.setRotation(270);
                     tvViewMoreDriverId.setText("닫기");
+                    tvViewMoreDriverId.setTextColor(getResources().getColor(R.color.blue));
                     layoutDriverId2.setVisibility(View.VISIBLE);
                     layoutDriverId3.setVisibility(View.VISIBLE);
                     isClicked = false;
                 }else {
-//                    ivDropDown.setRotation(90);
                     tvViewMoreDriverId.setText("더보기");
+                    tvViewMoreDriverId.setTextColor(getResources().getColor(R.color.red));
                     layoutDriverId2.setVisibility(View.GONE);
                     layoutDriverId3.setVisibility(View.GONE);
                     isClicked = true;
                 }
                 break;
             case R.id.btn_register:        //[등록완료]버튼
-                //btnType - 등록인지 수정인지 구분해야함
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle("등록을 완료하시겠습니까?\n\n")
-                        .setPositiveButton(getString(R.string.setting_dialog_ok)
-                                , new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //등록 할 params 담기
-                                        putCarInfoParams();
-                                    }
-                                })
-                        .setNegativeButton("취소"
-                                , new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+
+                //insert/ update 할 params 담기
+                putCarInfoParams(btnType);
+
                 break;
             case R.id.btn_register_cancel:     //[취소]버튼
                 break;
@@ -439,46 +444,138 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     }//onClick..
 
 
+    //로그인 정보
+    private String getLoginId() {
+        pref = getActivity().getSharedPreferences("auto_login", Activity.MODE_PRIVATE);
+        return pref.getString("id","");
+    }
+
+
    //등록 할 params 담기
-    private void putCarInfoParams() {
+    private void putCarInfoParams(String buttonType) {
         //Params => HashMap 에 key, value 담아 서버전송
         keyDatas.put("mdn", etMdn.getText().toString()); //모뎀번호
-        keyDatas.put("car_version", makeCarVersion()); //차량버전 ///////    //TODO: 다시해야함
-        keyDatas.put("car_vin", etCarVin.getText().toString());  //차대번호
+        keyDatas.put("car_vin", "00000000000000000");  //차대번호 //17자리?
         keyDatas.put("car_type", strCarType);  //차량유형 //개인22/ 법인21
         keyDatas.put("car_num", etCarNum.getText().toString()); //차량번호
         keyDatas.put("car_regnum", etCarRegnum.getText().toString()); //사업자번호
         keyDatas.put("company_name", etCompanyName.getText().toString()); //운수사/개인이름
         keyDatas.put("driver_id1", etDriverId1.getText().toString());
-        keyDatas.put("driver_id2", etDriverId2.getText().toString());
-        keyDatas.put("driver_id3", etDriverId3.getText().toString());
+        if (etDriverId2.getText().toString().equals("")) {
+            keyDatas.put("driver_id2", "222222222");
+        }else{
+            keyDatas.put("driver_id2", etDriverId2.getText().toString());
+        }
+        if (etDriverId2.getText().toString().equals("")) {
 
+            keyDatas.put("driver_id3", "333333333");
+        }else {
+            keyDatas.put("driver_id3", etDriverId3.getText().toString());
+        }
+
+//        keyDatas.put("driver_id2", etDriverId2.getText().toString());
+//        keyDatas.put("driver_id3", etDriverId3.getText().toString());
         keyDatas.put("fare_id", strFareId); //요금  //스피너 선택값 가져오기
         keyDatas.put("city_id", strCityId); //시경계 //스피너 선택값 가져오기
         keyDatas.put("daemon_id", "1");     //기본값- 1
         keyDatas.put("firmware_id", strFirmwareId); //벤사 //스피너 선택값 가져오기
-        keyDatas.put("reg_id", strLogId);  //최초등록한 사람 아이디 -> 로그인화면에서 가져오기  //TODO: 다시해야함
-        keyDatas.put("reg_dtti", getCurDateString());  //현재날짜
+        if (buttonType.equals("등록")) {
+            keyDatas.put("reg_id", getLoginId());
 
-//        keyDatas.put("update_id", ""); //수정한사람 아이디 -> 로그인화면에서 가져오기  //TODO: 다시해야함
-
-//        keyDatas.put("speed_factor", "5120"); //기본값- 기본값 5120  //등록할 때 필요없음?
-//        keyDatas.put("rpm_factor", "2000"); //감속률- 기본값 2000   //등록할 때 필요없음?
-
-
-        Log.d(log+"makeCarVersion", makeCarVersion());
+        }else if (buttonType.equals("수정")) {
+            keyDatas.put("update_id", getLoginId());
+        }
 
 
 
-        //서버로 보낼 데이터 최종확인
-        Log.d(log+"insert_result_keyDatas", keyDatas.toString());
-        Toast.makeText(mContext, keyDatas.toString(), Toast.LENGTH_SHORT).show();
+        //null 체크 해야함
+        if (keyDatas == null || keyDatas.isEmpty()) {
 
-        //데이터 전송
-//        insertCarRegistrationInfo(keyDatas);
+            Toast.makeText(mContext, btnType+"할 정보가 없습니다", Toast.LENGTH_SHORT).show();
+
+        }else if (keyDatas.containsValue("") || keyDatas.containsValue(null)) {
+
+            if (keyDatas.get("company_name").equals("")) {
+                Toast.makeText(mContext, "운수사이름을 입력해주세요", Toast.LENGTH_SHORT).show();
+            }
+            if (keyDatas.get("mdn").equals("")) {
+                Toast.makeText(mContext, "모뎀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+            }
+            if (keyDatas.get("car_num").equals("")) {
+                Toast.makeText(mContext, "차량번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+            }
+            if (keyDatas.get("car_type").equals("")) {
+                Toast.makeText(mContext, "차량유형을 선택해주세요", Toast.LENGTH_SHORT).show();
+            }
+//            if (keyDatas.get("car_vin").equals("")) {
+//                //기본값 입력
+//            }
+            if (keyDatas.get("driver_id1").equals("")) {
+                Toast.makeText(mContext, "운전자 자격번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+            }
+//            if (keyDatas.get("driver_id2").equals("")) {
+//
+//            }
+//            if (keyDatas.get("driver_id3").equals("")) {
+//
+//            }
+            if (keyDatas.get("car_regnum").equals("")) {
+                Toast.makeText(mContext, "사업자번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+            }
+//            if (keyDatas.get("fare_id").equals("")) {
+//                Toast.makeText(mContext, "요금을 선택해주세요", Toast.LENGTH_SHORT).show();
+//            }
+//            if (keyDatas.get("city_id").equals("")) {
+//                Toast.makeText(mContext, "시경계를 선택해주세요", Toast.LENGTH_SHORT).show();
+//            }
+//            if (keyDatas.get("firmware_id").equals("")) {
+//                Toast.makeText(mContext, "벤사를 선택해주세요", Toast.LENGTH_SHORT).show();
+//            }
+
+        }else {
+            Log.d(log+"keydatas_final", keyDatas.toString()+"");
+
+            //btnType - 등록인지 수정인지 구분해야함
+            if (buttonType.equals("등록")) {
+                insertCarRegistrationInfo(keyDatas); //서버로 데이터 insert
+
+            }else if (buttonType.equals("수정")) {
+                updateCarRegistrationInfo(keyDatas); //서버로 데이터 update
+            }
+
+            //입력값이 다 있다면
+//            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+//            builder.setTitle(btnType+"을 완료하시겠습니까?\n\n")
+//                    .setPositiveButton(getString(R.string.setting_dialog_ok)
+//                            , new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    //btnType - 등록인지 수정인지 구분해야함
+//                                    if (buttonType.equals("등록")) {
+//                                        insertCarRegistrationInfo(keyDatas); //서버로 데이터 insert
+//
+//                                    }else if (buttonType.equals("수정")) {
+//                                        updateCarRegistrationInfo(keyDatas); //서버로 데이터 update
+//                                    }
+//                                }
+//                            })
+//                    .setNegativeButton("취소"
+//                            , new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.dismiss();
+//                                }
+//                            });
+//            AlertDialog dialog = builder.create();
+//            dialog.show();
+        }
     }
 
-    //등록완료 inert query 서버 전송
+
+
+
+
+    //등록완료 inert query 서버전송
     private void insertCarRegistrationInfo(HashMap<String, String> map) {
        Retrofit retrofit = RetrofitHelper.getRetrofitInstance();
        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
@@ -493,14 +590,53 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                if (response.isSuccessful()) {
                    String result = response.body();
                    Log.d(log+"insert_result", result);
+                   Toast.makeText(mContext, "등록을 완료하였습니다", Toast.LENGTH_SHORT).show();
+
+                   //조회화면으로 돌아가기
+                   FragmentManager manager = getActivity().getSupportFragmentManager();
+                   manager.beginTransaction().remove(Car_Registration_Fragment.this).commit();
+                   manager.popBackStack();
                }
            }
 
            @Override
            public void onFailure(Call<String> call, Throwable t) {
                Log.e(log+"insert_response", t.toString());
+               Toast.makeText(mContext, "등록을 실패하였습니다", Toast.LENGTH_SHORT).show();
            }
        });
+    }
+
+    //수정완료 update query 서버전송
+    private void updateCarRegistrationInfo(HashMap<String, String> map) {
+        Retrofit retrofit = RetrofitHelper.getRetrofitInstance();
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+        Call<String> call = retrofitAPI.updateCarInfoData(map);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.d(log+"update_response", response.toString());
+                Log.d(log+"update_response", response.code()+"");
+                if (response.isSuccessful()) {
+                    String result = response.body();
+                    Log.d(log+"update_result", result);
+                    Toast.makeText(mContext, "수정을 완료하였습니다", Toast.LENGTH_SHORT).show();
+
+                    //조회화면으로 돌아가기
+                    FragmentManager manager = getActivity().getSupportFragmentManager();
+                    manager.beginTransaction().remove(Car_Registration_Fragment.this).commit();
+                    manager.popBackStack();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e(log+"update_response", t.toString());
+                Toast.makeText(mContext, "수정을 실패하였습니다", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
@@ -511,6 +647,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         return sdf.format(time.getTime());
     }
 
+    private String currentChar = "";
 
     //car_version 생성
     private String makeCarVersion() {
@@ -524,7 +661,17 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         for (int i=0; i<alphabet.length; i++) {
             alphabet[i] = (char)('A'+i);
             Log.d(log+"alphabet", alphabet[i]+"");  //알파벳 출력
-            alphabetValue = alphabet[i]+"";  //맨 마지막것만 들어감..
+//            alphabetValue = alphabet[i]+"";  //맨 마지막것만 들어감..
+
+            if (!currentChar.equals("")) {
+                if (currentChar.equals(alphabet[i]+"")) {
+                    currentChar.equals(alphabet[i+1]);
+                }else {
+
+                }
+            }else {
+                currentChar = "A";
+            }
         }
 
         return sdf.format(time.getTime())+alphabetValue;
