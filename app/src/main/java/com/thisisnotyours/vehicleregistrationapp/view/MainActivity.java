@@ -7,12 +7,18 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thisisnotyours.vehicleregistrationapp.R;
+import com.thisisnotyours.vehicleregistrationapp.handler.BackPressedKeyHandler;
+import com.thisisnotyours.vehicleregistrationapp.handler.IOnBackPressed;
+
+import java.sql.Time;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     String log = "log_";
@@ -20,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Context mContext;
     private RecyclerView recycler;
     public static TextView search_car, register_car;
+    private BackPressedKeyHandler backPressedKeyHandler = new BackPressedKeyHandler(this);
+    private String fragType = "", loginId="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,25 +35,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         Log.d(lifeCycle_, "onCreate");
 
-        //처음에 나오는 차량조회 화면
-        Fragment fragment = null;
-        fragment = new Car_Search_Fragment();
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.frame_change, fragment);
-        transaction.commit();
-
         register_car = (TextView) findViewById(R.id.register_car);
         search_car = (TextView) findViewById(R.id.search_car);
         register_car.setOnClickListener(this);
         search_car.setOnClickListener(this);
+
+        Intent i = getIntent();
+        loginId = i.getStringExtra("login_id");
+        Log.d(log+"loginId_main",loginId);
+
+        //처음에 나오는 차량조회 화면
+        Fragment fragment = null;
+        fragment = new Car_Search_Fragment();
+        FragmentManager manager = getSupportFragmentManager();
+        Bundle bundle = new Bundle();
+        bundle.putString("login_id", loginId);
+        FragmentTransaction transaction = manager.beginTransaction();
+        fragment.setArguments(bundle);
+        transaction.replace(R.id.frame_change, fragment);
+        transaction.commit();
+
+        search_car.setTextColor(getResources().getColor(R.color.blue));
+        search_car.setBackgroundResource(R.drawable.btn_gradi_white_line);
+        register_car.setTextColor(getResources().getColor(R.color.light_grey));
+        register_car.setBackgroundResource(R.drawable.btn_gradi_white);
+
     }//onCreate..
 
-    //me: 뒤로가기 두른 클릭 시 앱 완전종료 해야함....!!
+
+    //me: 뒤로가기 클릭 시 앱 완전종료 해야함....!!
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+//        super.onBackPressed();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_change);
+        if (fragment != null) {
+            ((IOnBackPressed) fragment).onBackPressed();
+            backPressedKeyHandler.onBackPressed();
+        }else {
+//            finish();
+        }
     }
 
     @Override

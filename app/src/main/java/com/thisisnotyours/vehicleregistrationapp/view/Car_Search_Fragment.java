@@ -1,8 +1,10 @@
 package com.thisisnotyours.vehicleregistrationapp.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.view.menu.MenuBuilder;
@@ -22,13 +24,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.thisisnotyours.vehicleregistrationapp.R;
 import com.thisisnotyours.vehicleregistrationapp.adapter.CarInfoAdapter;
+import com.thisisnotyours.vehicleregistrationapp.handler.IOnBackPressed;
 import com.thisisnotyours.vehicleregistrationapp.item.CarInfoItems;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitAPI;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitHelper;
 import com.thisisnotyours.vehicleregistrationapp.vo.CarInfoListData;
 import com.thisisnotyours.vehicleregistrationapp.vo.CarInfoVO;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,8 +42,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class Car_Search_Fragment extends Fragment implements View.OnClickListener {
-    private String log = "log_";
+public class Car_Search_Fragment extends Fragment implements View.OnClickListener, IOnBackPressed {
+    private String log = "log_", loginId="";
     private Context mContext;
     private EditText carNumEt, companyNameEt, mdnEt;
     private Map<String, String> keyDatas = new HashMap<>();
@@ -48,11 +53,16 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
     private RecyclerView recyclerView;
     private ArrayList<CarInfoItems> recyclerItems;
     private CarInfoAdapter adapter;
+    private SharedPreferences pref;
 
     public Car_Search_Fragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(mContext, "뒤로가기 버튼을 한번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,12 +77,20 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
 
         mContext = container.getContext();
 
+        Log.d(log+"lifeCycle", "search onCreate");
+
+        if (getArguments() != null) {
+            loginId = getArguments().getString("login_id");
+            Log.d(log+"loginId_main_search",loginId);
+        }
+
         findViewIds(rootView);
 
         searchBtn.performClick();
 
         return rootView;
     }//onCreateView..
+
 
     //define view id's
     private void findViewIds(View v) {
@@ -111,7 +129,12 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         }
     }
 
-
+    //현재날짜시간
+    private String getCurDateString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");  //2022 0916 121212
+        Calendar time = Calendar.getInstance();
+        return sdf.format(time.getTime());
+    }
 
     //차량조회 데이터 fetching
     private void carInfoList() {
@@ -121,6 +144,10 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         keyDatas.put("car_num", carNumEt.getText().toString()); //대구
         keyDatas.put("mdn", mdnEt.getText().toString());  //000
         keyDatas.put("company_name",companyNameEt.getText().toString()); //다온
+        keyDatas.put("st_dtti", "20220926090000"); //시작일
+        keyDatas.put("et_dtti", getCurDateString());  //종료일
+        keyDatas.put("offset", "0");  //불러들이는 시작점
+        keyDatas.put("limit", "10");  //보여줄 리스트 개수
 
         Call<CarInfoListData> call = retrofitApi.getCarInfoData(keyDatas);
 //        Call<String> call = retrofitApi.getCarInfoData("대구","000","다온");
@@ -142,6 +169,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                     recyclerItems = new ArrayList<>(); //리사이클러뷰 아이템 객체생성
 
                     for (int i=0; i<item.getCarInfoVOS().size(); i++) {
+//                    for (int i=0; i<15; i++){
 
                         try {
                             setCarInfoListRecyclerItem(item, i);  //리사이클러뷰에 데이터 set
@@ -149,7 +177,6 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                         }catch (IndexOutOfBoundsException e) {
                             e.printStackTrace();
                         }
-
                     }
 
                 }else {
@@ -207,6 +234,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                                             FragmentManager manager = getActivity().getSupportFragmentManager();
                                             //fragment to fragment 데이터 전달
                                             Bundle bundle = new Bundle();
+                                            bundle.putString("login_id", loginId);
                                             bundle.putString("company_name", item.getCarInfoVOS().get(pos).getCompany_name());
                                             bundle.putString("car_regnum", item.getCarInfoVOS().get(pos).getCar_regnum());
                                             bundle.putString("car_type", item.getCarInfoVOS().get(pos).getType_name());
@@ -245,7 +273,12 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         adapter.notifyDataSetChanged();
     }
 
-
+    //로그인 정보
+    private String getLoginId() {
+        pref = getActivity().getSharedPreferences("auto_login", Activity.MODE_PRIVATE);
+        Log.d(log+"getLogin", pref.getString("id",""));
+        return pref.getString("id","");
+    }
 
     //하드웨어 키보드 숨기기
     private void hideKeyboard(EditText et) {

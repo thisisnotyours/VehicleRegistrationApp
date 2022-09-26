@@ -16,12 +16,12 @@ public interface RetrofitAPI {
     //로그인
     @POST("mobile_login")
     Call<CarInfoListData> getLoginData(@Query("id") String id
-            , @Query("pw") String pw);
+                                        , @Query("pw") String pw);
 //    Call<String> getLoginData(@Query("id") String id
 //                            , @Query("pw") String pw);
 
     //차량조회
-    @GET("get-connection-info-app")
+    @GET("get-connection-info")
     Call<CarInfoListData> getCarInfoData(@QueryMap(encoded = false) Map<String, String> datas);
 
     //요금조회

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thisisnotyours.vehicleregistrationapp.R;
+import com.thisisnotyours.vehicleregistrationapp.handler.IOnBackPressed;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitAPI;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitHelper;
 import com.thisisnotyours.vehicleregistrationapp.vo.CarInfoListData;
@@ -39,7 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class Car_Registration_Fragment extends Fragment implements View.OnClickListener{
+public class Car_Registration_Fragment extends Fragment implements View.OnClickListener, IOnBackPressed {
     private String log = "log_";
     private Context mContext;
     private ArrayList<String> fareIdArr, cityIdArr, firmwareIdArr;
@@ -47,7 +49,8 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     private ArrayAdapter fareIdAdapter, cityIdAdapter, firmwareIdAdapter;
     private int fareId_idx=0, cityId_idx=0, firmwareId_idx=0;
     private String btnType="등록"
-            , strCompanyName
+            , strLoginId=""
+            , strCompanyName=""
             , strCarRegnum=""
             , strCarType=""
             , strCarVin=""
@@ -82,6 +85,36 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     }
 
 
+    //뒤로가기버튼 클릭
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(btnType+"을 취소하시겠습니까?");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //차량조회 화면으로 이동
+                Fragment fragment = null;
+                fragment = new Car_Search_Fragment();
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.frame_change, fragment);
+                transaction.commit();
+                MainActivity.search_car.setTextColor(getResources().getColor(R.color.blue));
+                MainActivity.search_car.setBackgroundResource(R.drawable.btn_gradi_white_line);
+                MainActivity.register_car.setTextColor(getResources().getColor(R.color.light_grey));
+                MainActivity.register_car.setBackgroundResource(R.drawable.btn_gradi_white);
+            }
+        }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //do nothing
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +128,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
         mContext = container.getContext();
 
+        Log.d(log+"lifeCycle", "register onCreate");
 
         //뷰찾기 define id's
         findViewIds(rootView);
@@ -104,6 +138,8 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         if (getArguments() != null) {
             btnType = "수정";
 
+            strLoginId = getArguments().getString("login_id");
+            Log.d(log+"loginId_main_register", strLoginId);
             strCompanyName = getArguments().getString("company_name");  //운수사/개인이름
             strCarRegnum = getArguments().getString("car_regnum");  //사업자번호
             strCarVin = getArguments().getString("car_vin");        //차대번호
@@ -116,9 +152,6 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
             strMdn = getArguments().getString("mdn");  //모뎀번호
             strFareId = getArguments().getString("fare_id");  //요금
-            if (strFareId == null) {
-                Log.d("strFareId>>","null  ");
-            }
             strCityId = getArguments().getString("city_id");  //시경계
             strFirmwareId = getArguments().getString("firmware_id"); //벤사
 
@@ -149,12 +182,9 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             etMdn.setText(strMdn);
         }else {
             btnType = "등록";
+            strLoginId = getLoginId();
         }
 
-
-//        if (strFareId.equals("")) {
-//            Log.d("strFareId_empty_string", strFareId);
-//        }
 
         btnRegister.setText(btnType+" 완료");
 
@@ -435,7 +465,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             case R.id.btn_register:        //[등록완료]버튼
 
                 //insert/ update 할 params 담기
-                putCarInfoParams(btnType);
+                putParams(btnType);
 
                 break;
             case R.id.btn_register_cancel:     //[취소]버튼
@@ -447,15 +477,21 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     //로그인 정보
     private String getLoginId() {
         pref = getActivity().getSharedPreferences("auto_login", Activity.MODE_PRIVATE);
-        return pref.getString("id","");
+        Log.d(log+"getLogin", pref.getString("id",""));
+        strLoginId = pref.getString("id","");
+        return strLoginId;
     }
 
 
-   //등록 할 params 담기
-    private void putCarInfoParams(String buttonType) {
-        //Params => HashMap 에 key, value 담아 서버전송
+    //Params => HashMap 에 key, value 담아 서버전송
+    private void putParams(String buttonType) {
+        // hashMap null check
+        Log.d(log+"null_Check_1", isNullOrEmptyMap(keyDatas)+"");  //true
+        Log.d(log+"null_Check_toString_1", keyDatas.toString());
+        Log.d(log+"getLoginId", getLoginId()+", "+strLoginId);
+
         keyDatas.put("mdn", etMdn.getText().toString()); //모뎀번호
-        keyDatas.put("car_vin", "00000000000000000");  //차대번호 //17자리?
+        keyDatas.put("car_vin", etCarVin.getText().toString());  //차대번호 //17자리?
         keyDatas.put("car_type", strCarType);  //차량유형 //개인22/ 법인21
         keyDatas.put("car_num", etCarNum.getText().toString()); //차량번호
         keyDatas.put("car_regnum", etCarRegnum.getText().toString()); //사업자번호
@@ -466,110 +502,124 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         }else{
             keyDatas.put("driver_id2", etDriverId2.getText().toString());
         }
-        if (etDriverId2.getText().toString().equals("")) {
+        if (etDriverId3.getText().toString().equals("")) {
 
             keyDatas.put("driver_id3", "333333333");
         }else {
             keyDatas.put("driver_id3", etDriverId3.getText().toString());
         }
 
-//        keyDatas.put("driver_id2", etDriverId2.getText().toString());
-//        keyDatas.put("driver_id3", etDriverId3.getText().toString());
         keyDatas.put("fare_id", strFareId); //요금  //스피너 선택값 가져오기
         keyDatas.put("city_id", strCityId); //시경계 //스피너 선택값 가져오기
         keyDatas.put("daemon_id", "1");     //기본값- 1
         keyDatas.put("firmware_id", strFirmwareId); //벤사 //스피너 선택값 가져오기
+
         if (buttonType.equals("등록")) {
-            keyDatas.put("reg_id", getLoginId());
+            keyDatas.put("reg_id", strLoginId);
 
         }else if (buttonType.equals("수정")) {
-            keyDatas.put("update_id", getLoginId());
+            keyDatas.put("update_id", strLoginId);
+            Log.d(log+"update_id_val", strLoginId);
         }
 
 
-
-        //null 체크 해야함
-        if (keyDatas == null || keyDatas.isEmpty()) {
-
-            Toast.makeText(mContext, btnType+"할 정보가 없습니다", Toast.LENGTH_SHORT).show();
-
-        }else if (keyDatas.containsValue("") || keyDatas.containsValue(null)) {
-
-            if (keyDatas.get("company_name").equals("")) {
-                Toast.makeText(mContext, "운수사이름을 입력해주세요", Toast.LENGTH_SHORT).show();
-            }
-            if (keyDatas.get("mdn").equals("")) {
-                Toast.makeText(mContext, "모뎀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
-            }
-            if (keyDatas.get("car_num").equals("")) {
-                Toast.makeText(mContext, "차량번호를 입력해주세요", Toast.LENGTH_SHORT).show();
-            }
-            if (keyDatas.get("car_type").equals("")) {
-                Toast.makeText(mContext, "차량유형을 선택해주세요", Toast.LENGTH_SHORT).show();
-            }
-//            if (keyDatas.get("car_vin").equals("")) {
-//                //기본값 입력
-//            }
-            if (keyDatas.get("driver_id1").equals("")) {
-                Toast.makeText(mContext, "운전자 자격번호를 입력해주세요", Toast.LENGTH_SHORT).show();
-            }
-//            if (keyDatas.get("driver_id2").equals("")) {
-//
-//            }
-//            if (keyDatas.get("driver_id3").equals("")) {
-//
-//            }
-            if (keyDatas.get("car_regnum").equals("")) {
-                Toast.makeText(mContext, "사업자번호를 입력해주세요", Toast.LENGTH_SHORT).show();
-            }
-//            if (keyDatas.get("fare_id").equals("")) {
-//                Toast.makeText(mContext, "요금을 선택해주세요", Toast.LENGTH_SHORT).show();
-//            }
-//            if (keyDatas.get("city_id").equals("")) {
-//                Toast.makeText(mContext, "시경계를 선택해주세요", Toast.LENGTH_SHORT).show();
-//            }
-//            if (keyDatas.get("firmware_id").equals("")) {
-//                Toast.makeText(mContext, "벤사를 선택해주세요", Toast.LENGTH_SHORT).show();
-//            }
-
-        }else {
-            Log.d(log+"keydatas_final", keyDatas.toString()+"");
-
-            //btnType - 등록인지 수정인지 구분해야함
-            if (buttonType.equals("등록")) {
-                insertCarRegistrationInfo(keyDatas); //서버로 데이터 insert
-
-            }else if (buttonType.equals("수정")) {
-                updateCarRegistrationInfo(keyDatas); //서버로 데이터 update
-            }
-
-            //입력값이 다 있다면
-//            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//            builder.setTitle(btnType+"을 완료하시겠습니까?\n\n")
-//                    .setPositiveButton(getString(R.string.setting_dialog_ok)
-//                            , new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    //btnType - 등록인지 수정인지 구분해야함
-//                                    if (buttonType.equals("등록")) {
-//                                        insertCarRegistrationInfo(keyDatas); //서버로 데이터 insert
-//
-//                                    }else if (buttonType.equals("수정")) {
-//                                        updateCarRegistrationInfo(keyDatas); //서버로 데이터 update
-//                                    }
-//                                }
-//                            })
-//                    .setNegativeButton("취소"
-//                            , new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    dialog.dismiss();
-//                                }
-//                            });
-//            AlertDialog dialog = builder.create();
-//            dialog.show();
+        // hashMap null check
+        if (isNullOrEmptyMap(keyDatas) == false) {
+//            Log.d(log+"null_Check_keys_1", containsKey(keyDatas));
+            containsKey(keyDatas, buttonType);
         }
     }
+
+    public boolean isNullOrEmptyMap(HashMap<String, String> map) {
+        return (map == null || map.isEmpty());
+    }
+
+    public void containsKey(HashMap<String, String> map, String buttonType) {
+
+        Log.d("keyDatas-->", "CHECK_FIRST: "+keyDatas.toString());
+
+        for (int i=0; i<map.size(); i++) {
+
+            if (map.get("car_regnum") == null || map.get("car_regnum").equals("")) {
+                Toast.makeText(mContext, "사업자번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+            }
+            if (map.get("driver_id3") == null || map.get("driver_id3").equals("")) {
+
+            }
+            if (map.get("driver_id1") == null || map.get("driver_id1").equals("")) {
+                Toast.makeText(mContext, "운전자 자격번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+            }
+            if (map.get("driver_id1") == null || map.get("driver_id1").equals("")) {
+                Toast.makeText(mContext, "운전자 자격번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+            }
+            if (map.get("car_vin") == null || map.get("car_vin").equals("")) {
+                Toast.makeText(mContext, "차대번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+            }else if (map.get("car_vin").length() < 17) {
+                Toast.makeText(mContext, "차대번호를 다시 입력해주세요", Toast.LENGTH_SHORT).show();
+            }
+            if (map.get("car_type") == null || map.get("car_type").equals("")) {
+                Toast.makeText(mContext, "차량유형을 선택해주세요", Toast.LENGTH_SHORT).show();
+            }
+            if (map.get("car_num") == null || map.get("car_num").equals("")) {
+                Toast.makeText(mContext, "차량번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+            }
+            if (map.get("mdn") == null || map.get("mdn").equals("")) {
+                Toast.makeText(mContext, "모뎀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+            }
+            if (map.get("company_name") == null || map.get("company_name").equals("")) {
+                Toast.makeText(mContext, "운수사이름을 입력해주세요", Toast.LENGTH_SHORT).show();
+            }
+        }//for..
+
+
+        /** 최종확인 키값에 null 체크 **/
+        if (keyDatas.containsValue("")) {
+            Log.d("keyDatas-->", "YES- THERE IS NULL");
+            if (buttonType.equals("등록")) {
+                if (map.get("reg_id") == null || map.get("reg_id").equals("")) {
+                    keyDatas.put("reg_id", strLoginId);
+                }
+            }else {
+                if (map.get("update_id") == null || map.get("update_id").equals("")) {
+                    keyDatas.put("update_id", strLoginId);
+                }
+            }
+        }else if (keyDatas.get("car_vin").length() < 17) {
+            Toast.makeText(mContext, "차대번호를 다시 입력해주세요", Toast.LENGTH_SHORT).show();
+        }else {
+            Log.d("keyDatas-->", "FULL- NOT NULL: "+keyDatas.toString());
+
+            //입력값이 다 있다면
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle(btnType+"을 완료하시겠습니까?\n\n")
+                    .setPositiveButton(getString(R.string.setting_dialog_ok)
+                            , new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //btnType - 등록인지 수정인지 구분해야함
+                                    if (buttonType.equals("등록")) {
+                                        insertCarRegistrationInfo(keyDatas); //서버로 데이터 insert
+
+                                    }else if (buttonType.equals("수정")) {
+                                        updateCarRegistrationInfo(keyDatas); //서버로 데이터 update
+                                    }
+//                                    dialog.dismiss();
+                                }
+                            })
+                    .setNegativeButton("취소"
+                            , new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
+
+
+
 
 
 
@@ -592,10 +642,13 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                    Log.d(log+"insert_result", result);
                    Toast.makeText(mContext, "등록을 완료하였습니다", Toast.LENGTH_SHORT).show();
 
-                   //조회화면으로 돌아가기
+                   //차량조회 화면으로 이동
+                   Fragment fragment = null;
+                   fragment = new Car_Search_Fragment();
                    FragmentManager manager = getActivity().getSupportFragmentManager();
-                   manager.beginTransaction().remove(Car_Registration_Fragment.this).commit();
-                   manager.popBackStack();
+                   FragmentTransaction transaction = manager.beginTransaction();
+                   transaction.replace(R.id.frame_change, fragment);
+                   transaction.commit();
                }
            }
 
@@ -624,10 +677,13 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                     Log.d(log+"update_result", result);
                     Toast.makeText(mContext, "수정을 완료하였습니다", Toast.LENGTH_SHORT).show();
 
-                    //조회화면으로 돌아가기
+                    //차량조회 화면으로 이동
+                    Fragment fragment = null;
+                    fragment = new Car_Search_Fragment();
                     FragmentManager manager = getActivity().getSupportFragmentManager();
-                    manager.beginTransaction().remove(Car_Registration_Fragment.this).commit();
-                    manager.popBackStack();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.frame_change, fragment);
+                    transaction.commit();
                 }
             }
 
@@ -637,14 +693,6 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                 Toast.makeText(mContext, "수정을 실패하였습니다", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-
-    //현재날짜시간
-    private String getCurDateString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");  //2022 0916 121212
-        Calendar time = Calendar.getInstance();
-        return sdf.format(time.getTime());
     }
 
     private String currentChar = "";
@@ -676,6 +724,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
         return sdf.format(time.getTime())+alphabetValue;
     }
+
 
 
 }

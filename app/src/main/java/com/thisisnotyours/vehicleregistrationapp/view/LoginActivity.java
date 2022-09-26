@@ -141,6 +141,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 }
 //                                Log.d(log+"autoInfo_save", pref.getString("id","")+", "+pref.getString("pw",""));
                                 Intent i = new Intent(mContext, MainActivity.class);
+                                i.putExtra("login_id", str.getUserInfoVOS().get(0).getId());
                                 startActivity(i);
                             }else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
