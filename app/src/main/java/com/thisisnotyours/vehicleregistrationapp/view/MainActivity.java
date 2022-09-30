@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,12 +18,12 @@ import android.widget.Toast;
 import com.thisisnotyours.vehicleregistrationapp.R;
 import com.thisisnotyours.vehicleregistrationapp.handler.BackPressedKeyHandler;
 import com.thisisnotyours.vehicleregistrationapp.handler.IOnBackPressed;
+import com.thisisnotyours.vehicleregistrationapp.manager.PreferenceManager;
 
 import java.sql.Time;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     String log = "log_";
-    String lifeCycle_ = "lifeCycle_";
     private Context mContext;
     private RecyclerView recycler;
     public static TextView search_car, register_car;
@@ -33,15 +34,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d(lifeCycle_, "onCreate");
+        Log.d(log+"saved_info_lifeCycle_", "onCreate_main");
 
         register_car = (TextView) findViewById(R.id.register_car);
         search_car = (TextView) findViewById(R.id.search_car);
         register_car.setOnClickListener(this);
         search_car.setOnClickListener(this);
 
+//        String savedId = PreferenceManager.getString(mContext, "id");
+//        String savedPw = PreferenceManager.getString(mContext, "pw");
+//        String savedName = PreferenceManager.getString(mContext, "name");
+//        Log.d(log+"saved_info", savedId+", "+savedPw+", "+savedName);
+
         Intent i = getIntent();
         loginId = i.getStringExtra("login_id");
+//        loginId = "다시다시";
         Log.d(log+"loginId_main",loginId);
 
         //처음에 나오는 차량조회 화면
@@ -79,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(lifeCycle_, "onResume");
     }
 
     @Override

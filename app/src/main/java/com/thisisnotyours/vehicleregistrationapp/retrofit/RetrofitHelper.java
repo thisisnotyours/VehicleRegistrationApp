@@ -12,8 +12,11 @@ public class RetrofitHelper {
 //  해결 => builder.addConverterFactory(ScalarsConverterFactory.create()) 추가해주기..
 
     public static Retrofit getRetrofitInstance() {
+
+        String IP_BASE_URL = "http://43.200.135.146:8080/";
+
         Retrofit.Builder builder = new Retrofit.Builder();
-        builder.baseUrl("http://3.37.62.85:8080/");
+        builder.baseUrl(IP_BASE_URL);
         builder.addConverterFactory(ScalarsConverterFactory.create()); //json 못받아올때/ 파싱 못받아올때
         builder.addConverterFactory(GsonConverterFactory.create()); //retrofit 이 읽어온 json 데이터를 GSON 을 이용해 파싱/분석 하기위한 설정
         Retrofit retrofit = builder.build();

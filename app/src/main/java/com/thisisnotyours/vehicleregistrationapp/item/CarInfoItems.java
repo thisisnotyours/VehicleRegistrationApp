@@ -14,6 +14,7 @@ public class CarInfoItems {
     public String fare_name;
     public String city_name;
     public String firmware_name;
+    public String speed_factor;
 
     public CarInfoItems() {
 
@@ -30,8 +31,8 @@ public class CarInfoItems {
                         , String mdn
                         , String fare_name
                         , String city_name
-                        , String firmware_name) {
-
+                        , String firmware_name
+                        , String speed_factor) {
         this.company_name = company_name;
         this.car_regnum = car_regnum;
         this.type_name = type_name;
@@ -44,5 +45,6 @@ public class CarInfoItems {
         this.fare_name = fare_name;
         this.city_name = city_name;
         this.firmware_name = firmware_name;
+        this.speed_factor = speed_factor;
     }
 }

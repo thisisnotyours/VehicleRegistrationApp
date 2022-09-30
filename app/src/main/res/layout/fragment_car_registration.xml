@@ -107,7 +107,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_toRightOf="@id/tv_mdn"
-                        android:text="(9자리)"
+                        android:text="(11자리)"
                         android:textColor="@color/main_background"
                         android:textSize="18dp" />
                     <TextView
@@ -128,7 +128,7 @@
                         android:layout_marginTop="5dp"
                         android:background="@drawable/edit_box"
                         android:hint="000000000"
-                        android:maxLength="9"
+                        android:maxLength="11"
                         android:imeOptions="actionDone"
                         android:paddingLeft="20dp"
                         android:singleLine="true"
@@ -520,17 +520,16 @@
                         android:layout_centerVertical="true"
                         android:layout_marginTop="15dp"
                         android:layout_marginRight="10dp"
-                        android:background="@drawable/ic_arrow_down_24" />
-
+                        android:background="@drawable/ic_arrow_down_24"/>
                     <Spinner
                         android:id="@+id/spinner_fare_id"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_below="@+id/tv_fare_id"
                         android:layout_marginTop="5dp"
+                        android:spinnerMode="dialog"
                         android:background="@drawable/edit_box"
-                        android:paddingLeft="20dp"
-                        android:textSize="20dp" />
+                        android:theme="@style/spinner_style"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -578,9 +577,9 @@
                         android:layout_height="50dp"
                         android:layout_below="@+id/tv_city_id"
                         android:layout_marginTop="5dp"
+                        android:spinnerMode="dialog"
                         android:background="@drawable/edit_box"
-                        android:paddingLeft="20dp"
-                        android:textSize="20dp" />
+                        android:theme="@style/spinner_style"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -629,8 +628,35 @@
                         android:layout_below="@+id/tv_firmware_id"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/edit_box"
+                        android:spinnerMode="dialog"
+                        android:theme="@style/spinner_style" />
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp">
+                    <TextView
+                        android:id="@+id/tv_speed_factor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="11.  감속률"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+                    <EditText
+                        android:id="@+id/et_speed_factor"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/tv_speed_factor"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/edit_box"
                         android:paddingLeft="20dp"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:singleLine="true"
+                        android:imeOptions="actionDone"/>
                 </RelativeLayout>
 
 

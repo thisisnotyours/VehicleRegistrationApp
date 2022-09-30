@@ -16,7 +16,7 @@
             android:layout_height="match_parent">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -162,7 +162,7 @@
                         android:background="@drawable/btn_reset_box"
                         android:layout_marginRight="10dp"/>
                     <RelativeLayout
-                        android:id="@+id/search_btn"
+                        android:id="@+id/btn_search"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -173,36 +173,22 @@
                             android:layout_centerVertical="true"
                             android:background="@drawable/ic_baseline_search_24"
                             android:layout_toLeftOf="@+id/tv_edit"/>
+
                         <TextView
                             android:id="@+id/tv_edit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
+                            android:layout_marginLeft="5dp"
                             android:text="조 회"
                             android:textColor="@color/white"
-                            android:textStyle="bold"
                             android:textSize="20dp"
-                            android:layout_marginLeft="5dp"/>
+                            android:textStyle="bold" />
                     </RelativeLayout>
-                    <!--                    <Button-->
-                    <!--                        android:id="@+id/btn_search"-->
-                    <!--                        android:layout_weight="1"-->
-                    <!--                        android:layout_width="0dp"-->
-                    <!--                        android:layout_height="match_parent"-->
-                    <!--                        android:text="조 회"-->
-                    <!--                        android:textSize="20dp"-->
-                    <!--                        android:textColor="@color/white"-->
-                    <!--                        android:textStyle="bold"-->
-                    <!--                        android:background="@drawable/btn_search_box"/>-->
                 </LinearLayout>
 
 
 
-                <!--                <View-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="1.5dp"-->
-                <!--                    android:background="@color/light_grey"-->
-                <!--                    android:layout_marginTop="20dp"/>-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -239,17 +225,62 @@
                 </LinearLayout>
 
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:orientation="vertical"/>
+                    android:layout_height="441dp"
+                    android:orientation="vertical">
 
-                <!--                <View-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="1.5dp"-->
-                <!--                    android:background="@color/light_light_grey"/>-->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_search_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="5"
+                        android:orientation="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_paging"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                        <Button
+                            android:id="@+id/btn_back"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/btn_reset_box"
+                            android:text="이전"
+                            android:textSize="18dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/main_background"
+                            android:visibility="gone" />
+                        <Button
+                            android:id="@+id/btn_empty"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:textColor="@color/main_background"
+                            android:visibility="gone" />
+                        <Button
+                            android:id="@+id/btn_next"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/btn_search_box"
+                            android:text="다음"
+                            android:textSize="18dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </LinearLayout>
+
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>

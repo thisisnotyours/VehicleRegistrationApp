@@ -1,6 +1,7 @@
 package com.thisisnotyours.vehicleregistrationapp.adapter;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,7 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         VH vh = (VH) holder;
         CarInfoItems item = items.get(position);
+        vh.tvCnt.setText(position+"");
         vh.tvCompanyName.setText(item.company_name);
         vh.tvCarType.setText(item.type_name);
         vh.tvCarNum.setText(item.car_num);
@@ -62,6 +64,7 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
         vh.tvCityId.setText(item.city_name);
         vh.tvFirmwareId.setText(item.firmware_name);
         vh.tvMdn.setText(item.mdn);
+        vh.tvSpeedFactor.setText(item.speed_factor);
 
     }
 
@@ -73,12 +76,12 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
     class VH extends RecyclerView.ViewHolder {
         ImageView dropDownBtn;
         LinearLayout dropDownLayout;
-        TextView tvCompanyName, tvCarType, tvCarNum, tvDriverId, tvCarRegnum, tvFareId, tvCityId, tvFirmwareId, tvMdn, tvBusiness, tvUnitNum, tvSerialNum;
+        TextView tvCnt, tvCompanyName, tvCarType, tvCarNum, tvDriverId, tvCarRegnum, tvFareId, tvCityId, tvFirmwareId, tvMdn, tvSpeedFactor, tvBusiness, tvUnitNum, tvSerialNum;
 
 
         public VH(@NonNull View itemView) {
             super(itemView);
-
+            tvCnt = itemView.findViewById(R.id.tv_cnt);
             dropDownBtn = itemView.findViewById(R.id.iv_drop_down);
             dropDownLayout = itemView.findViewById(R.id.drop_down_layout);
             tvCompanyName = itemView.findViewById(R.id.tv_company_name);
@@ -90,6 +93,7 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
             tvCityId = itemView.findViewById(R.id.tv_city_id);
             tvFirmwareId = itemView.findViewById(R.id.tv_firmware_id);
             tvMdn = itemView.findViewById(R.id.tv_mdn);
+            tvSpeedFactor = itemView.findViewById(R.id.tv_speed_factor);
             tvBusiness = itemView.findViewById(R.id.tv_business);
             tvUnitNum = itemView.findViewById(R.id.tv_unit_num);
             tvSerialNum = itemView.findViewById(R.id.tv_serial_num);
@@ -99,11 +103,13 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
                 public void onClick(View v) {
                     if (isClicked == true) {
                         dropDownLayout.setVisibility(View.VISIBLE);
-                        dropDownBtn.setRotation(270);
+                        dropDownBtn.setBackgroundResource(R.drawable.ic_baseline_expand_circle_down_blue_24);
+                        dropDownBtn.setRotation(180);
                         isClicked = false;
                     }else {
                         dropDownLayout.setVisibility(View.GONE);
-                        dropDownBtn.setRotation(90);
+                        dropDownBtn.setBackgroundResource(R.drawable.ic_baseline_expand_circle_down_24);
+                        dropDownBtn.setRotation(360);
                         isClicked = true;
                     }
                 }
