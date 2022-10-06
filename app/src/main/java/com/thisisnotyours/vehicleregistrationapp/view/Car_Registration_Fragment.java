@@ -4,8 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -24,6 +31,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.thisisnotyours.vehicleregistrationapp.R;
 import com.thisisnotyours.vehicleregistrationapp.handler.IOnBackPressed;
 import com.thisisnotyours.vehicleregistrationapp.manager.PreferenceManager;
@@ -75,7 +84,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             , etSpeedFactor;
     private Button btnCarTypePersonal, btnCarTypeCompany, btnRegister, btnRegisterCancel;
     private ImageView ivDropDown;
-    private TextView tvViewMoreDriverId;
+    private TextView tvViewMoreDriverId, tvBarcodeScan;
     private boolean isClicked = true, registerBtnClicked = true;
     private RelativeLayout layoutDriverId2, layoutDriverId3;
     private HashMap<String, String> keyDatas = new HashMap<>();
@@ -433,6 +442,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         tvViewMoreDriverId = v.findViewById(R.id.tv_view_more_driver_id);
         btnRegister = v.findViewById(R.id.btn_register);
         btnRegisterCancel = v.findViewById(R.id.btn_register_cancel);
+        tvBarcodeScan = v.findViewById(R.id.tv_barcode_scan);
 
         btnCarTypePersonal.setOnClickListener(this);
         btnCarTypeCompany.setOnClickListener(this);
@@ -440,6 +450,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         tvViewMoreDriverId.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
         btnRegisterCancel.setOnClickListener(this);
+        tvBarcodeScan.setOnClickListener(this);
     }
 
     @Override
@@ -476,6 +487,13 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                     isClicked = true;
                 }
                 break;
+            case R.id.tv_barcode_scan:  //[바코드스캔] 버튼
+                Toast.makeText(mContext, "바코드스캔", Toast.LENGTH_SHORT).show();
+//                IntentIntegrator integrator = new IntentIntegrator((Activity) mContext);
+//                integrator.initiateScan();
+                new IntentIntegrator((Activity) getContext()).setCaptureActivity(BarcodeScanActivity.class).initiateScan();
+                break;
+
             case R.id.btn_register:        //[등록완료]버튼
 
                 //insert/ update 할 params 담기
@@ -486,6 +504,30 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                 break;
         }
     }//onClick..
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (scanResult != null) {
+            String barcode = scanResult.getContents();
+            Log.d(log+"getBarcode", requestCode+", "+resultCode+", "+data);
+            Log.d(log+"getBarcodeResult", barcode.toString());
+        }
+    }
+
+    ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                    }
+                }
+            }
+    );
 
 
 
@@ -547,11 +589,31 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                             , new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    //저장된 로그인정보 있는지 확인
+                                    String savedId = PreferenceManager.getString(mContext, "id");
+                                    String savedPw = PreferenceManager.getString(mContext, "pw");
+                                    String savedName = PreferenceManager.getString(mContext, "name");
+//                                    Log.d(log+"%%_saved_info", savedId+", "+savedPw+", "+savedName);
+
                                     //btnType - 등록인지 수정인지 구분해야함
                                     if (buttonType.equals("등록")) {
+
+                                        if (keyDatas.get("reg_id").equals("") || keyDatas.get("reg_id") == null) {
+                                            Log.d(log+"%%_", "1_"+keyDatas.get("reg_id"));
+                                            keyDatas.put("reg_id", savedId);
+                                            Log.d(log+"%%_", "2_"+keyDatas.get("reg_id"));
+                                        }
+
                                         insertCarRegistrationInfo(map); //서버로 데이터 insert
 
                                     }else if (buttonType.equals("수정")) {
+
+                                        if (keyDatas.get("update_id").equals("") || keyDatas.get("update_id") == null) {
+                                            Log.d(log+"%%_", "1_"+keyDatas.get("update_id"));
+                                            keyDatas.put("update_id", savedId);
+                                            Log.d(log+"%%_", "2_"+keyDatas.get("update_id"));
+                                        }
+
                                         updateCarRegistrationInfo(map); //서버로 데이터 update
                                     }
                                 }
@@ -652,6 +714,9 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                     break;
                 case "company_name,00":
                     responseVal = "운수사이름을";
+                    break;
+                case "mdn:01":
+                    responseVal = "입력된 모뎀번호가 이미 존재합니다.\n다른 모뎀번호를";
                     break;
                 case "mdn,00":
                     responseVal = "모뎀번호를";

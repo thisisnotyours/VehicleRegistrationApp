@@ -169,7 +169,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:background="@drawable/ic_baseline_expand_circle_down_24"/>
+            android:background="@drawable/ic_baseline_expand_circle_down_24" />
         <!-- android:background="@drawable/ic_arrow_right_24"-->
         <!-- android:rotation="90"-->
         <!--android:background="@drawable/ic_baseline_expand_circle_down_24"-->
@@ -301,35 +301,6 @@
                 android:textColor="@color/main_background"
                 android:textSize="16dp"
                 android:textStyle="bold" />
-
-<!--            <TextView-->
-<!--                android:id="@+id/tv_mdn_title"-->
-<!--                android:layout_width="130dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@id/tv_firmware_id_title"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:paddingRight="10dip"-->
-<!--                android:paddingBottom="4dip"-->
-<!--                android:text="모뎀번호"-->
-<!--                android:textColor="@color/blue"-->
-<!--                android:textSize="16dp"-->
-<!--                android:textStyle="bold" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/tv_mdn"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@+id/tv_firmware_id"-->
-<!--                android:layout_toRightOf="@+id/tv_mdn_title"-->
-<!--                android:layout_weight="2"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:paddingRight="10dip"-->
-<!--                android:paddingBottom="4dip"-->
-<!--                android:text="-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;"-->
-<!--                android:textColor="@color/main_background"-->
-<!--                android:textSize="16dp"-->
-<!--                android:textStyle="bold" />-->
-
             <TextView
                 android:id="@+id/tv_speed_factor_title"
                 android:layout_width="130dp"
@@ -342,7 +313,6 @@
                 android:textColor="@color/blue"
                 android:textSize="16dp"
                 android:textStyle="bold" />
-
             <TextView
                 android:id="@+id/tv_speed_factor"
                 android:layout_width="match_parent"
@@ -358,91 +328,34 @@
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/tv_unit_sn_title"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_speed_factor_title"
+                android:gravity="center_vertical"
+                android:paddingRight="10dip"
+                android:paddingBottom="4dip"
+                android:text="시리얼번호(KM100)"
+                android:textColor="@color/blue"
+                android:textSize="13dp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_unit_sn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_speed_factor"
+                android:layout_toRightOf="@+id/tv_unit_sn_title"
+                android:layout_weight="2"
+                android:gravity="center_vertical"
+                android:paddingRight="10dip"
+                android:paddingBottom="4dip"
+                android:text="---------"
+                android:textColor="@color/main_background"
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/tv_business_title"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_mdn_title"
-                android:gravity="center_vertical"
-                android:paddingRight="10dip"
-                android:paddingBottom="4dip"
-                android:text="가맹점ID"
-                android:textColor="@color/blue"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/tv_business"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_mdn"
-                android:layout_toRightOf="@+id/tv_business_title"
-                android:layout_weight="2"
-                android:gravity="center_vertical"
-                android:paddingRight="10dip"
-                android:paddingBottom="4dip"
-                android:text="---------"
-                android:textColor="@color/main_background"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/tv_unit_num_title"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_business_title"
-                android:gravity="center_vertical"
-                android:paddingRight="10dip"
-                android:paddingBottom="4dip"
-                android:text="단말기번호"
-                android:textColor="@color/blue"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/tv_unit_num"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_business"
-                android:layout_toRightOf="@+id/tv_unit_num_title"
-                android:layout_weight="2"
-                android:gravity="center_vertical"
-                android:paddingRight="10dip"
-                android:paddingBottom="4dip"
-                android:text="---------"
-                android:textColor="@color/main_background"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/tv_serial_num_title"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_unit_num_title"
-                android:gravity="center_vertical"
-                android:paddingRight="10dip"
-                android:paddingBottom="4dip"
-                android:text="시리얼번호"
-                android:textColor="@color/blue"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/tv_serial_num"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_unit_num"
-                android:layout_toRightOf="@+id/tv_serial_num_title"
-                android:layout_weight="2"
-                android:gravity="center_vertical"
-                android:paddingRight="10dip"
-                android:paddingBottom="4dip"
-                android:text="---------"
-                android:textColor="@color/main_background"
-                android:textSize="16dp"
-                android:textStyle="bold" />
+
         </RelativeLayout>
     </LinearLayout>
 

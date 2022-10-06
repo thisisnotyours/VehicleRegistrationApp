@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.BarcodeScanActivity">
+
+    <RelativeLayout
+        android:id="@+id/top_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/sky_blue"
+        android:orientation="vertical">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="촬영종료"
+            android:layout_marginLeft="10dp"/>
+
+        <ImageButton
+            android:id="@+id/iv_flash_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="switchFlashLight"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_baseline_flash_off_24"
+            android:background="@null"
+            android:layout_marginRight="10dp"/>
+    </RelativeLayout>
+
+
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/zxing_barcode_scanner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top_bar_layout"
+        app:zxing_scanner_layout="@layout/custom_zxing_scanner_layout" />
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:background="@color/sky_blue">
+        <TextView
+            android:id="@+id/tv_zxing_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="바코드를 스캔해주세요"
+            android:textSize="35sp"
+            android:textColor="@color/white"
+            android:paddingTop="20dp"/>
+    </LinearLayout>
+
+
+</RelativeLayout>
