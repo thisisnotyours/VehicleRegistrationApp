@@ -63,10 +63,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (savedId.equals("") && savedPw.equals("")) {
             //저장된 로그인정보 없으면 - do nothing
+            checkBox.setChecked(false);
         }else {
             //있으면 로그인버튼 자동클릭
             id_et.setText(savedId);
             pw_et.setText(savedPw);
+            checkBox.setChecked(true);
             loginBtn.performClick();
         }
 
