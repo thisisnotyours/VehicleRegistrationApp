@@ -35,6 +35,9 @@ public class CarInfoVO {
     private String daemon_update;
     private String firmware_update;
     private String logfile_upload;
+    private String store_id;
+    private String unit_num;
+    private String unit_sn;
 
     public String getId() {
         return id;
@@ -300,6 +303,30 @@ public class CarInfoVO {
         this.logfile_upload = logfile_upload;
     }
 
+    public String getStore_id() {
+        return store_id;
+    }
+
+    public void setStore_id(String store_id) {
+        this.store_id = store_id;
+    }
+
+    public String getUnit_num() {
+        return unit_num;
+    }
+
+    public void setUnit_num(String unit_num) {
+        this.unit_num = unit_num;
+    }
+
+    public String getUnit_sn() {
+        return unit_sn;
+    }
+
+    public void setUnit_sn(String unit_sn) {
+        this.unit_sn = unit_sn;
+    }
+
     @Override
     public String toString() {
         return "CarInfoVO{" +
@@ -336,6 +363,9 @@ public class CarInfoVO {
                 ", daemon_update='" + daemon_update + '\'' +
                 ", firmware_update='" + firmware_update + '\'' +
                 ", logfile_upload='" + logfile_upload + '\'' +
+                ", store_id='" + store_id + '\'' +
+                ", unit_num='" + unit_num + '\'' +
+                ", unit_sn='" + unit_sn + '\'' +
                 '}';
     }
 }

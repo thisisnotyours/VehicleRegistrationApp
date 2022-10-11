@@ -72,7 +72,10 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             , strFareId=""
             , strCityId=""
             , strFirmwareId=""
-            , strSpeedFactor="";
+            , strSpeedFactor=""
+            , strStoreId=""
+            , strUnitNum=""
+            , strUnitSn="";
     private EditText etCompanyName
             , etCarNum
             , etCarVin
@@ -81,7 +84,10 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             , etDriverId3
             , etCarRegnum
             , etMdn
-            , etSpeedFactor;
+            , etSpeedFactor
+            , etStoreId
+            , etUnitNum
+            , etUnitSn;
     private Button btnCarTypePersonal, btnCarTypeCompany, btnRegister, btnRegisterCancel;
     private ImageView ivDropDown;
     private TextView tvViewMoreDriverId, tvBarcodeScan;
@@ -173,6 +179,10 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             strFirmwareId = getArguments().getString("firmware_id");   //벤사
             strSpeedFactor = getArguments().getString("speed_factor"); //감속률
 
+            strStoreId = getArguments().getString("store_id");  //가맹점 ID
+            strUnitNum = getArguments().getString("unit_num");  //단말기번호
+            strUnitSn = getArguments().getString("unit_sn");    //생산번호/시리얼번호
+
             //차량유형
             if (!getArguments().getString("car_type").equals("")) {
                 if (getArguments().getString("car_type").equals("개인")) {
@@ -199,6 +209,10 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             etCarRegnum.setText(strCarRegnum);
             etMdn.setText(strMdn);
             etSpeedFactor.setText(strSpeedFactor);
+            etStoreId.setText(strStoreId);
+            etUnitNum.setText(strUnitNum);
+            etUnitSn.setText(strUnitSn);
+
         }else {
             btnType = "등록";
 //            strLoginId = getLoginId();
@@ -427,6 +441,9 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         etDriverId3 = v.findViewById(R.id.et_driver_id3);
         etCarRegnum = v.findViewById(R.id.et_car_regnum);
         etSpeedFactor = v.findViewById(R.id.et_speed_factor);
+        etStoreId = v.findViewById(R.id.et_store_id);
+        etUnitNum = v.findViewById(R.id.et_unit_num);
+        etUnitSn = v.findViewById(R.id.et_unit_sn);
 
         spinnerFareId = v.findViewById(R.id.spinner_fare_id);
         spinnerCityId = v.findViewById(R.id.spinner_city_id);

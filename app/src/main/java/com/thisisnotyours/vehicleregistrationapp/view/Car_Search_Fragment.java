@@ -339,7 +339,10 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                 , item.getCarInfoVOS().get(i).getFare_name()
                 , item.getCarInfoVOS().get(i).getCity_name()
                 , item.getCarInfoVOS().get(i).getFirmware_name()
-                , item.getCarInfoVOS().get(i).getSpeed_factor()));
+                , item.getCarInfoVOS().get(i).getSpeed_factor()
+                , item.getCarInfoVOS().get(i).getStore_id()
+                ,item.getCarInfoVOS().get(i).getUnit_num()
+                ,item.getCarInfoVOS().get(i).getUnit_sn()));
 
         adapter = new CarInfoAdapter(getContext(), searchRecyclerItems);
         searchRecyclerView.setAdapter(adapter);
@@ -376,6 +379,9 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                                             bundle.putString("city_id", item.getCarInfoVOS().get(pos).getCity_name());
                                             bundle.putString("firmware_id", item.getCarInfoVOS().get(pos).getFirmware_name());
                                             bundle.putString("speed_factor", item.getCarInfoVOS().get(pos).getSpeed_factor());
+                                            bundle.putString("store_id", item.getCarInfoVOS().get(pos).getStore_id());
+                                            bundle.putString("unit_num", item.getCarInfoVOS().get(pos).getUnit_num());
+                                            bundle.putString("unit_sn", item.getCarInfoVOS().get(pos).getUnit_sn());
 
                                             FragmentTransaction transaction = manager.beginTransaction();
                                             fragment.setArguments(bundle);
