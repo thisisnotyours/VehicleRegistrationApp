@@ -9,7 +9,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.carInfo.Car_Info_Activity">
+        tools:context=".view.carInfo.Car_Info_Activity"
+        android:background="@color/white">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -30,6 +31,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp">
+
                         <TextView
                             android:id="@+id/tv_car_num"
                             android:layout_width="wrap_content"
@@ -54,12 +56,13 @@
                             android:layout_height="40dp"
                             android:layout_below="@+id/tv_car_num"
                             android:layout_marginTop="5dp"
-                            android:background="@drawable/edit_box"
+                            android:background="@drawable/edittext_click_type"
                             android:imeOptions="actionDone"
                             android:paddingLeft="20dp"
                             android:singleLine="true"
                             android:textSize="20dp" />
                     </RelativeLayout>
+                    <!--android:background="@drawable/edit_box"-->
 
                     <RelativeLayout
                         android:layout_weight="1"
@@ -89,7 +92,7 @@
                             android:layout_height="40dp"
                             android:layout_below="@+id/tv_company_name"
                             android:layout_marginTop="5dp"
-                            android:background="@drawable/edit_box"
+                            android:background="@drawable/edittext_click_type"
                             android:imeOptions="actionDone"
                             android:paddingLeft="20dp"
                             android:singleLine="true"
@@ -133,8 +136,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:layout_below="@+id/tv_mdn"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/edit_box"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/edittext_click_type"
                             android:imeOptions="actionDone"
                             android:inputType="number"
                             android:paddingLeft="20dp"

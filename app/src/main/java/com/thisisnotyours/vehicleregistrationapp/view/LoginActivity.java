@@ -1,5 +1,6 @@
 package com.thisisnotyours.vehicleregistrationapp.view;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,7 +11,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -18,10 +22,15 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.thisisnotyours.vehicleregistrationapp.R;
+import com.thisisnotyours.vehicleregistrationapp.handler.BackPressedKeyHandler;
 import com.thisisnotyours.vehicleregistrationapp.manager.PreferenceManager;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitAPI;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitHelper;
 import com.thisisnotyours.vehicleregistrationapp.vo.CarInfoListData;
+
+import java.util.EventListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,6 +38,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+    private BackPressedKeyHandler backPressedKeyHandler = new BackPressedKeyHandler(this);
     private Context mContext;
     private String log="log_", savedId="", savedPw="", savedName="";
     private EditText id_et, pw_et;
@@ -38,6 +48,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private SharedPreferences.Editor editor;
     private boolean autoClicked = false;
     private PreferenceManager preferenceManager = new PreferenceManager();
+    private boolean idKeyboardOn = false, pwKeyboardOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +73,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
         if (savedId.equals("") && savedPw.equals("")) {
+            Log.d(log+"login","got no login information");
             //저장된 로그인정보 없으면 - do nothing
             checkBox.setChecked(false);
+            id_et.requestFocus();
+//            id_et.setBackgroundResource(R.drawable.edit_box_selected);
+            bringKeyboard(1650);
         }else {
+            Log.d(log+"login","login info existed. auto login");
             //있으면 로그인버튼 자동클릭
             id_et.setText(savedId);
             pw_et.setText(savedPw);
@@ -73,12 +89,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
 
+        //로그인 editText
+        id_et.setOnEditorActionListener((textView, i, keyEvent) -> {
+            boolean handled = false;
+            if (i == EditorInfo.IME_ACTION_DONE) {
+                handled = true;
+                id_et.clearFocus();
+//                id_et.setBackgroundResource(R.drawable.edit_box);
+                pw_et.requestFocus();
+//                pw_et.setBackgroundResource(R.drawable.edit_box_selected);
+            }
+            return handled;
+        });
+        //비밀번호 editText
+        pw_et.setOnEditorActionListener((textView, i, keyEvent) -> {
+            boolean handled = false;
+            if (i == EditorInfo.IME_ACTION_DONE) {
+                handled = true;
+                pw_et.clearFocus();
+                downKeyboard(pw_et);
+//                pw_et.setBackgroundResource(R.drawable.edit_box);
+            }
+            return handled;
+        });
+
 
         //자동로그인 체크박스
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
                 if (b == true) {
                     autoClicked = true; //자동로그인 선택
                 }else {
@@ -86,6 +125,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
         });
+
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
+
+    }//onCreate..
+
+    //앱 비정상종료 감지 handler
+    class ExceptionHandler implements Thread.UncaughtExceptionHandler {
+
+        @Override
+        public void uncaughtException(@NonNull Thread thread, @NonNull Throwable throwable) {
+            throwable.printStackTrace();
+            Log.d(log+"on_exception","비정상 종료");
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        backPressedKeyHandler.onBackPressed();
     }
 
     @Override
@@ -97,6 +155,57 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(log+"onStart","onStart");
+//        downKeyboardForced(id_et);
+        if (id_et.hasFocus() == true) {
+            Log.d(log+"which_editText","ID");
+            downKeyboardForced(id_et);
+        }else if (pw_et.hasFocus() == true) {
+            Log.d(log+"which_editText","PW");
+            downKeyboardForced(pw_et);
+        }
+    }
+
+    public void bringKeyboard(long speed) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        upKeyboard(id_et);
+                    }
+                };
+                Timer timer = new Timer();
+                timer.schedule(task, speed);
+            }
+        });
+        thread.start();
+    }
+
+    public void upKeyboard(EditText editText) {
+        if (editText != null) {
+            InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(editText,InputMethodManager.SHOW_FORCED);
+        }
+    }
+
+    public void downKeyboard(EditText editText) {
+        if (editText != null) {
+            InputMethodManager mInputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            mInputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        }
+    }
+
+    public void downKeyboardForced(EditText editText) {
+        if (editText != null) {
+            InputMethodManager mInputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            mInputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
+    }
 
     //로그인 정보 서버 fetching
     private void getLoginInfoData() {

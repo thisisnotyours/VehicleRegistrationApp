@@ -18,9 +18,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -35,6 +39,8 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.thisisnotyours.vehicleregistrationapp.R;
 import com.thisisnotyours.vehicleregistrationapp.handler.IOnBackPressed;
+import com.thisisnotyours.vehicleregistrationapp.item.CarPageGubun;
+import com.thisisnotyours.vehicleregistrationapp.manager.MyTouchListener;
 import com.thisisnotyours.vehicleregistrationapp.manager.PreferenceManager;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitAPI;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitHelper;
@@ -45,6 +51,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,6 +60,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class Car_Registration_Fragment extends Fragment implements View.OnClickListener, IOnBackPressed {
+    private MyTouchListener myTouchListener = new MyTouchListener();
+    private boolean clickEditText = true;
+    private String editTextType="";
     private String log = "log_";
     private Context mContext;
     private ArrayList<String> fareIdArr, cityIdArr, firmwareIdArr;
@@ -76,7 +87,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             , strStoreId=""
             , strUnitNum=""
             , strUnitSn="";
-    private EditText etCompanyName
+    public EditText etCompanyName
             , etCarNum
             , etCarVin
             , etDriverId1
@@ -106,31 +117,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     //뒤로가기버튼 클릭
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(btnType+"을 취소하시겠습니까?");
-        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //차량조회 화면으로 이동
-                Fragment fragment = null;
-                fragment = new Car_Search_Fragment();
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.frame_change, fragment);
-                transaction.commit();
-                MainActivity.search_car.setTextColor(getResources().getColor(R.color.blue));
-                MainActivity.search_car.setBackgroundResource(R.drawable.btn_gradi_white_line);
-                MainActivity.register_car.setTextColor(getResources().getColor(R.color.light_grey));
-                MainActivity.register_car.setBackgroundResource(R.drawable.btn_gradi_white);
-            }
-        }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //do nothing
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        cancelRegister();
     }
 
     @Override
@@ -143,6 +130,9 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_car_registration, container, false);
+
+        Log.d(log+"onCreate", "register");
+        CarPageGubun.type = "등록";
 
         mContext = container.getContext();
 
@@ -215,12 +205,11 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
         }else {
             btnType = "등록";
-//            strLoginId = getLoginId();
-//            Log.d(log+"loginId_main_register_2", strLoginId);
+            etCompanyName.requestFocus();
+//            etCompanyName.setBackgroundResource(R.drawable.edit_box_selected);
+            bringKeyboard(1400, etCompanyName);
         }
 
-//        strLoginId = getLoginId();
-//        Log.d(log+"loginId_main_register_2", strLoginId);
 
         btnRegister.setText(btnType+" 완료");
 
@@ -231,6 +220,17 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
         return rootView;
     }//onCreateView..
+
+    private void mSenseClick(View et, boolean status) {
+        switch (et.getId()) {
+            case R.id.et_company_name:
+                break;
+            case R.id.et_mdn:
+                break;
+            case R.id.et_car_num:
+                break;
+        }
+    }
 
 
     //운전자 자격번호 string '#' 빼고 set
@@ -444,12 +444,23 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         etStoreId = v.findViewById(R.id.et_store_id);
         etUnitNum = v.findViewById(R.id.et_unit_num);
         etUnitSn = v.findViewById(R.id.et_unit_sn);
+        etMdn = v.findViewById(R.id.et_mdn);
+
+        controlEditorAction(etCompanyName, etMdn);
+        controlEditorAction(etMdn, etCarNum);
+        controlEditorAction(etCarNum, etCarVin);
+        controlEditorAction(etCarVin, etDriverId1);
+        controlEditorAction(etDriverId1, etCarRegnum);
+        controlEditorAction(etDriverId2, etCarRegnum);
+        controlEditorAction(etDriverId3, etCarRegnum);
+        controlEditorAction(etCarRegnum, etStoreId);
+        controlEditorAction(etStoreId, etUnitNum);
+        controlEditorAction(etUnitNum, etUnitSn);
 
         spinnerFareId = v.findViewById(R.id.spinner_fare_id);
         spinnerCityId = v.findViewById(R.id.spinner_city_id);
         spinnerFirmwareId = v.findViewById(R.id.spinner_firmware_id);
 
-        etMdn = v.findViewById(R.id.et_mdn);
         layoutDriverId2 = v.findViewById(R.id.layout_driver_id2);
         layoutDriverId3 = v.findViewById(R.id.layout_driver_id3);
 
@@ -468,7 +479,47 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         btnRegister.setOnClickListener(this);
         btnRegisterCancel.setOnClickListener(this);
         tvBarcodeScan.setOnClickListener(this);
+        btnRegister.setOnTouchListener(myTouchListener);
+        btnRegisterCancel.setOnTouchListener(myTouchListener);
     }
+
+    public void controlEditorAction(EditText currentEditText, EditText nextEditText) {
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        currentEditText.setOnEditorActionListener((textView, i, keyEvent) -> {
+            boolean handled = false;
+            if (i == EditorInfo.IME_ACTION_DONE) {
+                handled = true;
+                currentEditText.clearFocus();
+//                currentEditText.setBackgroundResource(R.drawable.edit_box);
+                nextEditText.requestFocus();
+//                nextEditText.setBackgroundResource(R.drawable.edit_box_selected);
+            }
+            return handled;
+        });
+    }
+
+    public void bringKeyboard(long speed, EditText editText) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        upKeyboard(editText);
+                    }
+                };
+                Timer timer = new Timer();
+                timer.schedule(task, speed);
+            }
+        });
+        thread.start();
+    }
+
+    private void upKeyboard(EditText editText) {
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -518,34 +569,39 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
                 break;
             case R.id.btn_register_cancel:     //[취소]버튼
+                cancelRegister();
                 break;
         }
     }//onClick..
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (scanResult != null) {
-            String barcode = scanResult.getContents();
-            Log.d(log+"getBarcode", requestCode+", "+resultCode+", "+data);
-            Log.d(log+"getBarcodeResult", barcode.toString());
-        }
-    }
-
-    ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                    }
-                }
+    private void cancelRegister() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(btnType+"을 취소하시겠습니까?");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //차량조회 화면으로 이동
+                Fragment fragment = null;
+                fragment = new Car_Search_Fragment();
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.frame_change, fragment);
+                transaction.commit();
+                MainActivity.search_car.setTextColor(getResources().getColor(R.color.blue));
+                MainActivity.search_car.setBackgroundResource(R.drawable.btn_gradi_white_line);
+                MainActivity.register_car.setTextColor(getResources().getColor(R.color.light_grey));
+                MainActivity.register_car.setBackgroundResource(R.drawable.btn_gradi_white);
+                Toast.makeText(mContext, "등록 취소", Toast.LENGTH_SHORT).show();
             }
-    );
-
+        }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //do nothing
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 
     //Params => HashMap 에 key, value 담아 서버전송
@@ -600,6 +656,18 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             Log.d("keyDatas-->", "CHECK_FIRST: "+map.toString());
             Log.d(log+"car_vin_length", map.get("car_vin").length()+"");
             //입력값이 다 있다면
+            etCompanyName.setBackgroundResource(R.drawable.edit_box);
+            etMdn.setBackgroundResource(R.drawable.edit_box);
+            etCarNum.setBackgroundResource(R.drawable.edit_box);
+            etCarVin.setBackgroundResource(R.drawable.edit_box);
+            etDriverId1.setBackgroundResource(R.drawable.edit_box);
+            etDriverId2.setBackgroundResource(R.drawable.edit_box);
+            etDriverId3.setBackgroundResource(R.drawable.edit_box);
+            etCarRegnum.setBackgroundResource(R.drawable.edit_box);
+            etSpeedFactor.setBackgroundResource(R.drawable.edit_box);
+            etStoreId.setBackgroundResource(R.drawable.edit_box);
+            etUnitNum.setBackgroundResource(R.drawable.edit_box);
+            etUnitSn.setBackgroundResource(R.drawable.edit_box);
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle(btnType+"을 완료하시겠습니까?\n\n")
                     .setPositiveButton(getString(R.string.setting_dialog_ok)

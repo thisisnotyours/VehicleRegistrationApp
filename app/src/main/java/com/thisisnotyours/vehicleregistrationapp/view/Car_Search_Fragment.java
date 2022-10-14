@@ -15,8 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +30,7 @@ import com.thisisnotyours.vehicleregistrationapp.R;
 import com.thisisnotyours.vehicleregistrationapp.adapter.CarInfoAdapter;
 import com.thisisnotyours.vehicleregistrationapp.handler.IOnBackPressed;
 import com.thisisnotyours.vehicleregistrationapp.item.CarInfoItems;
+import com.thisisnotyours.vehicleregistrationapp.item.CarPageGubun;
 import com.thisisnotyours.vehicleregistrationapp.manager.PreferenceManager;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitAPI;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitHelper;
@@ -62,6 +65,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
     private boolean isClicked = false;
     private MyTouchListener myTouchListener = new MyTouchListener();
 
+
     public Car_Search_Fragment() {
         // Required empty public constructor
     }
@@ -69,6 +73,8 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
     @Override
     public void onBackPressed() {
         Toast.makeText(mContext, "뒤로가기 버튼을 한번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show();
+        Log.d(log+"back","from search");
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     @Override
@@ -82,6 +88,9 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_car_search, container, false);
 
+        Log.d(log+"onCreate", "search");
+        CarPageGubun.type = "조회";
+
         mContext = container.getContext();
 
         Log.d(log+"saved_info_lifeCycle_", "onCreate_search");
@@ -89,7 +98,6 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         String savedPw = PreferenceManager.getString(mContext, "pw");
         String savedName = PreferenceManager.getString(mContext, "name");
         Log.d(log+"saved_info", savedId+", "+savedPw+", "+savedName);
-
 
         if (getArguments() != null) {
             loginId = getArguments().getString("login_id");
@@ -111,28 +119,26 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         companyNameEt = (EditText) v.findViewById(R.id.et_company_name);
         searchRecyclerView = v.findViewById(R.id.recycler_search_data);
         tvResultCnt = v.findViewById(R.id.tv_result_cnt);
-
         searchBtn = (RelativeLayout) v.findViewById(R.id.btn_search);
-        searchBtn.setOnClickListener(this);
-        searchBtn.setOnTouchListener(myTouchListener);
         resetBtn = (Button) v.findViewById(R.id.btn_reset);
-        resetBtn.setOnClickListener(this);
-        resetBtn.setOnTouchListener(myTouchListener);
         nextBtn = v.findViewById(R.id.btn_next);
-        nextBtn.setOnClickListener(this);
-        nextBtn.setOnTouchListener(myTouchListener);
         backBtn = v.findViewById(R.id.btn_back);
-        backBtn.setOnClickListener(this);
-        backBtn.setOnTouchListener(myTouchListener);
         emptyBtn = v.findViewById(R.id.btn_empty);
 
-
+        searchBtn.setOnClickListener(this);
+        searchBtn.setOnTouchListener(myTouchListener);
+        resetBtn.setOnClickListener(this);
+        resetBtn.setOnTouchListener(myTouchListener);
+        nextBtn.setOnClickListener(this);
+        nextBtn.setOnTouchListener(myTouchListener);
+        backBtn.setOnClickListener(this);
+        backBtn.setOnTouchListener(myTouchListener);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_reset:  //초기화버튼
+            case R.id.btn_reset:  //[초기화]버튼
                 MenuBuilder items;
                 searchRecyclerItems.clear();
                 tvResultCnt.setText(searchRecyclerItems.size()+"");
@@ -145,26 +151,25 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                 nextBtn.setVisibility(View.GONE);
                 emptyBtn.setVisibility(View.GONE);
                 break;
-            case R.id.btn_search: //조회버튼
+            case R.id.btn_search: //[조회]버튼
                 //서버에서 데이터 fetching
                 //조회 cnt
                 Log.d(log+"search_input_click", "차량: "+carNumEt.getText().toString()+", 운수사: "+companyNameEt.getText().toString()+", 모뎀: "+mdnEt.getText().toString());
                 offSet = 0;  //초기화
                 getCarInfoCnt();
                 break;
-            case R.id.btn_next:
+            case R.id.btn_next:  //[다음]버튼
                 Log.d(log+"totalItemCnt", totalItemCnt);
                 isClicked = true;
                 offSet += 10;
                 Log.d(log+"offSet_next",offSet+"");
                 getCarInfoList(offSet, 10, totalItemCnt);
                 break;
-            case R.id.btn_back:
+            case R.id.btn_back:  //[이전]버튼
                 offSet -= 10;
                 Log.d(log+"offSet_back",offSet+"");
                 getCarInfoList(offSet, 10, totalItemCnt);
                 break;
-
         }
     }
 

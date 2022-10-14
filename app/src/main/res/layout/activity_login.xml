@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.LoginActivity">
+    tools:context=".view.LoginActivity"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,19 +14,31 @@
 
 
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="140dp"
+                android:layout_centerHorizontal="true"
+                android:background="@mipmap/ic_launcher_logo_car"
+                android:layout_above="@+id/tv"/>
+
             <TextView
+                android:id="@+id/tv"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
                 android:text="차 량 등 록"
-                android:textColor="@color/main_background"
-                android:textSize="40dp"/>
-        </LinearLayout>
+                android:textColor="#1A4E87"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
 
 
         <LinearLayout
@@ -44,9 +57,11 @@
                 android:textColor="@color/main_background"
                 android:singleLine="true"
                 android:imeOptions="actionDone"
-                android:background="@drawable/layout_line_light_grey"
+                android:background="@drawable/edittext_click_type"
                 android:hint="아이디를 입력해주세요"
-                android:paddingLeft="20dp" />
+                android:paddingLeft="20dp"
+                android:nextFocusDown="@id/et_login_pw"
+                android:inputType="text"/>
             <EditText
                 android:id="@+id/et_login_pw"
                 android:layout_width="match_parent"
@@ -56,7 +71,7 @@
                 android:singleLine="true"
                 android:imeOptions="actionDone"
                 android:password="true"
-                android:background="@drawable/layout_line_light_grey"
+                android:background="@drawable/edittext_click_type"
                 android:hint="비밀번호를 입력해주세요"
                 android:paddingLeft="20dp"
                 android:layout_marginTop="15dp"/>
