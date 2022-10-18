@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -34,7 +33,6 @@ import com.thisisnotyours.vehicleregistrationapp.item.CarPageGubun;
 import com.thisisnotyours.vehicleregistrationapp.manager.PreferenceManager;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitAPI;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitHelper;
-import com.thisisnotyours.vehicleregistrationapp.manager.MyTouchListener;
 import com.thisisnotyours.vehicleregistrationapp.vo.CarInfoListData;
 
 import java.text.SimpleDateFormat;
@@ -49,6 +47,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class Car_Search_Fragment extends Fragment implements View.OnClickListener, IOnBackPressed {
+    private MainActivity mainActivity = new MainActivity();
     private String log = "log_", loginId="";
     private Context mContext;
     private EditText carNumEt, companyNameEt, mdnEt;
@@ -63,7 +62,6 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
     private SharedPreferences pref;
     private int offSet = 0, limit = 10;
     private boolean isClicked = false;
-    private MyTouchListener myTouchListener = new MyTouchListener();
 
 
     public Car_Search_Fragment() {
@@ -90,6 +88,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
 
         Log.d(log+"onCreate", "search");
         CarPageGubun.type = "조회";
+        mainActivity.tabClickCheck();
 
         mContext = container.getContext();
 
@@ -125,14 +124,25 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         backBtn = v.findViewById(R.id.btn_back);
         emptyBtn = v.findViewById(R.id.btn_empty);
 
+        controlEditorAction(carNumEt);
+        controlEditorAction(companyNameEt);
+        controlEditorAction(mdnEt);
+
         searchBtn.setOnClickListener(this);
-        searchBtn.setOnTouchListener(myTouchListener);
         resetBtn.setOnClickListener(this);
-        resetBtn.setOnTouchListener(myTouchListener);
         nextBtn.setOnClickListener(this);
-        nextBtn.setOnTouchListener(myTouchListener);
         backBtn.setOnClickListener(this);
-        backBtn.setOnTouchListener(myTouchListener);
+    }
+
+    private void controlEditorAction(EditText editText) {
+        editText.setOnEditorActionListener((textView, i, keyEvent) -> {
+            boolean handled = false;
+            if (i == EditorInfo.IME_ACTION_DONE) {
+                handled = true;
+                searchBtn.performClick();
+            }
+            return handled;
+        });
     }
 
     @Override

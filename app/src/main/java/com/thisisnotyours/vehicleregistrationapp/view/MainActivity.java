@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent i = getIntent();
         loginId = i.getStringExtra("login_id");
         Log.d(log+"loginId_main",loginId);
+//        loginId = "test";
 
         //처음에 나오는 차량조회 화면
         Fragment fragment = null;
@@ -73,18 +74,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void tabClickCheck() {
         if (!CarPageGubun.type.equals("")) {
-            if (CarPageGubun.type.equals("등록")) {
-                //데이터의 개수를 확인하고 - null 아니면 do nothing
-//                if ("if ketdatas not null") {
-//                    search_car.setClickable(false);
-//                }
-                Toast.makeText(mContext, "???", Toast.LENGTH_SHORT).show();
-                search_car.setClickable(false);
+            if (CarPageGubun.type.equals("조회") || CarPageGubun.type.equals("등록")) {
+                register_car.setText("차량등록");
+            }else if (CarPageGubun.type.equals("수정")) {
+                register_car.setText("차량수정");
             }
         }else {
             //do nothing
             //this is for default
         }
+//        return;
     }
 
 
@@ -93,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onBackPressed() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_change);
         if (fragment != null) {
-            if (CarPageGubun.type.equals("등록")) {
+            if (CarPageGubun.type.equals("등록") || CarPageGubun.type.equals("수정")) {
                 ((IOnBackPressed) fragment).onBackPressed();
             }else {
                 Log.d(log+"back","111");
@@ -137,35 +136,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Fragment fragment = null;
 
         switch (v.getId()) {
-            case R.id.search_car: //차량조회
+            case R.id.search_car: //[차량조회] 탭버튼
+
                 if (!CarPageGubun.type.equals("")) {
-                    if (CarPageGubun.type.equals("등록")) {
+                    //"등록" 상태에서 조회누를 때
+                    if (CarPageGubun.type.equals("등록") || CarPageGubun.type.equals("수정")) {
                         //데이터의 개수를 확인하고 - null 아니면 do nothing
                         //alertdialog
-                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                        builder.setTitle("등록을 취소하시겠습니까?");
-                        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //차량조회 화면으로 이동
-                                Fragment fragment_1 = null;
-                                changeFragment(fragment_1);
-                                Toast.makeText(mContext, "등록 취소", Toast.LENGTH_SHORT).show();
-                            }
-                        }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //do nothing
-                                //이동안함
-                            }
-                        });
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
+                        setCancelDialog(CarPageGubun.type);
                     }else {
                         //"조회" 상태에서 조회누를 때
                         //do nothing
                     }
                 }else {
+                    //처음 시작할 때 ->  CarPageGubun.type 에 값이 없을 때
                     //do nothing
                     //this is for default
                     CarPageGubun.type = "조회";
@@ -176,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     register_car.setBackgroundResource(R.drawable.btn_gradi_white);
                 }
                 break;
-            case R.id.register_car: //차량등록
+            case R.id.register_car: //[차량등록] 탭버튼
                 CarPageGubun.type = "등록";
                 fragment = new Car_Registration_Fragment();
                 register_car.setTextColor(getResources().getColor(R.color.blue));
@@ -194,7 +178,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void changeFragment(Fragment fragment) {
+    private void setCancelDialog(String gubun) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(gubun+"을 취소하시겠습니까?");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //차량조회 화면으로 이동
+                Fragment fragment_1 = null;
+                changeFragment(fragment_1);
+                Toast.makeText(mContext, gubun+" 취소", Toast.LENGTH_SHORT).show();
+            }
+        }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //do nothing
+                //이동안함
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void changeFragment(Fragment fragment) { //차량조회//화면으로 이동
         fragment = null;
         fragment = new Car_Search_Fragment();
         FragmentManager manager = getSupportFragmentManager();
@@ -206,6 +212,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MainActivity.register_car.setTextColor(getResources().getColor(R.color.light_grey));
         MainActivity.register_car.setBackgroundResource(R.drawable.btn_gradi_white);
     }
+
+
 
 
 

@@ -30,6 +30,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -60,6 +61,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class Car_Registration_Fragment extends Fragment implements View.OnClickListener, IOnBackPressed {
+    private MainActivity mainActivity = new MainActivity();
     private MyTouchListener myTouchListener = new MyTouchListener();
     private boolean clickEditText = true;
     private String editTextType="";
@@ -99,6 +101,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             , etStoreId
             , etUnitNum
             , etUnitSn;
+    private LinearLayout car_type_layout;
     private Button btnCarTypePersonal, btnCarTypeCompany, btnRegister, btnRegisterCancel;
     private ImageView ivDropDown;
     private TextView tvViewMoreDriverId, tvBarcodeScan;
@@ -132,7 +135,6 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         final View rootView = inflater.inflate(R.layout.fragment_car_registration, container, false);
 
         Log.d(log+"onCreate", "register");
-        CarPageGubun.type = "등록";
 
         mContext = container.getContext();
 
@@ -149,6 +151,10 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
         //전달받은 데이터 체크
         if (getArguments() != null) {
+            CarPageGubun.type = "수정";
+
+            mainActivity.tabClickCheck();
+
             btnType = "수정";
 
 //            strLoginId = getArguments().getString("login_id");
@@ -204,6 +210,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             etUnitSn.setText(strUnitSn);
 
         }else {
+            CarPageGubun.type = "등록";
             btnType = "등록";
             etCompanyName.requestFocus();
 //            etCompanyName.setBackgroundResource(R.drawable.edit_box_selected);
@@ -460,10 +467,9 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         spinnerFareId = v.findViewById(R.id.spinner_fare_id);
         spinnerCityId = v.findViewById(R.id.spinner_city_id);
         spinnerFirmwareId = v.findViewById(R.id.spinner_firmware_id);
-
         layoutDriverId2 = v.findViewById(R.id.layout_driver_id2);
         layoutDriverId3 = v.findViewById(R.id.layout_driver_id3);
-
+        car_type_layout = v.findViewById(R.id.car_type_layout);
         btnCarTypePersonal = v.findViewById(R.id.btn_car_type_personal);
         btnCarTypeCompany = v.findViewById(R.id.btn_car_type_company);
         ivDropDown = v.findViewById(R.id.iv_drop_down);
@@ -479,20 +485,17 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         btnRegister.setOnClickListener(this);
         btnRegisterCancel.setOnClickListener(this);
         tvBarcodeScan.setOnClickListener(this);
-        btnRegister.setOnTouchListener(myTouchListener);
-        btnRegisterCancel.setOnTouchListener(myTouchListener);
     }
 
+    //키패드 이벤트 컨트롤하기
     public void controlEditorAction(EditText currentEditText, EditText nextEditText) {
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         currentEditText.setOnEditorActionListener((textView, i, keyEvent) -> {
             boolean handled = false;
-            if (i == EditorInfo.IME_ACTION_DONE) {
+            if (i == EditorInfo.IME_ACTION_DONE) { //[완료]버튼
                 handled = true;
                 currentEditText.clearFocus();
-//                currentEditText.setBackgroundResource(R.drawable.edit_box);
                 nextEditText.requestFocus();
-//                nextEditText.setBackgroundResource(R.drawable.edit_box_selected);
             }
             return handled;
         });
@@ -515,6 +518,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         thread.start();
     }
 
+    //키패드 올리기
     private void upKeyboard(EditText editText) {
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
@@ -591,7 +595,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                 MainActivity.search_car.setBackgroundResource(R.drawable.btn_gradi_white_line);
                 MainActivity.register_car.setTextColor(getResources().getColor(R.color.light_grey));
                 MainActivity.register_car.setBackgroundResource(R.drawable.btn_gradi_white);
-                Toast.makeText(mContext, "등록 취소", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, btnType+" 취소", Toast.LENGTH_SHORT).show();
             }
         }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
             @Override

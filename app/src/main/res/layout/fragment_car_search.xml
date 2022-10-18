@@ -163,14 +163,14 @@
                         android:textSize="20dp"
                         android:textStyle="bold"
                         android:textColor="@color/main_background"
-                        android:background="@drawable/btn_reset_box"
+                        android:background="@drawable/reset_button_click_effect"
                         android:layout_marginRight="10dp"/>
                     <RelativeLayout
                         android:id="@+id/btn_search"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:background="@drawable/btn_search_box">
+                        android:background="@drawable/search_button_click_effect">
                         <ImageView
                             android:layout_width="30dp"
                             android:layout_height="30dp"
@@ -256,7 +256,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="10dp"
                             android:layout_weight="1"
-                            android:background="@drawable/btn_reset_box"
+                            android:background="@drawable/reset_button_click_effect"
                             android:text="이전"
                             android:textSize="18dp"
                             android:textStyle="bold"
@@ -276,7 +276,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@drawable/btn_search_box"
+                            android:background="@drawable/search_button_click_effect"
                             android:text="다음"
                             android:textSize="18dp"
                             android:textStyle="bold"

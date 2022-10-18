@@ -1,5 +1,9 @@
 package com.thisisnotyours.vehicleregistrationapp.retrofit;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okio.Timeout;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -13,10 +17,18 @@ public class RetrofitHelper {
 
     public static Retrofit getRetrofitInstance() {
 
-        String IP_BASE_URL = "http://43.200.135.146:8080/";
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(200, TimeUnit.SECONDS)
+                .readTimeout(200, TimeUnit.SECONDS)
+                .writeTimeout(200, TimeUnit.SECONDS)
+                .build();
+
+//        String IP_BASE_URL = "http://10.36.90.179:8080/";
+        String IP_BASE_URL = "http://49.50.174.192:8080/";
 
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.baseUrl(IP_BASE_URL);
+//        builder.client(okHttpClient);
         builder.addConverterFactory(ScalarsConverterFactory.create()); //json 못받아올때/ 파싱 못받아올때
         builder.addConverterFactory(GsonConverterFactory.create()); //retrofit 이 읽어온 json 데이터를 GSON 을 이용해 파싱/분석 하기위한 설정
         Retrofit retrofit = builder.build();

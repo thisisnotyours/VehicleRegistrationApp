@@ -9,10 +9,14 @@
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/btn_round_grey.xml" value="0.294" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/btn_round_skyblue.xml" value="0.294" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/btn_search_box_clicked.xml" value="0.286" />
+        <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/button_click_effect.xml" value="0.2965" />
+        <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/cancel_button_click_effect.xml" value="0.2965" />
+        <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/confirm_button_click_effect.xml" value="0.2965" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/edit_box_selected.xml" value="0.285" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/edittext_click_type.xml" value="0.265" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/ic_baseline_expand_circle_down_blue_24.xml" value="0.2865" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/ic_launcher_logo_background.xml" value="0.1835" />
+        <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/search_button_click_effect.xml" value="0.2965" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/shape_clicked.xml" value="0.265" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/shape_unclicked.xml" value="0.265" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/layout/activity_barcode_scan.xml" value="0.23489583333333333" />
@@ -20,7 +24,7 @@
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/layout/activity_main.xml" value="0.29010416666666666" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/layout/activity_main2.xml" value="0.29010416666666666" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/layout/car_info_recycler_item.xml" value="0.328125" />
-        <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/layout/fragment_car_registration.xml" value="0.23489583333333333" />
+        <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/layout/fragment_car_registration.xml" value="0.25" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/layout/fragment_car_search.xml" value="0.328125" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/layout/fragment_car_search_2.xml" value="0.3026041666666667" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/layout/spinner_text_layout.xml" value="0.23177083333333334" />

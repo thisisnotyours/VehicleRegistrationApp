@@ -211,8 +211,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void getLoginInfoData() {
         if (id_et.getText().toString().equals("") || pw_et.getText().toString().equals("")) {
             Toast.makeText(mContext, "아이디와 비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
-
         }else {
+            Log.d(log+"loginEdittExt_3", id_et.getText().toString()+", "+pw_et.getText().toString());
             Retrofit retrofit = RetrofitHelper.getRetrofitInstance();
             RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
             Call<CarInfoListData> call = retrofitAPI.getLoginData(id_et.getText().toString(),pw_et.getText().toString());
@@ -264,6 +264,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onFailure(Call<CarInfoListData> call, Throwable t) {
                     Toast.makeText(LoginActivity.this, "다시 시도해주세요", Toast.LENGTH_SHORT).show();
+                    Log.d(log+"onFailure", call.toString()+",  "+t.toString()+",  "+t.getMessage());
                 }
             });
         }
