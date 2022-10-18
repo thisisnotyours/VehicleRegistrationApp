@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -149,7 +151,8 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
     }
 
     class VH extends RecyclerView.ViewHolder {
-        ImageView dropDownBtn;
+//        ImageView dropDownBtn;
+        CheckBox dropDownBtn;
         LinearLayout dropDownLayout;
         TextView tvCompanyName
                 , tvCarType
@@ -184,22 +187,20 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
             tvUnitNum = itemView.findViewById(R.id.tv_unit_num); //단말기번호
             tvUnitSn = itemView.findViewById(R.id.tv_unit_sn);  //생선번호/시리얼번호
 
-            dropDownBtn.setOnClickListener(new View.OnClickListener() {
+            dropDownBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
-                public void onClick(View v) {
-                    if (isClicked == true) {
+                public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                    if (isChecked) {
                         dropDownLayout.setVisibility(View.VISIBLE);
-                        dropDownBtn.setBackgroundResource(R.drawable.ic_baseline_expand_circle_down_blue_24);
                         dropDownBtn.setRotation(180);
-                        isClicked = false;
                     }else {
                         dropDownLayout.setVisibility(View.GONE);
-                        dropDownBtn.setBackgroundResource(R.drawable.ic_baseline_expand_circle_down_24);
                         dropDownBtn.setRotation(360);
-                        isClicked = true;
                     }
                 }
             });
+
+
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override

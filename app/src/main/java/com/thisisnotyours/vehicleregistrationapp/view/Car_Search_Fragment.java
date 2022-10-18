@@ -341,6 +341,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
     }
 
 
+    //조회리스트 리사이클러뷰
     private void setCarInfoListRecyclerItem(CarInfoListData item, int i, String itemCnt) {
         searchRecyclerItems.add(i, new CarInfoItems(item.getCarInfoVOS().get(i).getCompany_name()
                 , item.getCarInfoVOS().get(i).getCar_regnum()
