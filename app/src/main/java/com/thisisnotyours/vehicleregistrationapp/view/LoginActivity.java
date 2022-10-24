@@ -40,7 +40,7 @@ import retrofit2.Retrofit;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private BackPressedKeyHandler backPressedKeyHandler = new BackPressedKeyHandler(this);
     private Context mContext;
-    private String log="log_", savedId="", savedPw="", savedName="";
+    private String log="log_", savedId="", savedPw="", savedName="", savedAuto="false";
     private EditText id_et, pw_et;
     private CheckBox checkBox;
     private Button loginBtn;
@@ -66,20 +66,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
         //저장된 로그인정보 있는지 확인
+        savedAuto = PreferenceManager.getString(mContext, "auto");
         savedId = PreferenceManager.getString(mContext, "id");
         savedPw = PreferenceManager.getString(mContext, "pw");
         savedName = PreferenceManager.getString(mContext, "name");
         Log.d(log+"saved_info", savedId+", "+savedPw+", "+savedName);
 
 
-        if (savedId.equals("") && savedPw.equals("")) {
+        if (savedAuto.equals("false")) {
             Log.d(log+"login","got no login information");
             //저장된 로그인정보 없으면 - do nothing
             checkBox.setChecked(false);
             id_et.requestFocus();
-//            id_et.setBackgroundResource(R.drawable.edit_box_selected);
             bringKeyboard(1650);
-        }else {
+        }else if (savedAuto.equals("true")) {
             Log.d(log+"login","login info existed. auto login");
             //있으면 로그인버튼 자동클릭
             id_et.setText(savedId);
@@ -95,9 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (i == EditorInfo.IME_ACTION_DONE) {
                 handled = true;
                 id_et.clearFocus();
-//                id_et.setBackgroundResource(R.drawable.edit_box);
                 pw_et.requestFocus();
-//                pw_et.setBackgroundResource(R.drawable.edit_box_selected);
             }
             return handled;
         });
@@ -108,7 +106,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 handled = true;
                 pw_et.clearFocus();
                 downKeyboard(pw_et);
-//                pw_et.setBackgroundResource(R.drawable.edit_box);
             }
             return handled;
         });
@@ -140,7 +137,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-
+    //뒤로가기 버튼
     @Override
     public void onBackPressed() {
         backPressedKeyHandler.onBackPressed();
@@ -159,7 +156,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         super.onStart();
         Log.d(log+"onStart","onStart");
-//        downKeyboardForced(id_et);
         if (id_et.hasFocus() == true) {
             Log.d(log+"which_editText","ID");
             downKeyboardForced(id_et);
@@ -169,6 +165,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+
     public void bringKeyboard(long speed) {
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -176,7 +173,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 TimerTask task = new TimerTask() {
                     @Override
                     public void run() {
-                        upKeyboard(id_et);
+                        upKeyboard(id_et);  //키보드 올리기
                     }
                 };
                 Timer timer = new Timer();
@@ -216,28 +213,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Retrofit retrofit = RetrofitHelper.getRetrofitInstance();
             RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
             Call<CarInfoListData> call = retrofitAPI.getLoginData(id_et.getText().toString(),pw_et.getText().toString());
-
             call.enqueue(new Callback<CarInfoListData>() {
                 @Override
                 public void onResponse(Call<CarInfoListData> call, Response<CarInfoListData> response) {
                     Log.d(log+"response", response.body().toString());
                     Log.d(log+"response", response.toString());
-
                     if (response.isSuccessful()) {
                         try {
                             CarInfoListData str = response.body();
                             Log.d(log+"response_str", str.toString());
-
                             if (response.body().getUserInfoVOS().get(0).getUse_yn().equals("Y")) {
                                 if (autoClicked == true) {
-                                    PreferenceManager.setString(mContext, "id", str.getUserInfoVOS().get(0).getId());
-                                    PreferenceManager.setString(mContext, "pw", str.getUserInfoVOS().get(0).getPw());
-                                    PreferenceManager.setString(mContext, "name", str.getUserInfoVOS().get(0).getName());
+                                    PreferenceManager.setString(mContext, "auto", "true");
                                 }else {
-                                    PreferenceManager.setString(mContext, "id", "");
-                                    PreferenceManager.setString(mContext, "pw", "");
-                                    PreferenceManager.setString(mContext, "name", "");
+                                    PreferenceManager.setString(mContext, "auto", "false");
                                 }
+                                PreferenceManager.setString(mContext, "id", str.getUserInfoVOS().get(0).getId());
+                                PreferenceManager.setString(mContext, "pw", str.getUserInfoVOS().get(0).getPw());
+                                PreferenceManager.setString(mContext, "name", str.getUserInfoVOS().get(0).getName());
                                 Intent i = new Intent(mContext, MainActivity.class);
                                 i.putExtra("login_id", str.getUserInfoVOS().get(0).getId());
                                 startActivity(i);

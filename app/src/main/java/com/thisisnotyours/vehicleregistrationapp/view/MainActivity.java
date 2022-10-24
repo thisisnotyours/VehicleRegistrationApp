@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent i = getIntent();
         loginId = i.getStringExtra("login_id");
         Log.d(log+"loginId_main",loginId);
-//        loginId = "test";
 
         //처음에 나오는 차량조회 화면
         Fragment fragment = null;

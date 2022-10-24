@@ -792,12 +792,15 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             transaction.replace(R.id.frame_change, fragment);
             transaction.commit();
         }else if (result.equals("N")) {
-            Toast.makeText(mContext, "서버오류", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "서버오류", Toast.LENGTH_SHORT).show();
         }else {
             String responseVal = "";
             String str = " 입력해주세요";
 
             switch (result) {
+                case "reg_id,00":
+                    responseVal = "로그인 아이디를";
+                    break;
                 case "update_id,00":
                     responseVal = "로그인 아이디를";
                     break;

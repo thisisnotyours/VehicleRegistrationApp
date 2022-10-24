@@ -136,14 +136,6 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
         }
     }
 
-//    public Object itemNullCheck(Object obj)  {
-//
-//        CarInfoItems item = o
-//
-//        Object item;
-//
-//        return item;
-//    }
 
     @Override
     public int getItemCount() {

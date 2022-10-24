@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/btn_cancel_box.xml" value="0.294" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/btn_gradi_white.xml" value="0.294" />
+        <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/btn_gradi_white_line.xml" value="0.2755" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/btn_reset_box_clicked.xml" value="0.286" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/btn_round_grey.xml" value="0.294" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/btn_round_skyblue.xml" value="0.294" />
@@ -21,6 +22,7 @@
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/search_button_click_effect.xml" value="0.2965" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/shape_clicked.xml" value="0.265" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/shape_unclicked.xml" value="0.265" />
+        <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/drawable/tab_button_click_effect.xml" value="0.2755" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/layout/activity_barcode_scan.xml" value="0.23489583333333333" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="..\:/Users/Interpass/AndroidStudioProjects/VehicleRegistrationApp/app/src/main/res/layout/activity_main.xml" value="0.29010416666666666" />
