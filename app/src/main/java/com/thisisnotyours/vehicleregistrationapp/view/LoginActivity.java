@@ -253,7 +253,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     }
                 }
-
+///////////////////////////////
                 @Override
                 public void onFailure(Call<CarInfoListData> call, Throwable t) {
                     Toast.makeText(LoginActivity.this, "다시 시도해주세요", Toast.LENGTH_SHORT).show();
