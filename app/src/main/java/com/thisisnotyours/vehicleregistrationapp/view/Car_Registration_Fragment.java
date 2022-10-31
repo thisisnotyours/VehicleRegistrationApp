@@ -142,7 +142,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         strLoginId = PreferenceManager.getString(mContext, "id");
         String savedPw = PreferenceManager.getString(mContext, "pw");
         String savedName = PreferenceManager.getString(mContext, "name");
-        Log.d(log+"saved_info", strLoginId+", "+savedPw+", "+savedName);
+        Log.d(log+"login_saved_info", strLoginId+", "+savedPw+", "+savedName);
 
 
         //뷰찾기 define id's
@@ -783,7 +783,6 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     void checkResultData(String result, String btnType) {
         if (result.equals("Y")) {
             Toast.makeText(mContext, btnType+"을 완료하였습니다", Toast.LENGTH_SHORT).show();
-
             //차량조회 화면으로 이동
             Fragment fragment = null;
             fragment = new Car_Search_Fragment();
@@ -799,10 +798,12 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
             switch (result) {
                 case "reg_id,00":
-                    responseVal = "로그인 아이디를";
+                    responseVal = "로그인 정보가";
+                    str = " 없습니다.";
                     break;
                 case "update_id,00":
-                    responseVal = "로그인 아이디를";
+                    responseVal = "로그인 정보가";
+                    str = " 없습니다.";
                     break;
                 case "company_name,00":
                     responseVal = "운수사이름을";
@@ -852,6 +853,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                     break;
             }
             Toast.makeText(mContext, responseVal + str, Toast.LENGTH_SHORT).show();
+            Log.d(log+"서버오류", responseVal);
         }
     }
 

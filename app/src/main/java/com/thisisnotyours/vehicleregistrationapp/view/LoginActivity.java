@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -19,6 +21,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thisisnotyours.vehicleregistrationapp.R;
@@ -42,6 +45,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Context mContext;
     private String log="log_", savedId="", savedPw="", savedName="", savedAuto="false";
     private EditText id_et, pw_et;
+    private TextView tvAppVersion;
     private CheckBox checkBox;
     private Button loginBtn;
     private SharedPreferences pref;
@@ -49,6 +53,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private boolean autoClicked = false;
     private PreferenceManager preferenceManager = new PreferenceManager();
     private boolean idKeyboardOn = false, pwKeyboardOn = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         pw_et = findViewById(R.id.et_login_pw); //비밀번호
         checkBox = findViewById(R.id.checkbox); //자동로그인 체크박스
         loginBtn = findViewById(R.id.btn_login);
+        tvAppVersion = findViewById(R.id.tv_app_version);  //앱버전
+        String version = getVersionInfo(getApplicationContext());
+        tvAppVersion.setText("v"+version);
 
         loginBtn.setOnClickListener(this);
 
@@ -126,6 +134,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 
     }//onCreate..
+
+    public String getVersionInfo(Context context) {
+        String version = null;
+        try {
+            PackageInfo i = context.getPackageManager().getPackageInfo(context.getPackageName(),0);
+            version = i.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return version;
+    }
 
     //앱 비정상종료 감지 handler
     class ExceptionHandler implements Thread.UncaughtExceptionHandler {
