@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +46,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Context mContext;
     private String log="log_", savedId="", savedPw="", savedName="", savedAuto="false";
     private EditText id_et, pw_et;
-    private String idValue="", pwValue="";
+    private LinearLayout refresh_layout;
     private TextView tvAppVersion;
     private CheckBox checkBox;
     private Button loginBtn;
@@ -69,10 +70,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginBtn = findViewById(R.id.btn_login);
         tvAppVersion = findViewById(R.id.tv_app_version);  //앱버전
         String version = getVersionInfo(getApplicationContext());
-        tvAppVersion.setText("v"+version);
+        tvAppVersion.setText("앱 버전(v"+version+")");
 
         loginBtn.setOnClickListener(this);
 
+        refresh_layout = findViewById(R.id.refresh_layout);
+        refresh_layout.setOnClickListener(this);
 
         //저장된 로그인정보 있는지 확인
         savedAuto = PreferenceManager.getString(mContext, "auto");
@@ -168,6 +171,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (view.getId()) {
             case R.id.btn_login:  //[로그인]버튼
                 getLoginInfoData();   //로그인 정보
+                break;
+            case R.id.refresh_layout:  //로그인 아이디, 비번 새로고침
+                id_et.setText("");
+                pw_et.setText("");
                 break;
         }
     }
