@@ -23,13 +23,14 @@ import com.thisisnotyours.vehicleregistrationapp.R;
 import com.thisisnotyours.vehicleregistrationapp.handler.BackPressedKeyHandler;
 import com.thisisnotyours.vehicleregistrationapp.handler.IOnBackPressed;
 import com.thisisnotyours.vehicleregistrationapp.item.CarPageGubun;
+import com.thisisnotyours.vehicleregistrationapp.manager.PreferenceManager;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     String log = "log_";
     private Context mContext;
     private RecyclerView recycler;
-    public static TextView search_car, register_car;
+    public static TextView search_car, register_car, logout;
     private BackPressedKeyHandler backPressedKeyHandler = new BackPressedKeyHandler(this);
     private String fragType = "", loginId="";
     public String barcodeResult="";
@@ -45,8 +46,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         register_car = (TextView) findViewById(R.id.register_car);
         search_car = (TextView) findViewById(R.id.search_car);
+        logout = (TextView) findViewById(R.id.tv_logout);
         register_car.setOnClickListener(this);
         search_car.setOnClickListener(this);
+        logout.setOnClickListener(this);
 
         Intent i = getIntent();
         loginId = i.getStringExtra("login_id");
@@ -135,6 +138,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Fragment fragment = null;
 
         switch (v.getId()) {
+            case R.id.tv_logout:
+                setCancelDialog("로그아웃");
+                break;
             case R.id.search_car: //[차량조회] 탭버튼
 
                 if (!CarPageGubun.type.equals("")) {
@@ -179,24 +185,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setCancelDialog(String gubun) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(gubun+"을 취소하시겠습니까?");
-        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //차량조회 화면으로 이동
-                Fragment fragment_1 = null;
-                changeFragment(fragment_1);
-                Toast.makeText(mContext, gubun+" 취소", Toast.LENGTH_SHORT).show();
-            }
-        }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //do nothing
-                //이동안함
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        if (gubun.equals("등록") || gubun.equals("수정")) {
+//            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle(gubun+"을 취소하시겠습니까?");
+            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //차량조회 화면으로 이동
+                    Fragment fragment_1 = null;
+                    changeFragment(fragment_1);
+                    Toast.makeText(mContext, gubun+" 취소", Toast.LENGTH_SHORT).show();
+                }
+            }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //do nothing
+                    //이동안함
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }else if (gubun.equals("로그아웃")) {
+            builder.setTitle("로그아웃을 하시겠습니까?");
+            builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //preference 에서 로그인정보 초기화
+                    PreferenceManager.setString(mContext, "auto","false");
+                    PreferenceManager.setString(mContext, "id", "");
+                    PreferenceManager.setString(mContext, "pw","");
+                    //로그인화면으로 이동하며 clear task
+                    Intent intent = new Intent(mContext, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //do nothing
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }else {
+            //do nothing
+        }
+
+
     }
 
     private void changeFragment(Fragment fragment) { //차량조회//화면으로 이동
