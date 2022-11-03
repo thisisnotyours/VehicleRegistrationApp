@@ -157,7 +157,6 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
             btnType = "수정";
 
-//            strLoginId = getArguments().getString("login_id");
             Log.d(log+"loginId_main_register_1", strLoginId);
             strCompanyName = getArguments().getString("company_name");  //운수사/개인이름
             strCarRegnum = getArguments().getString("car_regnum");  //사업자번호
@@ -174,6 +173,18 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             strCityId = getArguments().getString("city_id");   //시경계
             strFirmwareId = getArguments().getString("firmware_id");   //벤사
             strSpeedFactor = getArguments().getString("speed_factor"); //감속률
+
+            try {
+                if (!strFareId.equals("")||strFareId!=null) {
+                    Log.d(log+"pos_get_fare", strFareId);
+                }
+                if (!strCityId.equals("")||strCityId!=null) {
+                    Log.d(log+"pos_get_city", strCityId);
+                }
+                if (!strFirmwareId.equals("")||strFirmwareId!=null) {
+                    Log.d(log+"pos_get_firmware", strFirmwareId);
+                }
+            }catch (Exception e) {e.printStackTrace();}
 
             strStoreId = getArguments().getString("store_id");  //가맹점 ID
             strUnitNum = getArguments().getString("unit_num");  //단말기번호
@@ -284,7 +295,8 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                             //등록인지 수정값인지 확인
                             if (strFareId != null) {  //앞에서 넘어온 요금값
                                 if (!strFareId.equals("")) {  //앞에서 넘어온 요금값
-                                    if (strFareId.equals(item.getFareTypeVOS().get(i).getFare_name())) {  //앞에서 넘어온 요금값 position 확인
+//                                    if (strFareId.equals(item.getFareTypeVOS().get(i).getFare_name())) {  //앞에서 넘어온 요금값 position 확인
+                                    if (strFareId.equals(item.getFareTypeVOS().get(i).getFare_id())) {
                                         //position set
                                         fareId_idx = i;
                                     }
@@ -293,8 +305,6 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                             fareIdArr.add(item.getFareTypeVOS().get(i).getFare_name());
                         }
 
-                        Log.d(log+"fareIdArr", fareIdArr.toString());
-
                         //요금 스피너에 데이터 표출
                         fareIdAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, fareIdArr);
                         spinnerFareId.setAdapter(fareIdAdapter);
@@ -302,8 +312,18 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                         spinnerFareId.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+//                                strFareId = (pos+1)+""; //값넣기
+                                String selectedFareName = fareIdArr.get(pos);  //선택한 값
 
-                                strFareId = (pos+1)+""; //값넣기
+                                for (int v=0; v<item.getFareTypeVOS().size(); v++) {
+                                    if (item.getFareTypeVOS().get(v).getFare_name() == selectedFareName) {
+                                        strFareId = item.getFareTypeVOS().get(v).getFare_id();  //fare_id 저장
+                                        fareId_idx = v; //pos 자리값
+                                        Log.d(log+"fare_val_name", selectedFareName);
+                                        Log.d(log+"fare_val_total", item.getFareTypeVOS().get(v).getFare_id()+"-> "+item.getFareTypeVOS().get(v).getFare_name());
+                                        Log.d(log+"fare_val_final", strFareId+"-> arr Pos:"+v);
+                                    }
+                                }
                             }
 
                             @Override
@@ -337,10 +357,11 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                         cityIdArr = new ArrayList<>();
 
                         for (int t=0; t<item.getFareTypeVOS().size(); t++) {
+
                             //등록인지 수정값인지 확인
                             if (strCityId != null) {
                                 if (!strCityId.equals("")) {
-                                    if (strCityId.equals(item.getFareTypeVOS().get(t).getCity_name())) {
+                                    if (strCityId.equals(item.getFareTypeVOS().get(t).getCity_id())) {
                                         cityId_idx = t;
                                     }
                                 }
@@ -355,7 +376,20 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                         spinnerCityId.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-                                strCityId = (pos+1)+"";  //값넣기
+//                                strCityId = (pos)+"";  //값넣기
+                                strCityId = "";  //spinner 자리수가 아니라 city_id 를 저장해야함.
+
+                                String selectedCityName = cityIdArr.get(pos); //선택한 값
+
+                                for (int p=0; p<item.getFareTypeVOS().size(); p++) {
+                                    if (item.getFareTypeVOS().get(p).getCity_name() == selectedCityName) {
+                                        strCityId = item.getFareTypeVOS().get(p).getCity_id();  //pos 자리값이 아니라 city_id 저장
+                                        cityId_idx = p;  //pos 자리값 저장
+                                        Log.d(log+"selected_val_id", selectedCityName);
+                                        Log.d(log+"selected_val_total", item.getFareTypeVOS().get(p).getCity_id()+"-> "+ item.getFareTypeVOS().get(p).getCity_name());
+                                        Log.d(log+"selected_val_final", strCityId+"->  arr Pos:"+p);
+                                    }
+                                }
                             }
 
                             @Override
@@ -398,15 +432,18 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                             //등록인지 수정값인지 확인
                             if (strFirmwareId != null) {
                                 if (!strFirmwareId.equals("")) {
-                                    if (strFirmwareId.equals(item.getFareTypeVOS().get(y).getFirmware_name())) {
-                                        Log.d(log+"strFirmwareId_find", item.getFareTypeVOS().get(y).getFirmware_id()+": "+item.getFareTypeVOS().get(y).getFirmware_name());
+                                    Log.d(log+"recycler_firmware_2", strFirmwareId);  //firmware_id 는 pos 자리값이 아니라 id 값임.
+
+//                                    if (strFirmwareId.equals(item.getFareTypeVOS().get(y).getFirmware_name())) {
+                                    if (String.valueOf(strFirmwareId).equals(item.getFareTypeVOS().get(y).getFirmware_id())) {
+                                        Log.d(log+"recycler_firmware_find", item.getFareTypeVOS().get(y).getFirmware_id()+": "+item.getFareTypeVOS().get(y).getFirmware_name());
                                         firmwareId_idx = y;
                                     }
                                 }
                             }
                             firmwareIdArr.add(item.getFareTypeVOS().get(y).getFirmware_name());
                         }
-                        Log.d(log+"firmwareIdArr", firmwareIdArr.toString());
+
                         //벤사 스피너 데이터 표출
                         firmwareIdAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, firmwareIdArr);
                         spinnerFirmwareId.setAdapter(firmwareIdAdapter);
@@ -414,8 +451,19 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                         spinnerFirmwareId.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+//                                strFirmwareId = (pos)+""; //값넣기
+                                Log.d(log+"recycler_firmware_3", strFirmwareId);
+                                String selectedFirmwareName = firmwareIdArr.get(pos);  //선택한 값
 
-                                strFirmwareId = (pos+1)+""; //값넣기
+                                for (int r=0; r<item.getFareTypeVOS().size(); r++) {
+                                    if (item.getFareTypeVOS().get(r).getFirmware_name() == selectedFirmwareName) {
+                                        strFirmwareId = item.getFareTypeVOS().get(r).getFirmware_id();  //firmware id 저장
+                                        firmwareId_idx = r; //pos 자리값 저장
+                                        Log.d(log+"firmware_val_name", selectedFirmwareName);
+                                        Log.d(log+"firmware_val_total", item.getFareTypeVOS().get(r).getFirmware_id()+"-> "+item.getFareTypeVOS().get(r).getFirmware_name());
+                                        Log.d(log+"firmware_val_final", strFirmwareId+"-> arr Pos:"+r);
+                                    }
+                                }
                             }
 
                             @Override
@@ -693,6 +741,9 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                                             Log.d(log+"%%_", "2_"+keyDatas.get("reg_id"));
                                         }
 
+                                        Log.d(log+"final_keyDatas", keyDatas.toString());
+                                        Log.d(log+"final_map", map.toString());
+
                                         insertCarRegistrationInfo(map); //서버로 데이터 insert
 
                                     }else if (buttonType.equals("수정")) {
@@ -702,6 +753,9 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                                             keyDatas.put("update_id", savedId);
                                             Log.d(log+"%%_", "2_"+keyDatas.get("update_id"));
                                         }
+
+                                        Log.d(log+"final_keyDatas", keyDatas.toString());
+                                        Log.d(log+"final_map", map.toString());
 
                                         updateCarRegistrationInfo(map); //서버로 데이터 update
                                     }

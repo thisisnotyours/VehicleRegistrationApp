@@ -391,9 +391,29 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                                             bundle.putString("driver_id2", item.getCarInfoVOS().get(pos).getDriver_id2());
                                             bundle.putString("driver_id3", item.getCarInfoVOS().get(pos).getDriver_id3());
                                             bundle.putString("mdn", item.getCarInfoVOS().get(pos).getMdn());
-                                            bundle.putString("fare_id", item.getCarInfoVOS().get(pos).getFare_name());
-                                            bundle.putString("city_id", item.getCarInfoVOS().get(pos).getCity_name());
-                                            bundle.putString("firmware_id", item.getCarInfoVOS().get(pos).getFirmware_name());
+
+//                                            bundle.putString("fare_id", item.getCarInfoVOS().get(pos).getFare_name()); //요금 spinner pos text 값 전달
+//                                            bundle.putString("city_id", item.getCarInfoVOS().get(pos).getCity_name()); //시경계 spinner pos text 값 전달
+//                                            bundle.putString("firmware_id", item.getCarInfoVOS().get(pos).getFirmware_name());  //벤사 spinner pos text 값 전달
+
+                                            bundle.putString("fare_id", item.getCarInfoVOS().get(pos).getFare_id());  //요금 spinner id 값 전달
+                                            bundle.putString("city_id", item.getCarInfoVOS().get(pos).getCity_id());  //시경계 spinner id 값 전달
+                                            bundle.putString("firmware_id", item.getCarInfoVOS().get(pos).getFirmware_id()); //벤사 spinner id 값 전달
+                                            Log.d(log+"recycler_firmware_id",item.getCarInfoVOS().get(pos).getFirmware_id());
+
+
+                                            try {
+                                                Log.d(log+"pos_send_fare_id", item.getCarInfoVOS().get(pos).getFare_id());
+                                                Log.d(log+"pos_send_city_id", item.getCarInfoVOS().get(pos).getCity_id());
+                                                Log.d(log+"pos_send_firmware_id",item.getCarInfoVOS().get(pos).getFirmware_id());
+
+                                                Log.d(log+"pos_send_fare", item.getCarInfoVOS().get(pos).getFare_name());
+                                                Log.d(log+"pos_send_firmware",item.getCarInfoVOS().get(pos).getFirmware_name());
+                                                Log.d(log+"pos_send_city", item.getCarInfoVOS().get(pos).getCity_id());
+                                                Log.d(log+"pos_send_city", item.getCarInfoVOS().get(pos).getCity_name());
+
+                                            }catch (Exception e){e.printStackTrace();}
+
                                             bundle.putString("speed_factor", item.getCarInfoVOS().get(pos).getSpeed_factor());
                                             bundle.putString("store_id", item.getCarInfoVOS().get(pos).getStore_id());
                                             bundle.putString("unit_num", item.getCarInfoVOS().get(pos).getUnit_num());
