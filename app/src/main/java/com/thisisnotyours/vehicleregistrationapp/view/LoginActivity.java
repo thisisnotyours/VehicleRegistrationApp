@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Context mContext;
     private String log="log_", savedId="", savedPw="", savedName="", savedAuto="false";
     private EditText id_et, pw_et;
+    private String idValue="", pwValue="";
     private TextView tvAppVersion;
     private CheckBox checkBox;
     private Button loginBtn;
@@ -225,13 +226,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //로그인 정보 서버 fetching
     private void getLoginInfoData() {
-        if (id_et.getText().toString().equals("") || pw_et.getText().toString().equals("")) {
+        if (id_et.getText().toString().replace(" ","").equals("") || pw_et.getText().toString().replace(" ","").equals("")) {
             Toast.makeText(mContext, "아이디와 비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
         }else {
             Log.d(log+"loginEdittExt_3", id_et.getText().toString()+", "+pw_et.getText().toString());
             Retrofit retrofit = RetrofitHelper.getRetrofitInstance();
             RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
-            Call<CarInfoListData> call = retrofitAPI.getLoginData(id_et.getText().toString(),pw_et.getText().toString());
+            Call<CarInfoListData> call = retrofitAPI.getLoginData(id_et.getText().toString().replace(" ",""), pw_et.getText().toString().replace(" ",""));
             call.enqueue(new Callback<CarInfoListData>() {
                 @Override
                 public void onResponse(Call<CarInfoListData> call, Response<CarInfoListData> response) {
