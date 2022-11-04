@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }//onCreate..
 
-    public String getVersionInfo(Context context) {
+    static public String getVersionInfo(Context context) {
         String version = null;
         try {
             PackageInfo i = context.getPackageManager().getPackageInfo(context.getPackageName(),0);
