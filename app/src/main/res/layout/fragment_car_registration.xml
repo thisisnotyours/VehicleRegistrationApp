@@ -564,7 +564,6 @@
                         android:layout_marginTop="15dp"
                         android:layout_marginRight="10dp"
                         android:background="@drawable/ic_arrow_down_24" />
-
                     <Spinner
                         android:id="@+id/spinner_fare_id"
                         android:layout_width="match_parent"
@@ -664,7 +663,6 @@
                         android:textColor="@color/red"
                         android:textSize="18dp"
                         android:textStyle="bold" />
-
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
@@ -674,7 +672,6 @@
                         android:layout_marginTop="15dp"
                         android:layout_marginRight="10dp"
                         android:background="@drawable/ic_arrow_down_24" />
-
                     <Spinner
                         android:id="@+id/spinner_firmware_id"
                         android:layout_width="match_parent"
@@ -692,7 +689,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
                     android:visibility="visible">
-
                     <TextView
                         android:id="@+id/tv_speed_factor"
                         android:layout_width="wrap_content"
@@ -701,7 +697,6 @@
                         android:textColor="@color/main_background"
                         android:textSize="18dp"
                         android:textStyle="bold" />
-
                     <TextView
                         android:id="@+id/tv_speed_factor_cnt"
                         android:layout_width="wrap_content"
@@ -711,7 +706,6 @@
                         android:text="(5자리)"
                         android:textColor="@color/main_background"
                         android:textSize="18dp" />
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -735,6 +729,119 @@
                         android:paddingLeft="20dp"
                         android:singleLine="true"
                         android:textSize="20dp" />
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:visibility="visible">
+                    <TextView
+                        android:id="@+id/tv_update"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="12.  업데이트"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tv_update_select"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_update"
+                        android:text="(선택)"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@id/tv_update_select"
+                        android:text="*"
+                        android:textColor="@color/red"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/tv_update"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp">
+                        <RelativeLayout
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="5dp">
+                            <TextView
+                                android:id="@+id/tv_firmware"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="펌웨어"
+                                android:textColor="@color/main_background"
+                                android:textSize="18dp"
+                                android:textStyle="bold" />
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginTop="15dp"
+                                android:layout_marginRight="10dp"
+                                android:background="@drawable/ic_arrow_down_24" />
+                            <Spinner
+                                android:id="@+id/spinner_firmware_update"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:layout_toRightOf="@+id/tv_firmware"
+                                android:background="@drawable/edit_box" />
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_weight="0.9"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="5dp">
+                            <TextView
+                                android:id="@+id/tv_daemon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="대몬"
+                                android:textColor="@color/main_background"
+                                android:textSize="18dp"
+                                android:textStyle="bold" />
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginTop="15dp"
+                                android:layout_marginRight="10dp"
+                                android:background="@drawable/ic_arrow_down_24" />
+                            <Spinner
+                                android:id="@+id/spinner_daemon_update"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:layout_toRightOf="@+id/tv_daemon"
+                                android:background="@drawable/edit_box" />
+                        </RelativeLayout>
+                    </LinearLayout>
+<!--                    <EditText-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="50dp"-->
+<!--                        android:layout_below="@+id/tv_update"-->
+<!--                        android:layout_marginTop="5dp"-->
+<!--                        android:background="@drawable/edittext_click_type"-->
+<!--                        android:imeOptions="actionDone"-->
+<!--                        android:inputType="number"-->
+<!--                        android:maxLength="5"-->
+<!--                        android:paddingLeft="20dp"-->
+<!--                        android:singleLine="true"-->
+<!--                        android:textSize="20dp" />-->
                 </RelativeLayout>
 
 

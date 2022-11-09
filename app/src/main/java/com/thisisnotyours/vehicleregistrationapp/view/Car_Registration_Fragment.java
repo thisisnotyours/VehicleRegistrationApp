@@ -67,8 +67,8 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     private String editTextType="";
     private String log = "log_";
     private Context mContext;
-    private ArrayList<String> fareIdArr, cityIdArr, firmwareIdArr;
-    private Spinner spinnerFareId, spinnerCityId, spinnerFirmwareId;
+    private ArrayList<String> fareIdArr, cityIdArr, firmwareIdArr, firm;
+    private Spinner spinnerFareId, spinnerCityId, spinnerFirmwareId, spinnerFirmwareUpdate, spinnerDaemonUpdate;
     private ArrayAdapter fareIdAdapter, cityIdAdapter, firmwareIdAdapter;
     private int fareId_idx=0, cityId_idx=0, firmwareId_idx=0;
     private String btnType="등록"
@@ -88,7 +88,9 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             , strSpeedFactor=""
             , strStoreId=""
             , strUnitNum=""
-            , strUnitSn="";
+            , strUnitSn=""
+            , strFirmwareUpdate=""
+            , strDaemonUpdate="";
     public EditText etCompanyName
             , etCarNum
             , etCarVin
@@ -206,6 +208,21 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                     btnCarTypePersonal.setTextColor(getResources().getColor(R.color.main_background));
                 }
             }
+
+            strFirmwareUpdate = getArguments().getString("firmware_update");
+            strDaemonUpdate = getArguments().getString("daemon_update");
+
+            //업데이트 확인
+            if (!strFirmwareUpdate.equals("")) {
+                Log.d(log+"update_firmware", strFirmwareUpdate);
+
+            }
+
+            if (!strDaemonUpdate.equals("")) {
+                Log.d(log+"update_daemon", strDaemonUpdate);
+
+            }
+
 
             etCompanyName.setText(strCompanyName);
             etCarNum.setText(strCarNum);

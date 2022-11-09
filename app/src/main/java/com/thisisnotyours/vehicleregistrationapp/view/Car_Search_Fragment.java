@@ -256,11 +256,15 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
 
             keyDatas.put("car_num", carNumEt.getText().toString()); //대구
             keyDatas.put("mdn", mdnEt.getText().toString());  //000
+            //me: 로그인 아이디 보내기
+            keyDatas.put("reg_id",PreferenceManager.getString(mContext, "id"));
             keyDatas.put("company_name",companyNameEt.getText().toString()); //다온
             keyDatas.put("st_dtti", getYesterdayString()); //시작일
             keyDatas.put("et_dtti", getCurDateString());  //종료일
             keyDatas.put("offset", offSet+"");      //불러들이는 시작점
             keyDatas.put("limit", limit+"");        //보여줄 리스트 개수
+
+            Log.d("checkListCnt", "offset:"+offSet+",  limit:"+limit);
 
             searchRecyclerItems = new ArrayList<>(); //리사이클러뷰 아이템 객체생성
 
@@ -286,12 +290,9 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                             Log.d(log+"itemValue", itemValue);
                         } catch (Exception e) {e.printStackTrace();}
 
-//                        searchRecyclerItems = new ArrayList<>(); //리사이클러뷰 아이템 객체생성
-
                         final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) searchRecyclerView.getLayoutManager();
 
                         for (int i=0; i<item.getCarInfoVOS().size(); i++) {
-//                    for (int i=0; i<15; i++){
                             try {
                                 setCarInfoListRecyclerItem(item, i, itemCnt);  //리사이클러뷰에 데이터 set
 
@@ -358,7 +359,10 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                 , item.getCarInfoVOS().get(i).getSpeed_factor()
                 , item.getCarInfoVOS().get(i).getStore_id()
                 ,item.getCarInfoVOS().get(i).getUnit_num()
-                ,item.getCarInfoVOS().get(i).getUnit_sn()));
+                ,item.getCarInfoVOS().get(i).getUnit_sn()
+                ,item.getCarInfoVOS().get(i).getFirmware_update()
+                ,item.getCarInfoVOS().get(i).getDaemon_update()
+        ));
 
         adapter = new CarInfoAdapter(getContext(), searchRecyclerItems);
         searchRecyclerView.setAdapter(adapter);
@@ -392,32 +396,17 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                                             bundle.putString("driver_id3", item.getCarInfoVOS().get(pos).getDriver_id3());
                                             bundle.putString("mdn", item.getCarInfoVOS().get(pos).getMdn());
 
-//                                            bundle.putString("fare_id", item.getCarInfoVOS().get(pos).getFare_name()); //요금 spinner pos text 값 전달
-//                                            bundle.putString("city_id", item.getCarInfoVOS().get(pos).getCity_name()); //시경계 spinner pos text 값 전달
-//                                            bundle.putString("firmware_id", item.getCarInfoVOS().get(pos).getFirmware_name());  //벤사 spinner pos text 값 전달
-
                                             bundle.putString("fare_id", item.getCarInfoVOS().get(pos).getFare_id());  //요금 spinner id 값 전달
                                             bundle.putString("city_id", item.getCarInfoVOS().get(pos).getCity_id());  //시경계 spinner id 값 전달
                                             bundle.putString("firmware_id", item.getCarInfoVOS().get(pos).getFirmware_id()); //벤사 spinner id 값 전달
-                                            Log.d(log+"recycler_firmware_id",item.getCarInfoVOS().get(pos).getFirmware_id());
-
-
-                                            try {
-                                                Log.d(log+"pos_send_fare_id", item.getCarInfoVOS().get(pos).getFare_id());
-                                                Log.d(log+"pos_send_city_id", item.getCarInfoVOS().get(pos).getCity_id());
-                                                Log.d(log+"pos_send_firmware_id",item.getCarInfoVOS().get(pos).getFirmware_id());
-
-                                                Log.d(log+"pos_send_fare", item.getCarInfoVOS().get(pos).getFare_name());
-                                                Log.d(log+"pos_send_firmware",item.getCarInfoVOS().get(pos).getFirmware_name());
-                                                Log.d(log+"pos_send_city", item.getCarInfoVOS().get(pos).getCity_id());
-                                                Log.d(log+"pos_send_city", item.getCarInfoVOS().get(pos).getCity_name());
-
-                                            }catch (Exception e){e.printStackTrace();}
-
                                             bundle.putString("speed_factor", item.getCarInfoVOS().get(pos).getSpeed_factor());
                                             bundle.putString("store_id", item.getCarInfoVOS().get(pos).getStore_id());
                                             bundle.putString("unit_num", item.getCarInfoVOS().get(pos).getUnit_num());
                                             bundle.putString("unit_sn", item.getCarInfoVOS().get(pos).getUnit_sn());
+//                                            bundle.putString("firmware_update", item.getCarInfoVOS().get(pos).getFirmware_update());
+//                                            bundle.putString("daemon_update", item.getCarInfoVOS().get(pos).getDaemon_update());
+                                            bundle.putString("firmware_update", "Y");
+                                            bundle.putString("daemon_update", "Y");
 
                                             FragmentTransaction transaction = manager.beginTransaction();
                                             fragment.setArguments(bundle);

@@ -15,6 +15,8 @@ public class RetrofitHelper {
 //  Call 로, 또는 Rxjava 를 사용 중이라 Observable 으로 설정해서 메서드를 호출할 경우 간간이 볼 수 있다.
 //  해결 => builder.addConverterFactory(ScalarsConverterFactory.create()) 추가해주기..
 
+
+    //실서버
     public static Retrofit getRetrofitInstance() {
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -23,8 +25,31 @@ public class RetrofitHelper {
                 .writeTimeout(200, TimeUnit.SECONDS)
                 .build();
 
-//        String IP_BASE_URL = "http://10.36.90.179:8080/";
         String IP_BASE_URL = "http://49.50.174.192:8080/";
+
+
+        Retrofit.Builder builder = new Retrofit.Builder();
+        builder.baseUrl(IP_BASE_URL);
+//        builder.client(okHttpClient);
+        builder.addConverterFactory(ScalarsConverterFactory.create()); //json 못받아올때/ 파싱 못받아올때
+        builder.addConverterFactory(GsonConverterFactory.create()); //retrofit 이 읽어온 json 데이터를 GSON 을 이용해 파싱/분석 하기위한 설정
+        Retrofit retrofit = builder.build();
+
+        return retrofit;
+    }
+
+
+    //테스트용
+    public static Retrofit getRetrofitInstance2() {
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(200, TimeUnit.SECONDS)
+                .readTimeout(200, TimeUnit.SECONDS)
+                .writeTimeout(200, TimeUnit.SECONDS)
+                .build();
+
+        String IP_BASE_URL = "http://192.168.0.48:8080/"; //테스트용
+
 
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.baseUrl(IP_BASE_URL);
