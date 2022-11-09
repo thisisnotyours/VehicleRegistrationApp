@@ -51,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -67,9 +68,10 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     private String editTextType="";
     private String log = "log_";
     private Context mContext;
-    private ArrayList<String> fareIdArr, cityIdArr, firmwareIdArr, firm;
+    private ArrayList<String> fareIdArr, cityIdArr, firmwareIdArr;
+    private List<String> firmwareUpdateList, daemonUpdateList;
     private Spinner spinnerFareId, spinnerCityId, spinnerFirmwareId, spinnerFirmwareUpdate, spinnerDaemonUpdate;
-    private ArrayAdapter fareIdAdapter, cityIdAdapter, firmwareIdAdapter;
+    private ArrayAdapter fareIdAdapter, cityIdAdapter, firmwareIdAdapter, firmwareUpdateAdater, daemonUpdateAdapter;
     private int fareId_idx=0, cityId_idx=0, firmwareId_idx=0;
     private String btnType="등록"
             , strLoginId=""
@@ -223,7 +225,6 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
             }
 
-
             etCompanyName.setText(strCompanyName);
             etCarNum.setText(strCarNum);
             etCarVin.setText(strCarVin);
@@ -245,13 +246,52 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             bringKeyboard(1400, etCompanyName);
         }
 
-
         btnRegister.setText(btnType+" 완료");
 
         /* retrofit data fetching */
         getFareTypeData();     //요금
         getCityTypeData();     //시경계
         getFirmwareTypeData(); //벤사
+
+
+        //펌웨어 업데이트 테스트
+        firmwareUpdateList = new ArrayList<>();
+        firmwareUpdateList.add("Y");
+        firmwareUpdateList.add("N");
+        firmwareUpdateAdater = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, firmwareUpdateList);
+        spinnerFirmwareUpdate.setAdapter(firmwareUpdateAdater);
+        spinnerFirmwareUpdate.setSelection(0);
+        spinnerFirmwareUpdate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        //대몬 업데이트 테스트
+        daemonUpdateList = new ArrayList<>();
+        daemonUpdateList.add("Y");
+        daemonUpdateList.add("N");
+        daemonUpdateAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, daemonUpdateList);
+        spinnerDaemonUpdate.setAdapter(daemonUpdateAdapter);
+        spinnerDaemonUpdate.setSelection(0);
+        spinnerDaemonUpdate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
         return rootView;
     }//onCreateView..
@@ -532,6 +572,8 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         spinnerFareId = v.findViewById(R.id.spinner_fare_id);
         spinnerCityId = v.findViewById(R.id.spinner_city_id);
         spinnerFirmwareId = v.findViewById(R.id.spinner_firmware_id);
+        spinnerFirmwareUpdate = v.findViewById(R.id.spinner_firmware_update);
+        spinnerDaemonUpdate = v.findViewById(R.id.spinner_daemon_update);
         layoutDriverId2 = v.findViewById(R.id.layout_driver_id2);
         layoutDriverId3 = v.findViewById(R.id.layout_driver_id3);
         car_type_layout = v.findViewById(R.id.car_type_layout);
@@ -550,6 +592,8 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         btnRegister.setOnClickListener(this);
         btnRegisterCancel.setOnClickListener(this);
         tvBarcodeScan.setOnClickListener(this);
+
+
     }
 
     //키패드 이벤트 컨트롤하기
