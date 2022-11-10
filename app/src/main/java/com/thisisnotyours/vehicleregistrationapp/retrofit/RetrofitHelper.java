@@ -40,7 +40,7 @@ public class RetrofitHelper {
 
 
     //테스트용
-    public static Retrofit getRetrofitInstance2() {
+    public static Retrofit getRetrofitInstanceTest() {
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(200, TimeUnit.SECONDS)
@@ -48,7 +48,7 @@ public class RetrofitHelper {
                 .writeTimeout(200, TimeUnit.SECONDS)
                 .build();
 
-        String IP_BASE_URL = "http://192.168.0.48:8080/"; //테스트용
+        String IP_BASE_URL = "http://192.168.0.48:8080/register/"; //테스트용
 
 
         Retrofit.Builder builder = new Retrofit.Builder();

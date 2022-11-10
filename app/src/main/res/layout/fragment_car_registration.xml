@@ -733,15 +733,16 @@
 
 
                 <RelativeLayout
+                    android:id="@+id/update_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
-                    android:visibility="visible">
+                    android:visibility="gone">
                     <TextView
                         android:id="@+id/tv_update"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="12.  업데이트"
+                        android:text="12.  업데이트 여부"
                         android:textColor="@color/main_background"
                         android:textSize="18dp"
                         android:textStyle="bold" />

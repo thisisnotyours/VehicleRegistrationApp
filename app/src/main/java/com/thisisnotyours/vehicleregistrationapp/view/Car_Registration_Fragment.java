@@ -72,7 +72,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     private List<String> firmwareUpdateList, daemonUpdateList;
     private Spinner spinnerFareId, spinnerCityId, spinnerFirmwareId, spinnerFirmwareUpdate, spinnerDaemonUpdate;
     private ArrayAdapter fareIdAdapter, cityIdAdapter, firmwareIdAdapter, firmwareUpdateAdater, daemonUpdateAdapter;
-    private int fareId_idx=0, cityId_idx=0, firmwareId_idx=0;
+    private int fareId_idx=0, cityId_idx=0, firmwareId_idx=0, firmwareUpdate_idx=0, daemonUpdate_idx=0;
     private String btnType="등록"
             , strLoginId=""
             , strCompanyName=""
@@ -110,7 +110,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     private ImageView ivDropDown;
     private TextView tvViewMoreDriverId, tvBarcodeScan;
     private boolean isClicked = true, registerBtnClicked = true;
-    private RelativeLayout layoutDriverId2, layoutDriverId3;
+    private RelativeLayout layoutDriverId2, layoutDriverId3, update_layout;
     private HashMap<String, String> keyDatas = new HashMap<>();
     private RetrofitAPI retrofitAPI = RetrofitHelper.getRetrofitInstance().create(RetrofitAPI.class);
     private SharedPreferences pref;
@@ -156,6 +156,8 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         //전달받은 데이터 체크
         if (getArguments() != null) {
             CarPageGubun.type = "수정";
+
+            update_layout.setVisibility(View.VISIBLE);
 
             mainActivity.tabClickCheck();
 
@@ -211,18 +213,24 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                 }
             }
 
+            //업데이트 확인
             strFirmwareUpdate = getArguments().getString("firmware_update");
             strDaemonUpdate = getArguments().getString("daemon_update");
 
-            //업데이트 확인
-            if (!strFirmwareUpdate.equals("")) {
-                Log.d(log+"update_firmware", strFirmwareUpdate);
-
+            if (!strFirmwareUpdate.equals("") || strFirmwareUpdate != null) {
+                if (strFirmwareUpdate.equals("Y")) {
+                    firmwareUpdate_idx = 0;
+                }else if (strFirmwareUpdate.equals("N")) {
+                    firmwareUpdate_idx = 1;
+                }
             }
 
-            if (!strDaemonUpdate.equals("")) {
-                Log.d(log+"update_daemon", strDaemonUpdate);
-
+            if (!strDaemonUpdate.equals("") || strDaemonUpdate != null) {
+                if (strDaemonUpdate.equals("Y")) {
+                    daemonUpdate_idx = 0;
+                }else if (strDaemonUpdate.equals("N")) {
+                    daemonUpdate_idx = 1;
+                }
             }
 
             etCompanyName.setText(strCompanyName);
@@ -241,6 +249,9 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         }else {
             CarPageGubun.type = "등록";
             btnType = "등록";
+
+            update_layout.setVisibility(View.GONE);
+
             etCompanyName.requestFocus();
 //            etCompanyName.setBackgroundResource(R.drawable.edit_box_selected);
             bringKeyboard(1400, etCompanyName);
@@ -248,50 +259,11 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
         btnRegister.setText(btnType+" 완료");
 
-        /* retrofit data fetching */
+        /* spinner setting */
         getFareTypeData();     //요금
         getCityTypeData();     //시경계
         getFirmwareTypeData(); //벤사
-
-
-        //펌웨어 업데이트 테스트
-        firmwareUpdateList = new ArrayList<>();
-        firmwareUpdateList.add("Y");
-        firmwareUpdateList.add("N");
-        firmwareUpdateAdater = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, firmwareUpdateList);
-        spinnerFirmwareUpdate.setAdapter(firmwareUpdateAdater);
-        spinnerFirmwareUpdate.setSelection(0);
-        spinnerFirmwareUpdate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        //대몬 업데이트 테스트
-        daemonUpdateList = new ArrayList<>();
-        daemonUpdateList.add("Y");
-        daemonUpdateList.add("N");
-        daemonUpdateAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, daemonUpdateList);
-        spinnerDaemonUpdate.setAdapter(daemonUpdateAdapter);
-        spinnerDaemonUpdate.setSelection(0);
-        spinnerDaemonUpdate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
+        getUpdateSetting();  //펌웨어 & 대몬 업데이트기능
 
         return rootView;
     }//onCreateView..
@@ -543,6 +515,70 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     }
 
 
+    //펌웨어 & 대몬 업데이트 설정기능
+    private void getUpdateSetting() {
+        //펌웨어 업데이트 설정
+        firmwareUpdateList = new ArrayList<>();
+        firmwareUpdateList.add("Y");
+        firmwareUpdateList.add("N");
+        firmwareUpdateAdater = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, firmwareUpdateList);
+        spinnerFirmwareUpdate.setAdapter(firmwareUpdateAdater);
+        spinnerFirmwareUpdate.setSelection(firmwareUpdate_idx);
+        spinnerFirmwareUpdate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                String selectedItem = firmwareUpdateList.get(pos);
+
+                for (int t=0; t<firmwareUpdateList.size(); t++) {
+
+                    if (selectedItem.equals(firmwareUpdateList.get(t))) {
+                        Log.d("update_firmware_compare",selectedItem +" == "+ firmwareUpdateList.get(t));
+                        firmwareUpdate_idx = t;
+                        strFirmwareUpdate = firmwareUpdateList.get(t);  //넘길 값
+                        Log.d("update_firmware_put", firmwareUpdate_idx+": "+strFirmwareUpdate);
+                        Log.d("update_firmware_put","-----------------------------");
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        //대몬 업데이트 설정
+        daemonUpdateList = new ArrayList<>();
+        daemonUpdateList.add("Y");
+        daemonUpdateList.add("N");
+        daemonUpdateAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, daemonUpdateList);
+        spinnerDaemonUpdate.setAdapter(daemonUpdateAdapter);
+        spinnerDaemonUpdate.setSelection(daemonUpdate_idx);
+        spinnerDaemonUpdate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                String selectedItem = daemonUpdateList.get(pos);
+
+                for (int y=0; y<daemonUpdateList.size(); y++) {
+
+                    if (selectedItem.equals(daemonUpdateList.get(y))) {
+                        Log.d("update_daemon_compare", selectedItem+" == "+daemonUpdateList.get(y));
+                        daemonUpdate_idx = y;
+                        strDaemonUpdate = daemonUpdateList.get(y);
+                        Log.d("update_daemon_put", daemonUpdate_idx+": "+strDaemonUpdate);
+                        Log.d("update_daemon_put","-----------------------------");
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+
     //define view id's
     private void findViewIds(View v) {
         etCompanyName = v.findViewById(R.id.et_company_name);
@@ -575,6 +611,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         spinnerFirmwareUpdate = v.findViewById(R.id.spinner_firmware_update);
         spinnerDaemonUpdate = v.findViewById(R.id.spinner_daemon_update);
         layoutDriverId2 = v.findViewById(R.id.layout_driver_id2);
+        update_layout = v.findViewById(R.id.update_layout);
         layoutDriverId3 = v.findViewById(R.id.layout_driver_id3);
         car_type_layout = v.findViewById(R.id.car_type_layout);
         btnCarTypePersonal = v.findViewById(R.id.btn_car_type_personal);
@@ -751,6 +788,11 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             keyDatas.put("update_id", strLoginId);
             Log.d(log+"update_id_val", strLoginId);
         }
+
+        //펌웨어 & 대몬 업데이트 기능 전송
+        keyDatas.put("firmware_update", strFirmwareUpdate);
+        keyDatas.put("daemon_update", strDaemonUpdate);
+
         // hashMap null check
         if (isNullOrEmptyMap(keyDatas) == false) {
             sendMapData(keyDatas, buttonType);
@@ -966,9 +1008,16 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                     responseVal = "벤사를";
                     str = " 선택해주세요";
                     break;
+                case "firmware_udpate,00":
+                    responseVal = "펌웨어 업데이트 여부를";
+                    str = " 선택해주세요";
+                    break;
+                case "daemon_udpate,00":
+                    responseVal = "대몬 업데이트 여부를";
+                    str = " 선택해주세요";
+                    break;
             }
             Toast.makeText(mContext, responseVal + str, Toast.LENGTH_SHORT).show();
-            Log.d(log+"서버오류", responseVal);
         }
     }
 

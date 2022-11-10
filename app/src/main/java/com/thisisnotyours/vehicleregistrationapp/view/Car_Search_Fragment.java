@@ -205,7 +205,8 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
         Call<String> call = retrofitAPI.getCarInfoCnt(carNumEt.getText().toString()
                                                     , mdnEt.getText().toString()
-                                                    , companyNameEt.getText().toString());
+                                                    , companyNameEt.getText().toString()
+                                                    , PreferenceManager.getString(mContext, "id"));  //me: 로그인 아이디 보내기
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -249,7 +250,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
             backBtn.setVisibility(View.VISIBLE);
             nextBtn.setVisibility(View.VISIBLE);
             emptyBtn.setVisibility(View.VISIBLE);
-            Retrofit retrofit = RetrofitHelper.getRetrofitInstance();
+            Retrofit retrofit = RetrofitHelper.getRetrofitInstance(); //me: 로그인 아이디 보내기
             RetrofitAPI retrofitApi = retrofit.create(RetrofitAPI.class); //추상메소드를 객체로 만들어줌
 
             Log.d(log+"search_input_fetch", "차량: "+carNumEt.getText().toString()+", 운수사: "+companyNameEt.getText().toString()+", 모뎀: "+mdnEt.getText().toString());
@@ -259,8 +260,8 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
             //me: 로그인 아이디 보내기
             keyDatas.put("reg_id",PreferenceManager.getString(mContext, "id"));
             keyDatas.put("company_name",companyNameEt.getText().toString()); //다온
-            keyDatas.put("st_dtti", getYesterdayString()); //시작일
-            keyDatas.put("et_dtti", getCurDateString());  //종료일
+//            keyDatas.put("st_dtti", getYesterdayString()); //시작일
+//            keyDatas.put("ed_dtti", getCurDateString());  //종료일
             keyDatas.put("offset", offSet+"");      //불러들이는 시작점
             keyDatas.put("limit", limit+"");        //보여줄 리스트 개수
 
@@ -403,10 +404,8 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                                             bundle.putString("store_id", item.getCarInfoVOS().get(pos).getStore_id());
                                             bundle.putString("unit_num", item.getCarInfoVOS().get(pos).getUnit_num());
                                             bundle.putString("unit_sn", item.getCarInfoVOS().get(pos).getUnit_sn());
-//                                            bundle.putString("firmware_update", item.getCarInfoVOS().get(pos).getFirmware_update());
-//                                            bundle.putString("daemon_update", item.getCarInfoVOS().get(pos).getDaemon_update());
-                                            bundle.putString("firmware_update", "Y");
-                                            bundle.putString("daemon_update", "Y");
+                                            bundle.putString("firmware_update", item.getCarInfoVOS().get(pos).getFirmware_update());
+                                            bundle.putString("daemon_update", item.getCarInfoVOS().get(pos).getDaemon_update());
 
                                             FragmentTransaction transaction = manager.beginTransaction();
                                             fragment.setArguments(bundle);
