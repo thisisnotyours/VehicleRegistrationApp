@@ -29,6 +29,15 @@
                     android:textSize="14sp"
                     android:paddingRight="15dp"/>
                 <TextView
+                    android:id="@+id/tv_reg_name"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|center"
+                    android:textColor="@color/white"
+                    android:text="김수현"
+                    android:textSize="14sp"/>
+                <TextView
                     android:id="@+id/tv_logout"
                     android:layout_weight="1"
                     android:layout_width="0dp"

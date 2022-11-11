@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String log = "log_";
     private Context mContext;
     private RecyclerView recycler;
-    public static TextView search_car, register_car, logout, appVersion;
+    public static TextView search_car, register_car, logout, appVersion, regNameText;
     private BackPressedKeyHandler backPressedKeyHandler = new BackPressedKeyHandler(this);
     private String fragType = "", loginId="";
     public String barcodeResult="";
@@ -48,8 +48,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         search_car = (TextView) findViewById(R.id.search_car);
         logout = (TextView) findViewById(R.id.tv_logout);
         appVersion = (TextView) findViewById(R.id.tv_app_version);
+        regNameText = (TextView) findViewById(R.id.tv_reg_name);
+        if (!PreferenceManager.getString(mContext,"name").equals("") || PreferenceManager.getString(mContext,"name") != null) {
+            regNameText.setText(PreferenceManager.getString(mContext,"name"));
+        }else {
+            regNameText.setText("");
+        }
 
-        appVersion.setText("앱 버전(v"+LoginActivity.getVersionInfo(mContext)+")");
+        appVersion.setText("(v"+LoginActivity.getVersionInfo(mContext)+")");
 
         register_car.setOnClickListener(this);
         search_car.setOnClickListener(this);
