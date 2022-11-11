@@ -267,6 +267,8 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
 
             Log.d("checkListCnt", "offset:"+offSet+",  limit:"+limit);
 
+            /////////////
+
             searchRecyclerItems = new ArrayList<>(); //리사이클러뷰 아이템 객체생성
 
             Call<CarInfoListData> call = retrofitApi.getCarInfoData(keyDatas);
