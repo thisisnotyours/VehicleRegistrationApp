@@ -38,6 +38,24 @@ public class CarInfoVO {
     private String store_id;
     private String unit_num;
     private String unit_sn;
+    private String konai_mid;
+    private String konai_tid;
+
+    public String getKonai_mid() {
+        return konai_mid;
+    }
+
+    public void setKonai_mid(String konai_mid) {
+        this.konai_mid = konai_mid;
+    }
+
+    public String getKonai_tid() {
+        return konai_tid;
+    }
+
+    public void setKonai_tid(String konai_tid) {
+        this.konai_tid = konai_tid;
+    }
 
     public String getId() {
         return id;
@@ -366,6 +384,8 @@ public class CarInfoVO {
                 ", store_id='" + store_id + '\'' +
                 ", unit_num='" + unit_num + '\'' +
                 ", unit_sn='" + unit_sn + '\'' +
+                ", konai_mid='" + konai_mid + '\'' +
+                ", konai_tid='" + konai_tid + '\'' +
                 '}';
     }
 }

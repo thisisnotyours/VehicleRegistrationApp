@@ -95,22 +95,10 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_car_search, container, false);
 
-        Log.d(log+"onCreate", "search");
         CarPageGubun.type = "조회";
         mainActivity.tabClickCheck();
 
         mContext = container.getContext();
-
-        Log.d(log+"saved_info_lifeCycle_", "onCreate_search");
-        String savedId = PreferenceManager.getString(mContext, "id");
-        String savedPw = PreferenceManager.getString(mContext, "pw");
-        String savedName = PreferenceManager.getString(mContext, "name");
-        Log.d(log+"saved_info", savedId+", "+savedPw+", "+savedName);
-
-        if (getArguments() != null) {
-            loginId = getArguments().getString("login_id");
-            Log.d(log+"loginId_main_search",loginId);
-        }
 
         findViewIds(rootView);
 
@@ -172,6 +160,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                                 strFirstVisitValue = "false";
                                 break;
                         }
+                        searchBtn.performClick();
 
                         Log.d("visit_selected_value", firstVisit_idx+": "+selectedItem+": "+strFirstVisitValue);
                         Log.d("visit_selected","-------------------------");
@@ -407,15 +396,16 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                 , item.getCarInfoVOS().get(i).getCity_name()
                 , item.getCarInfoVOS().get(i).getFirmware_name()
                 , item.getCarInfoVOS().get(i).getSpeed_factor()
-                , item.getCarInfoVOS().get(i).getStore_id()
-                , item.getCarInfoVOS().get(i).getUnit_num()
-                , item.getCarInfoVOS().get(i).getUnit_sn()
+                , item.getCarInfoVOS().get(i).getUnit_sn()  //시리얼번호(KM100)
+                , item.getCarInfoVOS().get(i).getKonai_mid() //단말기번호(Konai)
+                , item.getCarInfoVOS().get(i).getKonai_tid() //터미널번호(Konai)
                 , item.getCarInfoVOS().get(i).getFirmware_update()
                 , item.getCarInfoVOS().get(i).getDaemon_update()
         ));
 
-//        Log.d("log_get_unit_num", item.getCarInfoVOS().get(i).getUnit_num());
-//        Log.d("log_get_unit_sn", item.getCarInfoVOS().get(i).getUnit_sn());
+//        Log.d("log_get_unit_sn", item.getCarInfoVOS().get(i).getUnit_sn().toString());
+//        Log.d("log_get_konai_mid", item.getCarInfoVOS().get(i).getKonai_mid());
+//        Log.d("log_get_konai_tid", item.getCarInfoVOS().get(i).getKonai_tid());
 
         adapter = new CarInfoAdapter(getContext(), searchRecyclerItems);
         searchRecyclerView.setAdapter(adapter);
@@ -438,7 +428,6 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                                             FragmentManager manager = getActivity().getSupportFragmentManager();
                                             //fragment to fragment 데이터 전달
                                             Bundle bundle = new Bundle();
-//                                            bundle.putString("login_id", loginId);
                                             bundle.putString("company_name", item.getCarInfoVOS().get(pos).getCompany_name());
                                             bundle.putString("car_regnum", item.getCarInfoVOS().get(pos).getCar_regnum());
                                             bundle.putString("car_type", item.getCarInfoVOS().get(pos).getType_name());

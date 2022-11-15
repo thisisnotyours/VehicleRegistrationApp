@@ -47,7 +47,7 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View itemView = inflater.inflate(R.layout.car_info_recycler_item, parent, false);
+        View itemView = inflater.inflate(R.layout.car_info_recycler_item_redo, parent, false);
         VH holder = new VH(itemView);
         return holder;
     }
@@ -117,23 +117,33 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
             vh.tvSpeedFactor.setText(item.speed_factor);
         }
 
-        if (item.store_id == null) {
-            vh.tvStoreId.setText("---------");
-        }else {
-            vh.tvStoreId.setText(item.store_id);
-        }
+//        if (item.store_id == null) {
+//            vh.tvStoreId.setText("---------");
+//        }else {
+//            vh.tvStoreId.setText(item.store_id);
+//        }
 
-        if (item.unit_num == null) {
-            vh.tvUnitNum.setText("---------");
-        }else {
-            vh.tvUnitNum.setText(item.unit_num);
-        }
-
-        if (item.unit_sn == null) {
-            vh.tvUnitSn.setText("---------");
+        //시리얼번호 (KM100)
+        if (item.unit_sn == null || item.unit_sn.equals("")) {
+            vh.tvUnitSn.setText("없음");
         }else {
             vh.tvUnitSn.setText(item.unit_sn);
         }
+
+        //단말기번호 (Konai)
+        if (item.konai_mid == null || item.konai_mid.equals("")) {
+            vh.tvKonaiMid.setText("없음");
+        }else {
+            vh.tvKonaiMid.setText(item.konai_mid);
+        }
+
+        //터미널번호 (Konai)
+        if (item.konai_tid == null || item.konai_tid.equals("")) {
+            vh.tvKonaiTid.setText("없음");
+        }else {
+            vh.tvKonaiTid.setText(item.konai_tid);
+        }
+
     }
 
 
@@ -144,6 +154,7 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
 
     class VH extends RecyclerView.ViewHolder {
 //        ImageView dropDownBtn;
+        LinearLayout content_layout;
         CheckBox dropDownBtn;
         LinearLayout dropDownLayout;
         TextView tvCompanyName
@@ -157,12 +168,14 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
                 , tvMdn
                 , tvSpeedFactor
                 , tvStoreId
-                , tvUnitNum
+                , tvKonaiMid
+                , tvKonaiTid
                 , tvUnitSn;
 
 
         public VH(@NonNull View itemView) {
             super(itemView);
+            content_layout = itemView.findViewById(R.id.content_layout);
             dropDownBtn = itemView.findViewById(R.id.iv_drop_down);
             dropDownLayout = itemView.findViewById(R.id.drop_down_layout);
             tvCompanyName = itemView.findViewById(R.id.tv_company_name);
@@ -175,9 +188,10 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
             tvFirmwareId = itemView.findViewById(R.id.tv_firmware_id);
             tvMdn = itemView.findViewById(R.id.tv_mdn);
             tvSpeedFactor = itemView.findViewById(R.id.tv_speed_factor);
-            tvStoreId = itemView.findViewById(R.id.tv_store_id);  //가맹점 ID
-            tvUnitNum = itemView.findViewById(R.id.tv_unit_num); //단말기번호
-            tvUnitSn = itemView.findViewById(R.id.tv_unit_sn);  //생선번호/시리얼번호
+//            tvStoreId = itemView.findViewById(R.id.tv_store_id);  //가맹점 ID
+            tvUnitSn = itemView.findViewById(R.id.tv_unit_sn);  //(KM100) 생선번호/시리얼번호
+            tvKonaiMid = itemView.findViewById(R.id.tv_konai_mid); //(코나이) 단말기번호
+            tvKonaiTid = itemView.findViewById(R.id.tv_konai_tid); //(코나이) 터미널 번호
 
             dropDownBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -185,9 +199,11 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
                     if (isChecked) {
                         dropDownLayout.setVisibility(View.VISIBLE);
                         dropDownBtn.setRotation(180);
+//                        content_layout.setPadding(30, 30, 0,0);
                     }else {
                         dropDownLayout.setVisibility(View.GONE);
                         dropDownBtn.setRotation(360);
+//                        content_layout.setPadding(30, 30, 0,30);
                     }
                 }
             });

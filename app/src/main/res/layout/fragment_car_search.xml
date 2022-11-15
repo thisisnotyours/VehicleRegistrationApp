@@ -147,11 +147,12 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginLeft="10dp">
+
                         <TextView
                             android:id="@+id/tv_first_visit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="최조접속일자"
+                            android:text="최초접속일자"
                             android:textColor="@color/main_background"
                             android:textSize="18dp"
                             android:textStyle="bold" />
