@@ -357,7 +357,7 @@
                 android:textSize="16dp"
                 android:textStyle="bold" />
             <TextView
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/tv_unit_sn_title"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
@@ -371,7 +371,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/tv_unit_sn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -386,7 +386,7 @@
                 android:textSize="16dp"
                 android:textStyle="bold" />
             <TextView
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/tv_unit_num_title"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
@@ -399,7 +399,7 @@
                 android:textSize="16dp"
                 android:textStyle="bold" />
             <TextView
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/tv_unit_num"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

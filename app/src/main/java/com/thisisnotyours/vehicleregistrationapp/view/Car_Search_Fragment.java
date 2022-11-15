@@ -19,10 +19,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.thisisnotyours.vehicleregistrationapp.R;
@@ -39,6 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -62,6 +66,11 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
     private SharedPreferences pref;
     private int offSet = 0, limit = 10;
     private boolean isClicked = false;
+    private Spinner spinnerFirstVisit;
+    private List<String> firstVisitValueList;
+    private ArrayAdapter firstVisitAdapter;
+    private int firstVisit_idx=0;
+    private String strFirstVisitValue="";  //default=""
 
 
     public Car_Search_Fragment() {
@@ -123,6 +132,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         nextBtn = v.findViewById(R.id.btn_next);
         backBtn = v.findViewById(R.id.btn_back);
         emptyBtn = v.findViewById(R.id.btn_empty);
+        spinnerFirstVisit = v.findViewById(R.id.spinner_first_visit);
 
         controlEditorAction(carNumEt);
         controlEditorAction(companyNameEt);
@@ -132,6 +142,49 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         resetBtn.setOnClickListener(this);
         nextBtn.setOnClickListener(this);
         backBtn.setOnClickListener(this);
+
+        //최조접속일자 유무 선택. (default:""/ 있음:"true"/ 없음:"false")
+        firstVisitValueList = new ArrayList<>();
+        firstVisitValueList.add("전체");
+        firstVisitValueList.add("있음");
+        firstVisitValueList.add("없음");
+        firstVisitAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, firstVisitValueList);
+        spinnerFirstVisit.setAdapter(firstVisitAdapter);
+        spinnerFirstVisit.setSelection(firstVisit_idx);
+        spinnerFirstVisit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                String selectedItem = firstVisitValueList.get(pos);
+
+                for (int i=0; i<firstVisitValueList.size(); i++) {
+                    if (selectedItem.equals(firstVisitValueList.get(i))) {
+                        Log.d("visit_selected_compare", selectedItem+" == "+firstVisitValueList.get(i));
+                        firstVisit_idx = i;
+
+                        switch (selectedItem) {
+                            case "전체":
+                                strFirstVisitValue = "";
+                                break;
+                            case "있음":
+                                strFirstVisitValue = "true";
+                                break;
+                            case "없음":
+                                strFirstVisitValue = "false";
+                                break;
+                        }
+
+                        Log.d("visit_selected_value", firstVisit_idx+": "+selectedItem+": "+strFirstVisitValue);
+                        Log.d("visit_selected","-------------------------");
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
     }
 
     private void controlEditorAction(EditText editText) {
@@ -206,7 +259,8 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         Call<String> call = retrofitAPI.getCarInfoCnt(carNumEt.getText().toString()
                                                     , mdnEt.getText().toString()
                                                     , companyNameEt.getText().toString()
-                                                    , PreferenceManager.getString(mContext, "id"));  //me: 로그인 아이디 보내기
+                                                    , PreferenceManager.getString(mContext, "id")   //me: 로그인 아이디 보내기
+                                                    , strFirstVisitValue);    //me: 최조등록일자 있음 요청-"true"/ 없음 요청 - "false"
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -244,30 +298,22 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         Log.d(log+"itemSize_itemCnt", itemCnt);
 
         if (offSet == -10) {
-//            backBtn.setVisibility(View.INVISIBLE);
             Toast.makeText(mContext, "마지막 페이지입니다.", Toast.LENGTH_SHORT).show();
         }else {
             backBtn.setVisibility(View.VISIBLE);
             nextBtn.setVisibility(View.VISIBLE);
             emptyBtn.setVisibility(View.VISIBLE);
-            Retrofit retrofit = RetrofitHelper.getRetrofitInstance(); //me: 로그인 아이디 보내기
+            Retrofit retrofit = RetrofitHelper.getRetrofitInstance();  //me: 로그인 아이디 보내기
             RetrofitAPI retrofitApi = retrofit.create(RetrofitAPI.class); //추상메소드를 객체로 만들어줌
-
-            Log.d(log+"search_input_fetch", "차량: "+carNumEt.getText().toString()+", 운수사: "+companyNameEt.getText().toString()+", 모뎀: "+mdnEt.getText().toString());
 
             keyDatas.put("car_num", carNumEt.getText().toString()); //대구
             keyDatas.put("mdn", mdnEt.getText().toString());  //000
-            //me: 로그인 아이디 보내기
-            keyDatas.put("reg_id",PreferenceManager.getString(mContext, "id"));
+            keyDatas.put("reg_id",PreferenceManager.getString(mContext, "id"));  //me: 로그인 아이디 보내기
             keyDatas.put("company_name",companyNameEt.getText().toString()); //다온
-//            keyDatas.put("st_dtti", getYesterdayString()); //시작일
-//            keyDatas.put("ed_dtti", getCurDateString());  //종료일
             keyDatas.put("offset", offSet+"");      //불러들이는 시작점
             keyDatas.put("limit", limit+"");        //보여줄 리스트 개수
+            keyDatas.put("visit_bool",strFirstVisitValue);     //me: 최조등록일자 유무
 
-            Log.d("checkListCnt", "offset:"+offSet+",  limit:"+limit);
-
-            /////////////
 
             searchRecyclerItems = new ArrayList<>(); //리사이클러뷰 아이템 객체생성
 
@@ -291,6 +337,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                         try {
                             String itemValue = item.getCarInfoVOS().toString();
                             Log.d(log+"itemValue", itemValue);
+                            Log.d(log+"itemValue_city", item.getCarInfoVOS().get(0).getCity_id()+", "+item.getCarInfoVOS().get(0).getCity_name());
                         } catch (Exception e) {e.printStackTrace();}
 
                         final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) searchRecyclerView.getLayoutManager();
@@ -361,11 +408,14 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                 , item.getCarInfoVOS().get(i).getFirmware_name()
                 , item.getCarInfoVOS().get(i).getSpeed_factor()
                 , item.getCarInfoVOS().get(i).getStore_id()
-                ,item.getCarInfoVOS().get(i).getUnit_num()
-                ,item.getCarInfoVOS().get(i).getUnit_sn()
-                ,item.getCarInfoVOS().get(i).getFirmware_update()
-                ,item.getCarInfoVOS().get(i).getDaemon_update()
+                , item.getCarInfoVOS().get(i).getUnit_num()
+                , item.getCarInfoVOS().get(i).getUnit_sn()
+                , item.getCarInfoVOS().get(i).getFirmware_update()
+                , item.getCarInfoVOS().get(i).getDaemon_update()
         ));
+
+//        Log.d("log_get_unit_num", item.getCarInfoVOS().get(i).getUnit_num());
+//        Log.d("log_get_unit_sn", item.getCarInfoVOS().get(i).getUnit_sn());
 
         adapter = new CarInfoAdapter(getContext(), searchRecyclerItems);
         searchRecyclerView.setAdapter(adapter);

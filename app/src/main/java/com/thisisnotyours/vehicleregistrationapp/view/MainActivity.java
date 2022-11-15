@@ -1,7 +1,9 @@
 package com.thisisnotyours.vehicleregistrationapp.view;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,7 +15,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,16 +33,23 @@ import com.thisisnotyours.vehicleregistrationapp.handler.IOnBackPressed;
 import com.thisisnotyours.vehicleregistrationapp.item.CarPageGubun;
 import com.thisisnotyours.vehicleregistrationapp.manager.PreferenceManager;
 
+import java.util.zip.Inflater;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     String log = "log_";
     private Context mContext;
     private RecyclerView recycler;
     public static TextView search_car, register_car, logout, appVersion, regNameText;
+    private RelativeLayout menu_logout_layout;
+    private TextView menu_tv_reg_name, menu_tv_reg_manager, menu_tv_logout;
     private BackPressedKeyHandler backPressedKeyHandler = new BackPressedKeyHandler(this);
     private String fragType = "", loginId="";
     public String barcodeResult="";
     private static String type="";
+    private TextView menuBtn;
+    private DrawerLayout drawer;
+    private boolean isDrawerOpen = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +64,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         logout = (TextView) findViewById(R.id.tv_logout);
         appVersion = (TextView) findViewById(R.id.tv_app_version);
         regNameText = (TextView) findViewById(R.id.tv_reg_name);
+        menu_tv_reg_name = (TextView) findViewById(R.id.menu_tv_reg_name);
+        menu_tv_reg_manager = (TextView) findViewById(R.id.menu_tv_reg_manager);
+        menu_tv_logout = (TextView) findViewById(R.id.menu_tv_logout);
+        menu_logout_layout = (RelativeLayout) findViewById(R.id.menu_logout_layout);
+        menu_logout_layout.setOnClickListener(this);
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer);
+        menuBtn = (TextView) findViewById(R.id.tv_menu_btn);
+        menuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isDrawerOpen == true) {
+                    drawer.openDrawer(Gravity.LEFT);
+                    isDrawerOpen = false;
+                }else {
+                    drawer.closeDrawer(Gravity.LEFT);
+                    isDrawerOpen = true;
+                }
+            }
+        });
+
         if (!PreferenceManager.getString(mContext,"name").equals("") || PreferenceManager.getString(mContext,"name") != null) {
             regNameText.setText(PreferenceManager.getString(mContext,"name"));
+            menu_tv_reg_name.setText(PreferenceManager.getString(mContext,"name"));
+            if (PreferenceManager.getString(mContext, "name").equals("신한교") ||
+                PreferenceManager.getString(mContext, "name").equals("권정안") ||
+                PreferenceManager.getString(mContext, "name").equals("테스트") ||
+                PreferenceManager.getString(mContext, "name").equals("이영민") ||
+                PreferenceManager.getString(mContext, "name").equals("하용선")) {
+                menu_tv_reg_manager.setText("관리자");
+            }else {
+                menu_tv_reg_manager.setText("일반");
+                menu_tv_reg_manager.setTextColor(getResources().getColor(R.color.blue));
+                menu_tv_reg_manager.setBackgroundResource(R.drawable.layout_line_light_blue);
+            }
         }else {
             regNameText.setText("");
+            menu_tv_reg_name.setText("");
         }
 
-        appVersion.setText("(v"+LoginActivity.getVersionInfo(mContext)+")");
+        appVersion.setText("앱버전  (v"+LoginActivity.getVersionInfo(mContext)+")");
 
         register_car.setOnClickListener(this);
         search_car.setOnClickListener(this);
@@ -82,7 +131,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         register_car.setBackgroundResource(R.drawable.btn_gradi_white);
 
     }//onCreate..
+/**
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = new MenuInflater(mContext);
+        menuInflater.inflate(R.menu.toolbar_menu_item, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.menu_drawer_btn:
+//                if (isDrawerOpen != isDrawerOpen) {
+//
+//                }
+                if (isDrawerOpen == true) {
+                    drawer.openDrawer(Gravity.LEFT);
+                    isDrawerOpen = false;
+                }else {
+                    drawer.closeDrawer(Gravity.LEFT);
+                    isDrawerOpen = true;
+                }
+            break;
+        }
+        return true;
+    }
+    **/
 
     public void tabClickCheck() {
         if (!CarPageGubun.type.equals("")) {
@@ -148,6 +224,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Fragment fragment = null;
 
         switch (v.getId()) {
+            case R.id.menu_logout_layout:
+                logout.performClick();
+                break;
             case R.id.tv_logout:
                 setCancelDialog("로그아웃");
                 break;
