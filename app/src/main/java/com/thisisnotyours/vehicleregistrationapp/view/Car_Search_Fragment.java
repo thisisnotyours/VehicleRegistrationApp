@@ -142,7 +142,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         resetBtn.setOnClickListener(this);
         nextBtn.setOnClickListener(this);
         backBtn.setOnClickListener(this);
-
+//
         //최조접속일자 유무 선택. (default:""/ 있음:"true"/ 없음:"false")
         firstVisitValueList = new ArrayList<>();
         firstVisitValueList.add("전체");
