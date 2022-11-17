@@ -126,13 +126,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
+        android:clickable="true"
         android:background="@color/white"
         android:layout_gravity="left">
 
         <RelativeLayout
             android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            android:background="@color/main_background">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
@@ -144,15 +146,11 @@
                 android:paddingRight="10dp"
                 android:paddingBottom="3dp"
                 android:text="TAXI 차량등록앱"
-                android:textColor="#565659"
+                android:textColor="@color/white"
                 android:textSize="15sp"
                 android:textStyle="bold" />
         </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/light_light_grey"
-            android:layout_marginTop="10dp"/>
+
         <TextView
             android:layout_weight="0.5"
             android:layout_width="match_parent"
@@ -178,7 +176,7 @@
                 android:layout_height="25dp"
                 android:layout_gravity="bottom|center_vertical"
                 android:gravity="left|bottom"
-                android:background="@drawable/ic_launcher_background"
+                android:background="@drawable/ic_arrow_down_24"
                 android:layout_marginRight="10dp"/>
             <TextView
                 android:id="@+id/menu_tv_reg_name"
@@ -219,7 +217,7 @@
                 android:layout_height="25dp"
                 android:layout_gravity="bottom|center_vertical"
                 android:gravity="left|bottom"
-                android:background="@drawable/ic_launcher_background"
+                android:background="@drawable/ic_arrow_down_24"
                 android:layout_marginRight="10dp"/>
             <TextView
                 android:id="@+id/tv_app_version"
@@ -233,6 +231,33 @@
                 android:textSize="12sp"
                 android:layout_toRightOf="@+id/iv_version"/>
         </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp">
+            <ImageView
+                android:id="@+id/iv_car_info_period"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="bottom|center_vertical"
+                android:gravity="left|bottom"
+                android:background="@drawable/ic_arrow_down_24"
+                android:layout_marginRight="10dp"/>
+            <TextView
+                android:id="@+id/tv_car_info_period"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_vertical"
+                android:gravity="left|bottom"
+                android:textColor="@color/main_background"
+                android:text="차량정보 기간검색"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:layout_toRightOf="@+id/iv_car_info_period"/>
+        </RelativeLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -269,22 +294,14 @@
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginLeft="10dp">
-            <ImageView
-                android:id="@+id/iv_logout"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="bottom|center_vertical"
-                android:gravity="left|bottom"
-                android:background="@drawable/ic_launcher_background"
-                android:layout_marginRight="10dp"/>
+            android:layout_gravity="right"
+            android:gravity="right|center_vertical"
+            android:background="@color/main_background">
             <TextView
                 android:id="@+id/menu_tv_logout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_vertical"
-                android:gravity="left|bottom"
-                android:textColor="@color/main_background"
+                android:textColor="@color/white"
                 android:text="로그아웃"
                 android:textStyle="bold"
                 android:textSize="12sp"
@@ -292,8 +309,8 @@
                 android:paddingRight="7dp"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
-                android:background="@drawable/layout_line_light_black"
-                android:layout_toRightOf="@+id/iv_logout"/>
+                android:background="@drawable/layout_line_light_white"
+                android:layout_marginRight="15dp"/>
         </RelativeLayout>
 
     </LinearLayout>

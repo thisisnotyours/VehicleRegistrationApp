@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -65,12 +67,14 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
     private CarInfoAdapter adapter;
     private SharedPreferences pref;
     private int offSet = 0, limit = 10;
-    private boolean isClicked = false;
+    private boolean isClicked = false, moreClicked = true;
     private Spinner spinnerFirstVisit;
     private List<String> firstVisitValueList;
     private ArrayAdapter firstVisitAdapter;
     private int firstVisit_idx=0;
     private String strFirstVisitValue="";  //default=""
+    private TextView tv_search_more_car;
+    private LinearLayout search_more_layout;
 
 
     public Car_Search_Fragment() {
@@ -93,7 +97,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_car_search, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_car_search_period, container, false);
 
         CarPageGubun.type = "조회";
         mainActivity.tabClickCheck();
@@ -101,6 +105,8 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         mContext = container.getContext();
 
         findViewIds(rootView);
+
+        search_more_layout.setVisibility(View.GONE);
 
         searchBtn.performClick();
 
@@ -121,6 +127,9 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         backBtn = v.findViewById(R.id.btn_back);
         emptyBtn = v.findViewById(R.id.btn_empty);
         spinnerFirstVisit = v.findViewById(R.id.spinner_first_visit);
+        tv_search_more_car = v.findViewById(R.id.tv_search_more_car);
+        search_more_layout = v.findViewById(R.id.search_more_layout);
+        tv_search_more_car.setOnClickListener(this);
 
         controlEditorAction(carNumEt);
         controlEditorAction(companyNameEt);
@@ -222,6 +231,19 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                 Log.d(log+"offSet_back",offSet+"");
                 getCarInfoList(offSet, 10, totalItemCnt);
                 break;
+            case R.id.tv_search_more_car:
+                if (moreClicked == true) {
+//                    tv_search_more_car.setGravity(Gravity.RIGHT);
+                    tv_search_more_car.setText("닫기");
+                    search_more_layout.setVisibility(View.VISIBLE);
+                    moreClicked = false;
+                }else {
+//                    tv_search_more_car.setGravity(Gravity.CENTER);
+                    tv_search_more_car.setText ("차량/운수사/모뎀 기간검색");
+                    search_more_layout.setVisibility(View.GONE);
+                    moreClicked = true;
+                }
+                break;
         }
     }
 
@@ -232,6 +254,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         return sdf.format(time.getTime());
     }
 
+    //어제날짜시간
     private String getYesterdayString() {
         Calendar day = Calendar.getInstance();
         day.add(Calendar.DATE, -1);

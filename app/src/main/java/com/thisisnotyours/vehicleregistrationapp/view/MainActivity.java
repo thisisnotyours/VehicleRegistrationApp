@@ -13,12 +13,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -36,7 +38,7 @@ import com.thisisnotyours.vehicleregistrationapp.manager.PreferenceManager;
 import java.util.zip.Inflater;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     String log = "log_";
     private Context mContext;
     private RecyclerView recycler;
@@ -44,12 +46,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RelativeLayout menu_logout_layout;
     private TextView menu_tv_reg_name, menu_tv_reg_manager, menu_tv_logout;
     private BackPressedKeyHandler backPressedKeyHandler = new BackPressedKeyHandler(this);
-    private String fragType = "", loginId="";
+    private String fragType="", loginId="";
     public String barcodeResult="";
     private static String type="";
     private TextView menuBtn;
     private DrawerLayout drawer;
-    private boolean isDrawerOpen = true;
+    private boolean isDrawerOpen=true, isOutSideClicked=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,31 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mContext = this;
 
-        register_car = (TextView) findViewById(R.id.register_car);
-        search_car = (TextView) findViewById(R.id.search_car);
-        logout = (TextView) findViewById(R.id.tv_logout);
-        appVersion = (TextView) findViewById(R.id.tv_app_version);
-        regNameText = (TextView) findViewById(R.id.tv_reg_name);
-        menu_tv_reg_name = (TextView) findViewById(R.id.menu_tv_reg_name);
-        menu_tv_reg_manager = (TextView) findViewById(R.id.menu_tv_reg_manager);
-        menu_tv_logout = (TextView) findViewById(R.id.menu_tv_logout);
-        menu_logout_layout = (RelativeLayout) findViewById(R.id.menu_logout_layout);
-        menu_logout_layout.setOnClickListener(this);
-
-        drawer = (DrawerLayout) findViewById(R.id.drawer);
-        menuBtn = (TextView) findViewById(R.id.tv_menu_btn);
-        menuBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isDrawerOpen == true) {
-                    drawer.openDrawer(Gravity.LEFT);
-                    isDrawerOpen = false;
-                }else {
-                    drawer.closeDrawer(Gravity.LEFT);
-                    isDrawerOpen = true;
-                }
-            }
-        });
+        findAllViewIds();
 
         if (!PreferenceManager.getString(mContext,"name").equals("") || PreferenceManager.getString(mContext,"name") != null) {
             regNameText.setText(PreferenceManager.getString(mContext,"name"));
@@ -106,10 +84,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         appVersion.setText("앱버전  (v"+LoginActivity.getVersionInfo(mContext)+")");
 
-        register_car.setOnClickListener(this);
-        search_car.setOnClickListener(this);
-        logout.setOnClickListener(this);
-
         Intent i = getIntent();
         loginId = i.getStringExtra("login_id");
         Log.d(log+"loginId_main",loginId);
@@ -131,34 +105,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         register_car.setBackgroundResource(R.drawable.btn_gradi_white);
 
     }//onCreate..
-/**
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = new MenuInflater(mContext);
-        menuInflater.inflate(R.menu.toolbar_menu_item, menu);
-        return true;
+
+
+    private void findAllViewIds() {
+        register_car = (TextView) findViewById(R.id.register_car);
+        search_car = (TextView) findViewById(R.id.search_car);
+        logout = (TextView) findViewById(R.id.tv_logout);
+        appVersion = (TextView) findViewById(R.id.tv_app_version);
+        regNameText = (TextView) findViewById(R.id.tv_reg_name);
+        menu_tv_reg_name = (TextView) findViewById(R.id.menu_tv_reg_name);
+        menu_tv_reg_manager = (TextView) findViewById(R.id.menu_tv_reg_manager);
+        menu_tv_logout = (TextView) findViewById(R.id.menu_tv_logout);
+        menu_logout_layout = (RelativeLayout) findViewById(R.id.menu_logout_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer);
+        menuBtn = (TextView) findViewById(R.id.tv_menu_btn);
+
+        menuBtn.setOnClickListener(this);
+        menu_logout_layout.setOnClickListener(this);
+        register_car.setOnClickListener(this);
+        search_car.setOnClickListener(this);
+        logout.setOnClickListener(this);
+
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                isDrawerOpen = true;
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        return super.onOptionsItemSelected(item);
-        switch (item.getItemId()) {
-            case R.id.menu_drawer_btn:
-//                if (isDrawerOpen != isDrawerOpen) {
-//
-//                }
-                if (isDrawerOpen == true) {
-                    drawer.openDrawer(Gravity.LEFT);
-                    isDrawerOpen = false;
-                }else {
-                    drawer.closeDrawer(Gravity.LEFT);
-                    isDrawerOpen = true;
-                }
-            break;
-        }
-        return true;
-    }
-    **/
 
     public void tabClickCheck() {
         if (!CarPageGubun.type.equals("")) {
@@ -167,11 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }else if (CarPageGubun.type.equals("수정")) {
                 register_car.setText("차량수정");
             }
-        }else {
-            //do nothing
-            //this is for default
         }
-//        return;
     }
 
 
@@ -224,6 +209,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Fragment fragment = null;
 
         switch (v.getId()) {
+            case R.id.tv_menu_btn:
+                if (isDrawerOpen == true) {
+                    drawer.openDrawer(Gravity.LEFT);
+                    //뒷배경 뷰들 클릭 안되게 막기
+                    //set drawerLayout (clickable = true) in xml file
+                    isDrawerOpen = false;
+                }else {
+                    drawer.closeDrawer(Gravity.LEFT);
+                    isDrawerOpen = true;
+                }
+                break;
             case R.id.menu_logout_layout:
                 logout.performClick();
                 break;
@@ -272,6 +268,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //등록/수정 취소 다이얼로그
     private void setCancelDialog(String gubun) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         if (gubun.equals("등록") || gubun.equals("수정")) {
@@ -320,11 +317,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else {
             //do nothing
         }
-
-
     }
 
-    private void changeFragment(Fragment fragment) { //차량조회//화면으로 이동
+    //프래그먼트 조회화면 이동
+    private void changeFragment(Fragment fragment) {
         fragment = null;
         fragment = new Car_Search_Fragment();
         FragmentManager manager = getSupportFragmentManager();
@@ -336,9 +332,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MainActivity.register_car.setTextColor(getResources().getColor(R.color.light_grey));
         MainActivity.register_car.setBackgroundResource(R.drawable.btn_gradi_white);
     }
-
-
-
-
-
 }

@@ -21,7 +21,26 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/tv_search_more_car"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/layout_line_light_blue_yellow"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="3dp"
+                    android:text="차량/운수사/모뎀 기간검색"
+                    android:textColor="@color/blue" />
+
+                <!--검색목록 EditTExt-->
                 <LinearLayout
+                    android:visibility="visible"
+                    android:id="@+id/search_more_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -29,7 +48,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
                         android:orientation="horizontal">
                         <RelativeLayout
@@ -45,7 +63,6 @@
                                 android:textColor="@color/main_background"
                                 android:textSize="18dp"
                                 android:textStyle="bold" />
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -169,6 +186,7 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_marginRight="10dp"
                                 android:background="@drawable/ic_arrow_down_24" />
+
                             <Spinner
                                 android:id="@+id/spinner_first_visit"
                                 android:layout_width="match_parent"
@@ -204,12 +222,14 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:background="@drawable/search_button_click_effect">
+
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:layout_centerVertical="true"
                                 android:layout_toLeftOf="@+id/tv_edit"
                                 android:background="@drawable/ic_baseline_search_24" />
+
                             <TextView
                                 android:id="@+id/tv_edit"
                                 android:layout_width="wrap_content"
@@ -225,17 +245,13 @@
                 </LinearLayout>
 
 
-
-
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="15dp"
                     android:background="@color/light_light_grey"
                     android:orientation="horizontal">
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -244,7 +260,6 @@
                         android:text="전체"
                         android:textColor="@color/main_background"
                         android:textSize="20dp" />
-
                     <TextView
                         android:id="@+id/tv_result_cnt"
                         android:layout_width="wrap_content"
@@ -256,7 +271,6 @@
                         android:textColor="@color/sky_blue"
                         android:textSize="25dp"
                         android:textStyle="bold" />
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -271,7 +285,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="441dp"
                     android:orientation="vertical">
-
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_search_data"
                         android:layout_width="match_parent"
@@ -279,7 +292,6 @@
                         android:layout_weight="5"
                         android:orientation="vertical"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
                     <LinearLayout
                         android:id="@+id/layout_paging"
                         android:layout_width="match_parent"

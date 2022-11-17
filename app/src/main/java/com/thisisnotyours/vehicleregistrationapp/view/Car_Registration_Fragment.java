@@ -105,10 +105,10 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             , etStoreId
             , etUnitNum
             , etUnitSn;
-    private LinearLayout car_type_layout;
+    private LinearLayout car_type_layout, installDateLayout;
     private Button btnCarTypePersonal, btnCarTypeCompany, btnRegister, btnRegisterCancel;
     private ImageView ivDropDown;
-    private TextView tvViewMoreDriverId, tvBarcodeScan;
+    private TextView tvViewMoreDriverId, tvBarcodeScan, tvFirstInstallDate, tvRecentConnectDate;
     private boolean isClicked = true, registerBtnClicked = true;
     private RelativeLayout layoutDriverId2, layoutDriverId3, update_layout;
     private HashMap<String, String> keyDatas = new HashMap<>();
@@ -158,6 +158,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             CarPageGubun.type = "수정";
 
             update_layout.setVisibility(View.VISIBLE);
+            installDateLayout.setVisibility(View.VISIBLE);
 
             mainActivity.tabClickCheck();
 
@@ -251,6 +252,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             btnType = "등록";
 
             update_layout.setVisibility(View.GONE);
+            installDateLayout.setVisibility(View.GONE);
 
             etCompanyName.requestFocus();
 //            etCompanyName.setBackgroundResource(R.drawable.edit_box_selected);
@@ -621,6 +623,9 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         btnRegister = v.findViewById(R.id.btn_register);
         btnRegisterCancel = v.findViewById(R.id.btn_register_cancel);
         tvBarcodeScan = v.findViewById(R.id.tv_barcode_scan);
+        installDateLayout = v.findViewById(R.id.install_date_layout);
+        tvFirstInstallDate = v.findViewById(R.id.tv_first_install_date);  //최조접속일자(== 최초설치등록일자)
+        tvRecentConnectDate = v.findViewById(R.id.tv_recent_connect_date); //최근접속일자
 
         btnCarTypePersonal.setOnClickListener(this);
         btnCarTypeCompany.setOnClickListener(this);

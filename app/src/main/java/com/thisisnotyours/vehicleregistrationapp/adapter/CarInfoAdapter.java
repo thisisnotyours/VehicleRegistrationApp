@@ -199,11 +199,9 @@ public class CarInfoAdapter extends RecyclerView.Adapter {
                     if (isChecked) {
                         dropDownLayout.setVisibility(View.VISIBLE);
                         dropDownBtn.setRotation(180);
-//                        content_layout.setPadding(30, 30, 0,0);
                     }else {
                         dropDownLayout.setVisibility(View.GONE);
                         dropDownBtn.setRotation(360);
-//                        content_layout.setPadding(30, 30, 0,30);
                     }
                 }
             });
