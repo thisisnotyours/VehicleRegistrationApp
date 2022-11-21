@@ -92,7 +92,9 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             , strUnitNum=""
             , strUnitSn=""
             , strFirmwareUpdate=""
-            , strDaemonUpdate="";
+            , strDaemonUpdate=""
+            , strRegDtti=""
+            , strLastDtti="";
     public EditText etCompanyName
             , etCarNum
             , etCarVin
@@ -105,7 +107,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             , etStoreId
             , etUnitNum
             , etUnitSn;
-    private LinearLayout car_type_layout, installDateLayout;
+    private LinearLayout car_type_layout, installDateLayout, recentConnectDateLayout;
     private Button btnCarTypePersonal, btnCarTypeCompany, btnRegister, btnRegisterCancel;
     private ImageView ivDropDown;
     private TextView tvViewMoreDriverId, tvBarcodeScan, tvFirstInstallDate, tvRecentConnectDate;
@@ -234,6 +236,24 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                 }
             }
 
+            //최초 & 최근 접속일자
+//            strRegDtti = getArguments().getString("reg_dtti");
+//            strLastDtti = getArguments().getString("last_dtti");
+            if (getArguments().getString("reg_dtti")=="" || getArguments().getString("reg_dtti").equals("") || getArguments().getString("reg_dtti")==null) {
+                tvFirstInstallDate.setText("없음");
+            }else {
+                tvFirstInstallDate.setText(getArguments().getString("reg_dtti")); //20221111
+                tvFirstInstallDate.setText(getArguments().getString("reg_dtti").substring(0,4)+"-"
+                                            +getArguments().getString("reg_dtti").substring(4,6)+"-"
+                                            +getArguments().getString("reg_dtti").substring(6,8));
+            }
+
+            if (getArguments().getString("last_dtti")=="" || getArguments().getString("last_dtti").equals("") || getArguments().getString("last_dtti")==null) {
+                tvRecentConnectDate.setText("없음");
+            }else {
+                tvRecentConnectDate.setText(getArguments().getString("last_dtti"));
+            }
+
             etCompanyName.setText(strCompanyName);
             etCarNum.setText(strCarNum);
             etCarVin.setText(strCarVin);
@@ -266,6 +286,10 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         getCityTypeData();     //시경계
         getFirmwareTypeData(); //벤사
         getUpdateSetting();  //펌웨어 & 대몬 업데이트기능
+
+        if (!strRegDtti.equals("")) {
+
+        }
 
         return rootView;
     }//onCreateView..
@@ -699,12 +723,14 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                 if (isClicked == true) {
                     tvViewMoreDriverId.setText("닫기");
                     tvViewMoreDriverId.setTextColor(getResources().getColor(R.color.blue));
+                    tvViewMoreDriverId.setBackgroundResource(R.drawable.layout_line_light_blue);
                     layoutDriverId2.setVisibility(View.VISIBLE);
                     layoutDriverId3.setVisibility(View.VISIBLE);
                     isClicked = false;
                 }else {
                     tvViewMoreDriverId.setText("더보기");
                     tvViewMoreDriverId.setTextColor(getResources().getColor(R.color.red));
+                    tvViewMoreDriverId.setBackgroundResource(R.drawable.layout_line_light_red);
                     layoutDriverId2.setVisibility(View.GONE);
                     layoutDriverId3.setVisibility(View.GONE);
                     isClicked = true;

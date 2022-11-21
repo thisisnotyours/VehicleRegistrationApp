@@ -1,7 +1,6 @@
 package com.thisisnotyours.vehicleregistrationapp.item;
 
 public class CarInfoItems {
-//    public String reg_dtti;
     public String company_name;
     public String car_regnum;
     public String type_name;

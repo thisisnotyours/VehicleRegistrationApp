@@ -7,7 +7,6 @@ public class CarInfoVO {
     private String name;
     private String use_yn;
     private String roles;
-    private String reg_dtti;
     private String mdn;     //모뎀번호
     private String car_vin; //차대번호/ 차마다 있는 고유번호
     private String type_name; //차량유형- 개인/법인
@@ -40,6 +39,8 @@ public class CarInfoVO {
     private String unit_sn;
     private String konai_mid;
     private String konai_tid;
+    private String reg_dtti;
+    private String last_dtti;
 
     public String getKonai_mid() {
         return konai_mid;
@@ -297,6 +298,14 @@ public class CarInfoVO {
         this.city_update = city_update;
     }
 
+    public String getLast_dtti() {
+        return last_dtti;
+    }
+
+    public void setLast_dtti(String last_dtti) {
+        this.last_dtti = last_dtti;
+    }
+
     public String getDaemon_update() {
         return daemon_update;
     }
@@ -353,7 +362,6 @@ public class CarInfoVO {
                 ", name='" + name + '\'' +
                 ", use_yn='" + use_yn + '\'' +
                 ", roles='" + roles + '\'' +
-                ", reg_dtti='" + reg_dtti + '\'' +
                 ", mdn='" + mdn + '\'' +
                 ", car_vin='" + car_vin + '\'' +
                 ", type_name='" + type_name + '\'' +
@@ -386,6 +394,8 @@ public class CarInfoVO {
                 ", unit_sn='" + unit_sn + '\'' +
                 ", konai_mid='" + konai_mid + '\'' +
                 ", konai_tid='" + konai_tid + '\'' +
+                ", reg_dtti='" + reg_dtti + '\'' +
+                ", last_dtti='" + last_dtti + '\'' +
                 '}';
     }
 }

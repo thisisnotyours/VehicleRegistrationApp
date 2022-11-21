@@ -1,6 +1,7 @@
 package com.thisisnotyours.vehicleregistrationapp.view;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -23,6 +24,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -67,14 +69,16 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
     private CarInfoAdapter adapter;
     private SharedPreferences pref;
     private int offSet = 0, limit = 10;
-    private boolean isClicked = false, moreClicked = true;
-    private Spinner spinnerFirstVisit;
-    private List<String> firstVisitValueList;
-    private ArrayAdapter firstVisitAdapter;
-    private int firstVisit_idx=0;
-    private String strFirstVisitValue="";  //default=""
-    private TextView tv_search_more_car;
+    private boolean isClicked=false, moreClicked=true, calendarClick=true;
+    private Spinner spinnerFirstVisit, spinnerRecentConnect;
+    private List<String> firstVisitValueList, recConList;
+    private ArrayAdapter firstVisitAdapter, recConAdapter;
+    private int firstVisit_idx=0, recCon_idx=0;
+    private String strFirstVisitValue="", strRecConValue="", st_dtti="", ed_dtti="";  //default=""
+    private TextView tv_search_more_car, tv_st_date, tv_ed_date;
     private LinearLayout search_more_layout;
+    private ImageView iv_calendar;
+    private String minDate, maxDate;
 
 
     public Car_Search_Fragment() {
@@ -127,9 +131,24 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         backBtn = v.findViewById(R.id.btn_back);
         emptyBtn = v.findViewById(R.id.btn_empty);
         spinnerFirstVisit = v.findViewById(R.id.spinner_first_visit);
+        spinnerRecentConnect = v.findViewById(R.id.spinner_rec_con);
         tv_search_more_car = v.findViewById(R.id.tv_search_more_car);
         search_more_layout = v.findViewById(R.id.search_more_layout);
         tv_search_more_car.setOnClickListener(this);
+
+        iv_calendar = v.findViewById(R.id.iv_calendar);
+        tv_st_date = v.findViewById(R.id.tv_st_date);
+        tv_ed_date = v.findViewById(R.id.tv_ed_date);
+
+        String[] yesterday = getYesterdayString().split("/");
+        String[] today = getCurDateString().split("/");
+
+//        tv_st_date.setText(yesterday[0]);  //시작
+//        tv_ed_date.setText(today[0]);   //종료
+        tv_st_date.setText("시작일 선택");
+        tv_ed_date.setText("종료일 선택");
+        st_dtti = yesterday[1];
+        ed_dtti = today[1];
 
         controlEditorAction(carNumEt);
         controlEditorAction(companyNameEt);
@@ -145,7 +164,8 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         firstVisitValueList.add("전체");
         firstVisitValueList.add("있음");
         firstVisitValueList.add("없음");
-        firstVisitAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, firstVisitValueList);
+        firstVisitAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, firstVisitValueList
+        );
         spinnerFirstVisit.setAdapter(firstVisitAdapter);
         spinnerFirstVisit.setSelection(firstVisit_idx);
         spinnerFirstVisit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -183,7 +203,82 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
             }
         });
 
-    }
+        //3 ~ 6개월 데이터
+        recConList = new ArrayList<>();
+        recConList.add("선택안함");
+        recConList.add("3개월");
+        recConList.add("6개월");
+        recConAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, recConList);
+        spinnerRecentConnect.setAdapter(recConAdapter);
+        spinnerRecentConnect.setSelection(recCon_idx);
+        spinnerRecentConnect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                String selectedItem = recConList.get(pos);
+
+                for (int i=0; i<recConList.size(); i++) {
+                    if (selectedItem.equals(recConList.get(i))) {
+                        Log.d("selected_item_compare", selectedItem+" == "+recConList.get(i));
+                        recCon_idx = i;
+
+                        switch (selectedItem) {
+                            case "선택안함":
+                                strRecConValue = "";
+                                break;
+                            case "3개월":
+                                strRecConValue = "3";  //period_select
+                                break;
+                            case "6개월":
+                                strRecConValue = "6"; //period_select
+                                break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+        //시작날짜-달력
+        final Calendar cal = Calendar.getInstance();
+        tv_st_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog dialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        Toast.makeText(mContext, year+"-"+(month+1)+"-"+day, Toast.LENGTH_SHORT).show();
+                        minDate = year+"-"+(month+1)+"-"+day;
+                        tv_st_date.setText(minDate);
+                    }
+                }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
+                dialog.show();
+            }
+        });
+
+        //종료날짜-달력
+        final Calendar cal2 = Calendar.getInstance();
+        tv_ed_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog dialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        Toast.makeText(mContext, year+"-"+(month+1)+"-"+day, Toast.LENGTH_SHORT).show();
+                        maxDate = year+"-"+(month+1)+"-"+day;
+                        tv_ed_date.setText(maxDate);
+                    }
+                }, cal2.get(Calendar.YEAR), cal2.get(Calendar.MONTH), cal2.get(Calendar.DATE));
+                dialog.show();
+            }
+        });
+
+    }//findViewIds
+
 
     private void controlEditorAction(EditText editText) {
         editText.setOnEditorActionListener((textView, i, keyEvent) -> {
@@ -233,13 +328,12 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.tv_search_more_car:
                 if (moreClicked == true) {
-//                    tv_search_more_car.setGravity(Gravity.RIGHT);
-                    tv_search_more_car.setText("닫기");
+                    tv_search_more_car.setText("닫기 ▲");
+//                    tv_search_more_car.setBackgroundResource(R.drawable.layout_line_light_black);
                     search_more_layout.setVisibility(View.VISIBLE);
                     moreClicked = false;
                 }else {
-//                    tv_search_more_car.setGravity(Gravity.CENTER);
-                    tv_search_more_car.setText ("차량/운수사/모뎀 기간검색");
+                    tv_search_more_car.setText ("차량 / 운수사 / 모뎀 / 기간검색  ▼");
                     search_more_layout.setVisibility(View.GONE);
                     moreClicked = true;
                 }
@@ -249,17 +343,19 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
 
     //현재날짜시간
     private String getCurDateString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat sdf_text = new SimpleDateFormat("yyyy-MM-dd");
         Calendar time = Calendar.getInstance();
-        return sdf.format(time.getTime());
+        return sdf_text.format(time.getTime())+"/"+sdf.format(time.getTime());
     }
 
     //어제날짜시간
     private String getYesterdayString() {
         Calendar day = Calendar.getInstance();
         day.add(Calendar.DATE, -1);
-        String beforeDate = new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(day.getTime());
-        return beforeDate;
+        String sdf = new SimpleDateFormat("yyyyMMdd").format(day.getTime());
+        String beforeDate_text = new java.text.SimpleDateFormat("yyyy-MM-dd").format(day.getTime());
+        return beforeDate_text+"/"+sdf;
     }
 
     private String totalItemCnt="";
@@ -325,6 +421,9 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
             keyDatas.put("offset", offSet+"");      //불러들이는 시작점
             keyDatas.put("limit", limit+"");        //보여줄 리스트 개수
             keyDatas.put("visit_bool",strFirstVisitValue);     //me: 최조등록일자 유무
+//            keyDatas.put("st_dtti", st_dtti);  //시작날짜
+//            keyDatas.put("ed_dtti", ed_dtti);  //종료날짜
+//            keyDatas.put("period_select", strRecConValue);  //선택기간 (3개월 / 6개월)
 
 
             searchRecyclerItems = new ArrayList<>(); //리사이클러뷰 아이템 객체생성
@@ -425,10 +524,8 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                 , item.getCarInfoVOS().get(i).getFirmware_update()
                 , item.getCarInfoVOS().get(i).getDaemon_update()
         ));
-
-//        Log.d("log_get_unit_sn", item.getCarInfoVOS().get(i).getUnit_sn().toString());
-//        Log.d("log_get_konai_mid", item.getCarInfoVOS().get(i).getKonai_mid());
-//        Log.d("log_get_konai_tid", item.getCarInfoVOS().get(i).getKonai_tid());
+//        Log.d(log+"dtti_reg", item.getCarInfoVOS().get(i).getReg_dtti());  //최초접속일자 (설치등록일자)
+//        Log.d(log+"dtti_last", item.getCarInfoVOS().get(i).getLast_dtti()); //최근접속일자
 
         adapter = new CarInfoAdapter(getContext(), searchRecyclerItems);
         searchRecyclerView.setAdapter(adapter);
@@ -470,6 +567,9 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                                             bundle.putString("unit_sn", item.getCarInfoVOS().get(pos).getUnit_sn());
                                             bundle.putString("firmware_update", item.getCarInfoVOS().get(pos).getFirmware_update());
                                             bundle.putString("daemon_update", item.getCarInfoVOS().get(pos).getDaemon_update());
+
+                                            bundle.putString("reg_dtti", item.getCarInfoVOS().get(pos).getReg_dtti());
+                                            bundle.putString("last_dtti", item.getCarInfoVOS().get(pos).getLast_dtti());
 
                                             FragmentTransaction transaction = manager.beginTransaction();
                                             fragment.setArguments(bundle);
