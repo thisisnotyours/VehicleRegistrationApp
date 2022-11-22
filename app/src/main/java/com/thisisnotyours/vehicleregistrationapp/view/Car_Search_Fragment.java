@@ -405,7 +405,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         }
     }
 
-    //현재날짜시간
+    //현재날짜
     private String getCurDateString() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         SimpleDateFormat sdf_text = new SimpleDateFormat("yyyy-MM-dd");
@@ -413,13 +413,19 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         return sdf_text.format(time.getTime())+"/"+sdf.format(time.getTime());
     }
 
-    //어제날짜시간
+    //어제날짜
     private String getYesterdayString() {
         Calendar day = Calendar.getInstance();
         day.add(Calendar.DATE, -1);
         String sdf = new SimpleDateFormat("yyyyMMdd").format(day.getTime());
-        String beforeDate_text = new java.text.SimpleDateFormat("yyyy-MM-dd").format(day.getTime());
+        String beforeDate_text = new SimpleDateFormat("yyyy-MM-dd").format(day.getTime());
         return beforeDate_text+"/"+sdf;
+    }
+
+    //날짜비교
+    private String compareDayString() {
+
+        return "";
     }
 
     private String totalItemCnt="";
