@@ -138,12 +138,10 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginRight="10dp"
                         android:orientation="horizontal">
-
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
-
                             <TextView
                                 android:id="@+id/tv_mdn"
                                 android:layout_width="wrap_content"
@@ -152,7 +150,6 @@
                                 android:textColor="@color/main_background"
                                 android:textSize="18dp"
                                 android:textStyle="bold" />
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -182,20 +179,63 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="1">
+                            <TextView
+                                android:id="@+id/tv_car_type"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="차량유형"
+                                android:textColor="@color/main_background"
+                                android:textSize="18dp"
+                                android:textStyle="bold" />
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_below="@+id/tv_car_type"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginRight="10dp"
+                                android:background="@drawable/ic_arrow_down_24" />
+                            <Spinner
+                                android:id="@+id/spinner_car_type"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_below="@+id/tv_car_type"
+                                android:layout_marginTop="4dp"
+                                android:background="@drawable/edit_box"
+                                android:spinnerMode="dialog"
+                                android:theme="@style/spinner_style" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="5dp">
+                        <RelativeLayout
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:layout_marginRight="10dp">
 
                             <TextView
-                                android:id="@+id/tv_first_visit"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/tv_first_visit_bool"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="최초접속일자"
                                 android:textColor="@color/main_background"
                                 android:textSize="18dp"
                                 android:textStyle="bold" />
-
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:layout_below="@+id/tv_first_visit"
+                                android:layout_below="@+id/tv_first_visit_bool"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:layout_marginTop="10dp"
@@ -206,13 +246,45 @@
                                 android:id="@+id/spinner_first_visit"
                                 android:layout_width="match_parent"
                                 android:layout_height="40dp"
-                                android:layout_below="@+id/tv_first_visit"
-                                android:layout_marginTop="4dp"
-                                android:background="@drawable/edit_box"
-                                android:spinnerMode="dialog"
-                                android:theme="@style/spinner_style" />
+                                android:layout_below="@+id/tv_first_visit_bool"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/edit_box" />
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/tv_period_select"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="최근접속일자"
+                                android:textColor="@color/main_background"
+                                android:textSize="18dp"
+                                android:textStyle="bold" />
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_below="@+id/tv_period_select"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginRight="10dp"
+                                android:background="@drawable/ic_arrow_down_24" />
+                            <Spinner
+                                android:id="@+id/spinner_period_select"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_below="@+id/tv_period_select"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/edit_box" />
                         </RelativeLayout>
                     </LinearLayout>
+
+
+
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -222,49 +294,22 @@
                         android:layout_marginRight="10dp"
                         android:layout_marginBottom="15dp"
                         android:orientation="horizontal">
-
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
-
                             <TextView
-                                android:id="@+id/tv_recent_connect_date"
+                                android:id="@+id/tv_dtti_layout"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="최근접속일자"
+                                android:text="기간검색"
                                 android:textColor="@color/main_background"
                                 android:textSize="18dp"
                                 android:textStyle="bold" />
-
-                            <LinearLayout
-                                android:id="@+id/layout_spin"
-                                android:layout_width="match_parent"
-                                android:layout_height="40dp"
-                                android:layout_below="@+id/tv_recent_connect_date"
-                                android:layout_marginTop="5dp"
-                                android:orientation="horizontal">
-                                <Spinner
-                                    android:id="@+id/spinner_rec_con"
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_marginRight="10dp"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/edit_box"
-                                    android:textColor="@color/main_background"
-                                    android:paddingLeft="5dp"/>
-                                <Spinner
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:textColor="@color/main_background"
-                                    android:visibility="invisible" />
-                            </LinearLayout>
-
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:layout_below="@+id/tv_recent_connect_date"
+                                android:layout_below="@+id/tv_dtti_layout"
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="125dp"
                                 android:layout_marginTop="10dp"
@@ -273,7 +318,7 @@
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:layout_below="@+id/layout_spin"
+                                android:layout_below="@+id/tv_dtti_layout"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:layout_marginTop="10dp"
@@ -282,7 +327,7 @@
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:layout_below="@+id/layout_spin"
+                                android:layout_below="@+id/tv_dtti_layout"
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="125dp"
                                 android:layout_marginTop="10dp"
@@ -291,7 +336,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="45dp"
-                                android:layout_below="@+id/layout_spin"
+                                android:layout_below="@+id/tv_dtti_layout"
                                 android:orientation="horizontal">
                                 <TextView
                                     android:id="@+id/tv_st_date"

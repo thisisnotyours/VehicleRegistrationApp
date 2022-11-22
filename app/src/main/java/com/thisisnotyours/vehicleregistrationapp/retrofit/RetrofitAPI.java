@@ -26,8 +26,12 @@ public interface RetrofitAPI {
     Call<String> getCarInfoCnt(@Query("car_num") String car_num
                                 , @Query("mdn") String mdn
                                 , @Query("company_name") String company_name
+                                , @Query("car_type") String car_type
                                 , @Query("reg_id") String reg_id
-                                , @Query("visit_bool") String visit_bool);
+                                , @Query("visit_bool") String visit_bool
+                                , @Query("st_dtti") String st_dtti
+                                , @Query("ed_dtti") String ed_dtti
+                                , @Query("period_select") String period_select);
     //요금조회
     @POST("get-fare-type")
     Call<CarInfoListData> getFareType();

@@ -70,11 +70,11 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
     private SharedPreferences pref;
     private int offSet = 0, limit = 10;
     private boolean isClicked=false, moreClicked=true, calendarClick=true;
-    private Spinner spinnerFirstVisit, spinnerRecentConnect;
-    private List<String> firstVisitValueList, recConList;
-    private ArrayAdapter firstVisitAdapter, recConAdapter;
-    private int firstVisit_idx=0, recCon_idx=0;
-    private String strFirstVisitValue="", strRecConValue="", st_dtti="", ed_dtti="";  //default=""
+    private Spinner spinnerFirstVisitBool, spinnerPeriodSelect, spinnerCarType;
+    private List<String> firstVisitValueList, recConList, carTypeList;
+    private ArrayAdapter firstVisitAdapter, recConAdapter, carTypeAdapter;
+    private int firstVisit_idx=0, recCon_idx=0, carType_idx=0;
+    private String first_visit_bool="", period_select="", st_dtti="", ed_dtti="", car_type="";  //default=""
     private TextView tv_search_more_car, tv_st_date, tv_ed_date;
     private LinearLayout search_more_layout;
     private ImageView iv_calendar;
@@ -130,8 +130,9 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         nextBtn = v.findViewById(R.id.btn_next);
         backBtn = v.findViewById(R.id.btn_back);
         emptyBtn = v.findViewById(R.id.btn_empty);
-        spinnerFirstVisit = v.findViewById(R.id.spinner_first_visit);
-        spinnerRecentConnect = v.findViewById(R.id.spinner_rec_con);
+        spinnerCarType = v.findViewById(R.id.spinner_car_type);
+        spinnerFirstVisitBool = v.findViewById(R.id.spinner_first_visit);
+        spinnerPeriodSelect = v.findViewById(R.id.spinner_period_select);
         tv_search_more_car = v.findViewById(R.id.tv_search_more_car);
         search_more_layout = v.findViewById(R.id.search_more_layout);
         tv_search_more_car.setOnClickListener(this);
@@ -147,8 +148,8 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
 //        tv_ed_date.setText(today[0]);   //종료
         tv_st_date.setText("시작일 선택");
         tv_ed_date.setText("종료일 선택");
-        st_dtti = yesterday[1];
-        ed_dtti = today[1];
+//        st_dtti = yesterday[1];
+//        ed_dtti = today[1];
 
         controlEditorAction(carNumEt);
         controlEditorAction(companyNameEt);
@@ -158,17 +159,57 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         resetBtn.setOnClickListener(this);
         nextBtn.setOnClickListener(this);
         backBtn.setOnClickListener(this);
-//
+
+        //차량유형 선택
+        carTypeList = new ArrayList<>();
+        carTypeList.add("전체");
+        carTypeList.add("법인"); //21
+        carTypeList.add("개인"); //22
+        carTypeAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, carTypeList);
+        spinnerCarType.setAdapter(carTypeAdapter);
+        spinnerCarType.setSelection(carType_idx);
+        spinnerCarType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                String selectedItem = carTypeList.get(pos);
+
+                for (int i=0; i<carTypeList.size(); i++) {
+                    if (selectedItem.equals(carTypeList.get(i))) {
+                        Log.d("carType_compare", selectedItem+" == "+carTypeList.get(i));
+                        carType_idx = i;
+
+                        switch (selectedItem) {
+                            case "전체":
+                                car_type = "";
+                                break;
+                            case "법인":
+                                car_type = "21";
+                                break;
+                            case "개인":
+                                car_type = "22";
+                                break;
+                        }
+                        searchBtn.performClick();
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
         //최조접속일자 유무 선택. (default:""/ 있음:"true"/ 없음:"false")
         firstVisitValueList = new ArrayList<>();
         firstVisitValueList.add("전체");
         firstVisitValueList.add("있음");
         firstVisitValueList.add("없음");
-        firstVisitAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, firstVisitValueList
-        );
-        spinnerFirstVisit.setAdapter(firstVisitAdapter);
-        spinnerFirstVisit.setSelection(firstVisit_idx);
-        spinnerFirstVisit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        firstVisitAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, firstVisitValueList);
+        spinnerFirstVisitBool.setAdapter(firstVisitAdapter);
+        spinnerFirstVisitBool.setSelection(firstVisit_idx);
+        spinnerFirstVisitBool.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
                 String selectedItem = firstVisitValueList.get(pos);
@@ -180,18 +221,18 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
 
                         switch (selectedItem) {
                             case "전체":
-                                strFirstVisitValue = "";
+                                first_visit_bool = "";
                                 break;
                             case "있음":
-                                strFirstVisitValue = "true";
+                                first_visit_bool = "true";
                                 break;
                             case "없음":
-                                strFirstVisitValue = "false";
+                                first_visit_bool = "false";
                                 break;
                         }
                         searchBtn.performClick();
 
-                        Log.d("visit_selected_value", firstVisit_idx+": "+selectedItem+": "+strFirstVisitValue);
+                        Log.d("visit_selected_value", firstVisit_idx+": "+selectedItem+": "+first_visit_bool);
                         Log.d("visit_selected","-------------------------");
                     }
                 }
@@ -209,9 +250,9 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         recConList.add("3개월");
         recConList.add("6개월");
         recConAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, recConList);
-        spinnerRecentConnect.setAdapter(recConAdapter);
-        spinnerRecentConnect.setSelection(recCon_idx);
-        spinnerRecentConnect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerPeriodSelect.setAdapter(recConAdapter);
+        spinnerPeriodSelect.setSelection(recCon_idx);
+        spinnerPeriodSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
                 String selectedItem = recConList.get(pos);
@@ -223,15 +264,16 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
 
                         switch (selectedItem) {
                             case "선택안함":
-                                strRecConValue = "";
+                                period_select = "";
                                 break;
                             case "3개월":
-                                strRecConValue = "3";  //period_select
+                                period_select = "3";  //period_select
                                 break;
                             case "6개월":
-                                strRecConValue = "6"; //period_select
+                                period_select = "6"; //period_select
                                 break;
                         }
+                        searchBtn.performClick();
                     }
                 }
             }
@@ -252,8 +294,15 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         Toast.makeText(mContext, year+"-"+(month+1)+"-"+day, Toast.LENGTH_SHORT).show();
-                        minDate = year+"-"+(month+1)+"-"+day;
-                        tv_st_date.setText(minDate);
+//                        minDate = year+"-"+(month+1)+"-"+day;
+                        tv_st_date.setText(year+"-"+(month+1)+"-"+day);
+                        st_dtti = year+""+(month+1)+""+day;  //선택한 시작일
+                        if (ed_dtti.equals("") || ed_dtti == null) {
+                            String[] today = getCurDateString().split("/");
+                            tv_ed_date.setText(today[0]);
+                            ed_dtti = today[1];
+                        }
+                        searchBtn.performClick();
                     }
                 }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
                 dialog.show();
@@ -269,8 +318,16 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         Toast.makeText(mContext, year+"-"+(month+1)+"-"+day, Toast.LENGTH_SHORT).show();
-                        maxDate = year+"-"+(month+1)+"-"+day;
-                        tv_ed_date.setText(maxDate);
+//                        maxDate = year+"-"+(month+1)+"-"+day;
+                        tv_ed_date.setText(year+"-"+(month+1)+"-"+day);
+                        ed_dtti = year+""+(month+1)+""+day;
+                        if (st_dtti.equals("") || st_dtti == null) {
+                            String[] yesterday = getYesterdayString().split("/");
+                            tv_st_date.setText(yesterday[0]);
+                            ed_dtti = yesterday[1];
+                        }
+                        searchBtn.performClick();
+                        //종료일이 시작일보다 작을 때 선택 못하게하기.
                     }
                 }, cal2.get(Calendar.YEAR), cal2.get(Calendar.MONTH), cal2.get(Calendar.DATE));
                 dialog.show();
@@ -362,13 +419,17 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
 
     //차량조회 데이터 cnt fetching
     private String getCarInfoCnt() {
-        Retrofit retrofit = RetrofitHelper.getRetrofitInstance();
+        Retrofit retrofit = RetrofitHelper.getRetrofitInstanceTest();
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
         Call<String> call = retrofitAPI.getCarInfoCnt(carNumEt.getText().toString()
                                                     , mdnEt.getText().toString()
                                                     , companyNameEt.getText().toString()
+                                                    , car_type
                                                     , PreferenceManager.getString(mContext, "id")   //me: 로그인 아이디 보내기
-                                                    , strFirstVisitValue);    //me: 최조등록일자 있음 요청-"true"/ 없음 요청 - "false"
+                                                    , first_visit_bool  //visit_bool - 최조등록일자 있음 요청-"true"/ 없음 요청 - "false"
+                                                    , st_dtti
+                                                    , ed_dtti
+                                                    , period_select);   //선택기간
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -411,19 +472,21 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
             backBtn.setVisibility(View.VISIBLE);
             nextBtn.setVisibility(View.VISIBLE);
             emptyBtn.setVisibility(View.VISIBLE);
-            Retrofit retrofit = RetrofitHelper.getRetrofitInstance();  //me: 로그인 아이디 보내기
+            Retrofit retrofit = RetrofitHelper.getRetrofitInstanceTest();
             RetrofitAPI retrofitApi = retrofit.create(RetrofitAPI.class); //추상메소드를 객체로 만들어줌
 
             keyDatas.put("car_num", carNumEt.getText().toString()); //대구
             keyDatas.put("mdn", mdnEt.getText().toString());  //000
-            keyDatas.put("reg_id",PreferenceManager.getString(mContext, "id"));  //me: 로그인 아이디 보내기
+            keyDatas.put("reg_id",PreferenceManager.getString(mContext, "id"));  //reg_id
             keyDatas.put("company_name",companyNameEt.getText().toString()); //다온
-            keyDatas.put("offset", offSet+"");      //불러들이는 시작점
-            keyDatas.put("limit", limit+"");        //보여줄 리스트 개수
-            keyDatas.put("visit_bool",strFirstVisitValue);     //me: 최조등록일자 유무
-//            keyDatas.put("st_dtti", st_dtti);  //시작날짜
-//            keyDatas.put("ed_dtti", ed_dtti);  //종료날짜
-//            keyDatas.put("period_select", strRecConValue);  //선택기간 (3개월 / 6개월)
+            keyDatas.put("offset", offSet+"");          //불러들이는 시작점
+            keyDatas.put("limit", limit+"");            //보여줄 리스트 개수
+            keyDatas.put("visit_bool",first_visit_bool);   //최조등록일자 유무
+            keyDatas.put("st_dtti", st_dtti);    //시작날짜
+            keyDatas.put("ed_dtti", ed_dtti);    //종료날짜
+            keyDatas.put("period_select", period_select);  //선택기간 (3개월 / 6개월)
+            keyDatas.put("car_type", car_type);
+            Log.d(log+"final_keyDatas", keyDatas.toString());
 
 
             searchRecyclerItems = new ArrayList<>(); //리사이클러뷰 아이템 객체생성
