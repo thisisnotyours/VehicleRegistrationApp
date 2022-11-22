@@ -369,17 +369,19 @@
                                     android:text="2022-00-00"
                                     android:textColor="@color/main_background"
                                     android:textSize="20dp" />
+
+                                <ImageView
+                                    android:id="@+id/iv_calendar"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_gravity="bottom"
+                                    android:background="@drawable/layout_round"
+                                    android:padding="8dp"
+                                    android:src="@drawable/ic_calendar"
+                                    android:visibility="visible"
+                                    android:layout_marginLeft="10dp"/>
                             </LinearLayout>
 
-                            <ImageView
-                                android:id="@+id/iv_calendar"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="bottom"
-                                android:background="@drawable/layout_round"
-                                android:padding="8dp"
-                                android:src="@drawable/ic_calendar"
-                                android:visibility="gone" />
                         </RelativeLayout>
                     </LinearLayout>
 

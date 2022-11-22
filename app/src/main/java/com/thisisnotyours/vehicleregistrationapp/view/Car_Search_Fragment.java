@@ -140,6 +140,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         iv_calendar = v.findViewById(R.id.iv_calendar);
         tv_st_date = v.findViewById(R.id.tv_st_date);
         tv_ed_date = v.findViewById(R.id.tv_ed_date);
+        iv_calendar.setOnClickListener(this);
 
         String[] yesterday = getYesterdayString().split("/");
         String[] today = getCurDateString().split("/");
@@ -246,7 +247,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
 
         //3 ~ 6개월 데이터
         recConList = new ArrayList<>();
-        recConList.add("선택안함");
+        recConList.add("전체");
         recConList.add("3개월");
         recConList.add("6개월");
         recConAdapter = new ArrayAdapter(mContext, androidx.appcompat.R.layout.select_dialog_item_material, recConList);
@@ -263,7 +264,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                         recCon_idx = i;
 
                         switch (selectedItem) {
-                            case "선택안함":
+                            case "전체":
                                 period_select = "";
                                 break;
                             case "3개월":
@@ -293,8 +294,6 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                 DatePickerDialog dialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        Toast.makeText(mContext, year+"-"+(month+1)+"-"+day, Toast.LENGTH_SHORT).show();
-//                        minDate = year+"-"+(month+1)+"-"+day;
                         tv_st_date.setText(year+"-"+(month+1)+"-"+day);
                         st_dtti = year+""+(month+1)+""+day;  //선택한 시작일
                         if (ed_dtti.equals("") || ed_dtti == null) {
@@ -317,14 +316,12 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                 DatePickerDialog dialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        Toast.makeText(mContext, year+"-"+(month+1)+"-"+day, Toast.LENGTH_SHORT).show();
-//                        maxDate = year+"-"+(month+1)+"-"+day;
                         tv_ed_date.setText(year+"-"+(month+1)+"-"+day);
                         ed_dtti = year+""+(month+1)+""+day;
                         if (st_dtti.equals("") || st_dtti == null) {
                             String[] yesterday = getYesterdayString().split("/");
                             tv_st_date.setText(yesterday[0]);
-                            ed_dtti = yesterday[1];
+                            st_dtti = yesterday[1];
                         }
                         searchBtn.performClick();
                         //종료일이 시작일보다 작을 때 선택 못하게하기.
@@ -352,17 +349,27 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_reset:  //[초기화]버튼
-                MenuBuilder items;
+                editTextValueReset(carNumEt);  //차량번호 초기화
+                editTextValueReset(companyNameEt); //운수사명 초기화
+                editTextValueReset(mdnEt);  //모뎀명 초기화
+                spinnerCarType.setSelection(0);  //차량유형 초기화
+                spinnerFirstVisitBool.setSelection(0);  //최초접속 초기화
+                spinnerPeriodSelect.setSelection(0);  //최근접속 초기화
+                carTypeAdapter.notifyDataSetChanged();
+                firstVisitAdapter.notifyDataSetChanged();
+                recConAdapter.notifyDataSetChanged();
+                tv_st_date.setText("시작일 선택");    //기간검색 초기화
+                tv_ed_date.setText("종료일 선택");
+                st_dtti = "";
+                ed_dtti = "";
+                backBtn.setVisibility(View.GONE);
+                nextBtn.setVisibility(View.GONE);
+                emptyBtn.setVisibility(View.GONE);
                 searchRecyclerItems.clear();
                 tvResultCnt.setText(searchRecyclerItems.size()+"");
                 searchRecyclerView.removeAllViews();
                 adapter.notifyDataSetChanged();
-                editTextValueReset(carNumEt);
-                editTextValueReset(companyNameEt);
-                editTextValueReset(mdnEt);
-                backBtn.setVisibility(View.GONE);
-                nextBtn.setVisibility(View.GONE);
-                emptyBtn.setVisibility(View.GONE);
+//                searchBtn.performClick();
                 break;
             case R.id.btn_search: //[조회]버튼
                 //서버에서 데이터 fetching
