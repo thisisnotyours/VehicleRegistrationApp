@@ -48,8 +48,10 @@ public class RetrofitHelper {
                 .writeTimeout(200, TimeUnit.SECONDS)
                 .build();
 
-        String IP_BASE_URL = "http://192.168.0.48:8080/register/"; //테스트용
-
+//        String IP_BASE_URL = "http://192.168.0.48:8080/register/";
+        String IP_BASE_URL = "http://192.168.0.48:18080/register/";
+        //같은 랜선에 연결된 컴퓨터들끼리 접속하는 개념 (네트워크)
+        //회사에서 쓰는 공유기를 게이트웨이로 삼아, 48이 공유기에 할당된 아이디를 의미함.
 
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.baseUrl(IP_BASE_URL);

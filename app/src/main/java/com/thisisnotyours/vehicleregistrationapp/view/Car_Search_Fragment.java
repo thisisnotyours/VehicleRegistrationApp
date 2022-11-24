@@ -42,9 +42,11 @@ import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitAPI;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitHelper;
 import com.thisisnotyours.vehicleregistrationapp.vo.CarInfoListData;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +97,12 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        if (Float.parseFloat("0.03") > Float.parseFloat("0.04")) {
+//            Log.d("compare_float", "11111111111");
+//        }else if (Float.parseFloat("0.03") < Float.parseFloat("0.04")){
+//            Log.d("compare_float", "2222222222");
+//        }
 
     }
 
@@ -147,8 +155,8 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
 
 //        tv_st_date.setText(yesterday[0]);  //시작
 //        tv_ed_date.setText(today[0]);   //종료
-        tv_st_date.setText("시작일 선택");
-        tv_ed_date.setText("종료일 선택");
+        tv_st_date.setText("시작일");
+        tv_ed_date.setText("종료일");
 //        st_dtti = yesterday[1];
 //        ed_dtti = today[1];
 
@@ -301,7 +309,9 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                             tv_ed_date.setText(today[0]);
                             ed_dtti = today[1];
                         }
-                        searchBtn.performClick();
+//                        searchBtn.performClick();
+                        //날짜비교
+                        compareDateString(st_dtti, ed_dtti);
                     }
                 }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
                 dialog.show();
@@ -323,16 +333,67 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                             tv_st_date.setText(yesterday[0]);
                             st_dtti = yesterday[1];
                         }
-                        searchBtn.performClick();
+//                        searchBtn.performClick();
                         //종료일이 시작일보다 작을 때 선택 못하게하기.
+                        //날짜비교
+                        compareDateString(st_dtti, ed_dtti);
                     }
                 }, cal2.get(Calendar.YEAR), cal2.get(Calendar.MONTH), cal2.get(Calendar.DATE));
                 dialog.show();
             }
         });
 
+
+
     }//findViewIds
 
+    //현재날짜
+    private String getCurDateString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat sdf_text = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar time = Calendar.getInstance();
+        return sdf_text.format(time.getTime())+"/"+sdf.format(time.getTime());
+    }
+
+    //어제날짜
+    private String getYesterdayString() {
+        Calendar day = Calendar.getInstance();
+        day.add(Calendar.DATE, -1);
+        String sdf = new SimpleDateFormat("yyyyMMdd").format(day.getTime());
+        String beforeDate_text = new SimpleDateFormat("yyyy-MM-dd").format(day.getTime());
+        return beforeDate_text+"/"+sdf;
+    }
+
+    //날짜비교
+    private String compareDateString(String start, String end) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        try {
+            Date st_date = new Date(sdf.parse(start).getTime());
+            Date ed_date = new Date((sdf).parse(end).getTime());
+
+            int  compare = st_date.compareTo(ed_date);
+
+            if (compare > 0) {
+                Log.d("compare_date", "st_date > ed_date");
+                Toast.makeText(mContext, "기간검색을 잘못하셨습니다", Toast.LENGTH_SHORT).show();
+                tv_st_date.setText("시작일");
+                tv_ed_date.setText("종료일");
+                st_dtti = "";
+                ed_dtti = "";
+                searchBtn.performClick();
+            }else if (compare < 0) {
+                Log.d("compare_date", "st_date < ed_date");
+                searchBtn.performClick();
+            }else {
+                Log.d("compare_date", "st_date == ed_date");
+                searchBtn.performClick();
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 
     private void controlEditorAction(EditText editText) {
         editText.setOnEditorActionListener((textView, i, keyEvent) -> {
@@ -405,28 +466,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
         }
     }
 
-    //현재날짜
-    private String getCurDateString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        SimpleDateFormat sdf_text = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar time = Calendar.getInstance();
-        return sdf_text.format(time.getTime())+"/"+sdf.format(time.getTime());
-    }
 
-    //어제날짜
-    private String getYesterdayString() {
-        Calendar day = Calendar.getInstance();
-        day.add(Calendar.DATE, -1);
-        String sdf = new SimpleDateFormat("yyyyMMdd").format(day.getTime());
-        String beforeDate_text = new SimpleDateFormat("yyyy-MM-dd").format(day.getTime());
-        return beforeDate_text+"/"+sdf;
-    }
-
-    //날짜비교
-    private String compareDayString() {
-
-        return "";
-    }
 
     private String totalItemCnt="";
 

@@ -223,7 +223,6 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical"
                             android:layout_marginRight="10dp">
-
                             <TextView
                                 android:id="@+id/tv_first_visit_bool"
                                 android:layout_width="match_parent"
@@ -378,7 +377,7 @@
                                     android:background="@drawable/layout_round"
                                     android:padding="8dp"
                                     android:src="@drawable/ic_calendar"
-                                    android:visibility="visible"
+                                    android:visibility="gone"
                                     android:layout_marginLeft="10dp"/>
                             </LinearLayout>
 

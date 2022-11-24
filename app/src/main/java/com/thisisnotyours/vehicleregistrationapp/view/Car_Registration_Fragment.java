@@ -242,10 +242,10 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             if (getArguments().getString("reg_dtti")=="" || getArguments().getString("reg_dtti").equals("") || getArguments().getString("reg_dtti")==null) {
                 tvFirstInstallDate.setText("없음");
             }else {
-                tvFirstInstallDate.setText(getArguments().getString("reg_dtti")); //20221111
-                tvFirstInstallDate.setText(getArguments().getString("reg_dtti").substring(0,4)+"-"
-                                            +getArguments().getString("reg_dtti").substring(4,6)+"-"
-                                            +getArguments().getString("reg_dtti").substring(6,8));
+                tvFirstInstallDate.setText(getArguments().getString("reg_dtti"));
+//                tvFirstInstallDate.setText(getArguments().getString("reg_dtti").substring(0,4)+"-"
+//                                            +getArguments().getString("reg_dtti").substring(4,6)+"-"
+//                                            +getArguments().getString("reg_dtti").substring(6,8));
             }
 
             if (getArguments().getString("last_dtti")=="" || getArguments().getString("last_dtti").equals("") || getArguments().getString("last_dtti")==null) {
