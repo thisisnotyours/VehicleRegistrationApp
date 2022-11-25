@@ -3,7 +3,6 @@ package com.thisisnotyours.vehicleregistrationapp.retrofit;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
-import okio.Timeout;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -48,8 +47,8 @@ public class RetrofitHelper {
                 .writeTimeout(200, TimeUnit.SECONDS)
                 .build();
 
-//        String IP_BASE_URL = "http://192.168.0.48:8080/register/";
-        String IP_BASE_URL = "http://192.168.0.48:18080/register/";
+        String IP_BASE_URL = "http://192.168.0.48:8080/register/";
+//        String IP_BASE_URL = "http://192.168.0.48:18080/register/";
         //같은 랜선에 연결된 컴퓨터들끼리 접속하는 개념 (네트워크)
         //회사에서 쓰는 공유기를 게이트웨이로 삼아, 48이 공유기에 할당된 아이디를 의미함.
 

@@ -47,6 +47,7 @@ import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitAPI;
 import com.thisisnotyours.vehicleregistrationapp.retrofit.RetrofitHelper;
 import com.thisisnotyours.vehicleregistrationapp.vo.CarInfoListData;
 
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -236,22 +237,24 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                 }
             }
 
-            //최초 & 최근 접속일자
-//            strRegDtti = getArguments().getString("reg_dtti");
-//            strLastDtti = getArguments().getString("last_dtti");
-            if (getArguments().getString("reg_dtti")=="" || getArguments().getString("reg_dtti").equals("") || getArguments().getString("reg_dtti")==null) {
-                tvFirstInstallDate.setText("없음");
-            }else {
-                tvFirstInstallDate.setText(getArguments().getString("reg_dtti"));
-//                tvFirstInstallDate.setText(getArguments().getString("reg_dtti").substring(0,4)+"-"
-//                                            +getArguments().getString("reg_dtti").substring(4,6)+"-"
-//                                            +getArguments().getString("reg_dtti").substring(6,8));
-            }
+            try {
+                //최초 & 최근 접속일자
+                strRegDtti = getArguments().getString("reg_dtti");
+                strLastDtti = getArguments().getString("last_dtti");
+                if (strRegDtti=="" || strRegDtti.equals("") || strRegDtti==null) {
+                    tvFirstInstallDate.setText("없음");
+                }else {
+                    tvFirstInstallDate.setText(strRegDtti);
+                }
 
-            if (getArguments().getString("last_dtti")=="" || getArguments().getString("last_dtti").equals("") || getArguments().getString("last_dtti")==null) {
+                if (strLastDtti=="" || strLastDtti.equals("") || strLastDtti==null) {
+                    tvRecentConnectDate.setText("없음");
+                }else {
+                    tvRecentConnectDate.setText(strLastDtti);
+                }
+            }catch (Exception e) {
+                tvFirstInstallDate.setText("없음");
                 tvRecentConnectDate.setText("없음");
-            }else {
-                tvRecentConnectDate.setText(getArguments().getString("last_dtti"));
             }
 
             etCompanyName.setText(strCompanyName);
@@ -286,10 +289,6 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         getCityTypeData();     //시경계
         getFirmwareTypeData(); //벤사
         getUpdateSetting();  //펌웨어 & 대몬 업데이트기능
-
-        if (!strRegDtti.equals("")) {
-
-        }
 
         return rootView;
     }//onCreateView..
@@ -787,47 +786,52 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
 
     //Params => HashMap 에 key, value 담아 서버전송
     private void putParams(String buttonType) {
-        keyDatas.put("mdn", etMdn.getText().toString()); //모뎀번호
-        keyDatas.put("car_vin", etCarVin.getText().toString());  //차대번호 //17자리?
-        keyDatas.put("car_type", strCarType);  //차량유형 //개인22/ 법인21
-        keyDatas.put("car_num", etCarNum.getText().toString()); //차량번호
-        keyDatas.put("car_regnum", etCarRegnum.getText().toString()); //사업자번호
-        keyDatas.put("company_name", etCompanyName.getText().toString()); //운수사/개인이름
-        keyDatas.put("driver_id1", etDriverId1.getText().toString());
-
-        if (etDriverId2.getText().toString().equals("")) {
-            keyDatas.put("driver_id2", "222222222");
-        }else{
-            keyDatas.put("driver_id2", etDriverId2.getText().toString());
-        }
-        if (etDriverId3.getText().toString().equals("")) {
-            keyDatas.put("driver_id3", "333333333");
+        if (etMdn.getText().toString().replace(" ","").length() < 11) {
+            Toast.makeText(mContext, "모뎀번호 11자리를 다시 입력해주세요.", Toast.LENGTH_SHORT).show();
         }else {
-            keyDatas.put("driver_id3", etDriverId3.getText().toString());
+            keyDatas.put("mdn", etMdn.getText().toString().replace(" ","")); //모뎀번호
+            keyDatas.put("car_vin", etCarVin.getText().toString().replace(" ",""));  //차대번호 //17자리?
+            keyDatas.put("car_type", strCarType);  //차량유형 //개인22/ 법인21
+            keyDatas.put("car_num", etCarNum.getText().toString().replace(" ","")); //차량번호
+            keyDatas.put("car_regnum", etCarRegnum.getText().toString().replace(" ","")); //사업자번호
+            keyDatas.put("company_name", etCompanyName.getText().toString().replace(" ","")); //운수사/개인이름
+            keyDatas.put("driver_id1", etDriverId1.getText().toString().replace(" ",""));
+
+            if (etDriverId2.getText().toString().equals("")) {
+                keyDatas.put("driver_id2", "222222222");
+            }else{
+                keyDatas.put("driver_id2", etDriverId2.getText().toString().replace(" ",""));
+            }
+            if (etDriverId3.getText().toString().equals("")) {
+                keyDatas.put("driver_id3", "333333333");
+            }else {
+                keyDatas.put("driver_id3", etDriverId3.getText().toString().replace(" ",""));
+            }
+
+            keyDatas.put("fare_id", strFareId); //요금  //스피너 선택값 가져오기
+            keyDatas.put("city_id", strCityId); //시경계 //스피너 선택값 가져오기
+            keyDatas.put("daemon_id", "1");     //기본값- 1
+            keyDatas.put("firmware_id", strFirmwareId); //벤사 //스피너 선택값 가져오기
+            keyDatas.put("speed_factor", etSpeedFactor.getText().toString().replace(" ",""));    //감속률
+
+            if (buttonType.equals("등록")) {
+                keyDatas.put("reg_id", strLoginId);
+
+            }else if (buttonType.equals("수정")) {
+                keyDatas.put("update_id", strLoginId);
+                Log.d(log+"update_id_val", strLoginId);
+            }
+
+            //펌웨어 & 대몬 업데이트 기능 전송
+            keyDatas.put("firmware_update", strFirmwareUpdate);
+            keyDatas.put("daemon_update", strDaemonUpdate);
+
+            // hashMap null check
+            if (isNullOrEmptyMap(keyDatas) == false) {
+                sendMapData(keyDatas, buttonType);
+            }
         }
 
-        keyDatas.put("fare_id", strFareId); //요금  //스피너 선택값 가져오기
-        keyDatas.put("city_id", strCityId); //시경계 //스피너 선택값 가져오기
-        keyDatas.put("daemon_id", "1");     //기본값- 1
-        keyDatas.put("firmware_id", strFirmwareId); //벤사 //스피너 선택값 가져오기
-        keyDatas.put("speed_factor", etSpeedFactor.getText().toString());    //감속률
-
-        if (buttonType.equals("등록")) {
-            keyDatas.put("reg_id", strLoginId);
-
-        }else if (buttonType.equals("수정")) {
-            keyDatas.put("update_id", strLoginId);
-            Log.d(log+"update_id_val", strLoginId);
-        }
-
-        //펌웨어 & 대몬 업데이트 기능 전송
-        keyDatas.put("firmware_update", strFirmwareUpdate);
-        keyDatas.put("daemon_update", strDaemonUpdate);
-
-        // hashMap null check
-        if (isNullOrEmptyMap(keyDatas) == false) {
-            sendMapData(keyDatas, buttonType);
-        }
     }
 
     public boolean isNullOrEmptyMap(HashMap<String, String> map) {
@@ -996,7 +1000,7 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                 case "company_name,00":
                     responseVal = "운수사이름을";
                     break;
-                case "mdn:01":
+                case "mdn,01":
                     responseVal = "입력된 모뎀번호가 이미 존재합니다.\n다른 모뎀번호를";
                     break;
                 case "mdn,00":

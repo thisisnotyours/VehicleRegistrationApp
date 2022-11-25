@@ -58,7 +58,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="10dp"
                             android:layout_weight="1">
-
                             <TextView
                                 android:id="@+id/tv_car_num"
                                 android:layout_width="wrap_content"
@@ -67,17 +66,24 @@
                                 android:textColor="@color/main_background"
                                 android:textSize="18dp"
                                 android:textStyle="bold" />
-
                             <TextView
+                                android:id="@+id/__"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_toRightOf="@id/tv_car_num"
+                                android:text="(9자리)"
+                                android:textColor="@color/main_background"
+                                android:textSize="15dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_toRightOf="@id/__"
                                 android:text="*"
                                 android:textColor="@color/red"
                                 android:textSize="18dp"
                                 android:textStyle="bold" />
-
                             <EditText
                                 android:id="@+id/et_car_num"
                                 android:layout_width="match_parent"
@@ -88,6 +94,7 @@
                                 android:imeOptions="actionDone"
                                 android:paddingLeft="20dp"
                                 android:singleLine="true"
+                                android:maxLength="9"
                                 android:textSize="20dp" />
                         </RelativeLayout>
                         <!--android:background="@drawable/edit_box"-->
@@ -105,12 +112,21 @@
                                 android:textColor="@color/main_background"
                                 android:textSize="18dp"
                                 android:textStyle="bold" />
-
+                            <TextView
+                                android:id="@+id/__2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:layout_marginLeft="5dp"
+                                android:layout_toRightOf="@id/tv_company_name"
+                                android:text="(5자리 이상)"
+                                android:textColor="@color/main_background"
+                                android:textSize="15dp" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
-                                android:layout_toRightOf="@id/tv_company_name"
+                                android:layout_toRightOf="@id/__2"
                                 android:text="*"
                                 android:textColor="@color/red"
                                 android:textSize="18dp"
@@ -151,15 +167,23 @@
                                 android:textSize="18dp"
                                 android:textStyle="bold" />
                             <TextView
+                                android:id="@+id/__1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_toRightOf="@id/tv_mdn"
+                                android:text="(11자리)"
+                                android:textColor="@color/main_background"
+                                android:textSize="15dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_toRightOf="@id/__1"
                                 android:text="*"
                                 android:textColor="@color/red"
                                 android:textSize="18dp"
                                 android:textStyle="bold" />
-
                             <EditText
                                 android:id="@+id/et_mdn"
                                 android:layout_width="match_parent"
@@ -169,6 +193,7 @@
                                 android:background="@drawable/edittext_click_type"
                                 android:imeOptions="actionDone"
                                 android:inputType="number"
+                                android:maxLength="11"
                                 android:paddingLeft="20dp"
                                 android:singleLine="true"
                                 android:textSize="20dp" />
@@ -511,50 +536,90 @@
                         android:orientation="vertical"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                    <LinearLayout
-                        android:id="@+id/layout_paging"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginLeft="10dp"
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/layout_paging"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="0dp"-->
+<!--                        android:layout_marginLeft="10dp"-->
+<!--                        android:layout_marginRight="10dp"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:orientation="horizontal">-->
+<!--                        <Button-->
+<!--                            android:id="@+id/btn_back"-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginRight="10dp"-->
+<!--                            android:layout_weight="1"-->
+<!--                            android:background="@drawable/reset_button_click_effect"-->
+<!--                            android:text="이전"-->
+<!--                            android:textColor="@color/main_background"-->
+<!--                            android:textSize="18dp"-->
+<!--                            android:textStyle="bold"-->
+<!--                            android:visibility="gone" />-->
+<!--                        <Button-->
+<!--                            android:id="@+id/btn_empty"-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginRight="10dp"-->
+<!--                            android:layout_weight="1"-->
+<!--                            android:background="@android:color/transparent"-->
+<!--                            android:textColor="@color/main_background"-->
+<!--                            android:visibility="gone" />-->
+<!--                        <Button-->
+<!--                            android:id="@+id/btn_next"-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_weight="1"-->
+<!--                            android:background="@drawable/search_button_click_effect"-->
+<!--                            android:text="다음"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:textSize="18dp"-->
+<!--                            android:textStyle="bold"-->
+<!--                            android:visibility="gone" />-->
+<!--                    </LinearLayout>-->
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_paging"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:gravity="bottom"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/btn_back"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <Button
-                            android:id="@+id/btn_back"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/reset_button_click_effect"
-                            android:text="이전"
-                            android:textColor="@color/main_background"
-                            android:textSize="18dp"
-                            android:textStyle="bold"
-                            android:visibility="gone" />
-
-                        <Button
-                            android:id="@+id/btn_empty"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:layout_weight="1"
-                            android:background="@android:color/transparent"
-                            android:textColor="@color/main_background"
-                            android:visibility="gone" />
-
-                        <Button
-                            android:id="@+id/btn_next"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@drawable/search_button_click_effect"
-                            android:text="다음"
-                            android:textColor="@color/white"
-                            android:textSize="18dp"
-                            android:textStyle="bold"
-                            android:visibility="gone" />
-                    </LinearLayout>
+                        android:background="@drawable/reset_button_click_effect"
+                        android:text="이전"
+                        android:textColor="@color/main_background"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+                    <Button
+                        android:id="@+id/btn_empty"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:textColor="@color/main_background"
+                        android:visibility="gone" />
+                    <Button
+                        android:id="@+id/btn_next"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/search_button_click_effect"
+                        android:text="다음"
+                        android:textColor="@color/white"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
                 </LinearLayout>
 
             </LinearLayout>

@@ -430,7 +430,7 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
                 tvResultCnt.setText(searchRecyclerItems.size()+"");
                 searchRecyclerView.removeAllViews();
                 adapter.notifyDataSetChanged();
-//                searchBtn.performClick();
+                searchBtn.performClick();
                 break;
             case R.id.btn_search: //[조회]버튼
                 //서버에서 데이터 fetching
@@ -454,11 +454,12 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
             case R.id.tv_search_more_car:
                 if (moreClicked == true) {
                     tv_search_more_car.setText("닫기 ▲");
-//                    tv_search_more_car.setBackgroundResource(R.drawable.layout_line_light_black);
+                    tv_search_more_car.setBackgroundResource(R.drawable.layout_line_light_black);
                     search_more_layout.setVisibility(View.VISIBLE);
                     moreClicked = false;
                 }else {
                     tv_search_more_car.setText ("차량 / 운수사 / 모뎀 / 기간검색  ▼");
+                    tv_search_more_car.setBackgroundResource(0);
                     search_more_layout.setVisibility(View.GONE);
                     moreClicked = true;
                 }
@@ -472,11 +473,11 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
 
     //차량조회 데이터 cnt fetching
     private String getCarInfoCnt() {
-        Retrofit retrofit = RetrofitHelper.getRetrofitInstanceTest();
+        Retrofit retrofit = RetrofitHelper.getRetrofitInstance();
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
-        Call<String> call = retrofitAPI.getCarInfoCnt(carNumEt.getText().toString()
-                                                    , mdnEt.getText().toString()
-                                                    , companyNameEt.getText().toString()
+        Call<String> call = retrofitAPI.getCarInfoCnt(carNumEt.getText().toString().replace(" ","")
+                                                    , mdnEt.getText().toString().replace(" ","")
+                                                    , companyNameEt.getText().toString().replace(" ","")
                                                     , car_type
                                                     , PreferenceManager.getString(mContext, "id")   //me: 로그인 아이디 보내기
                                                     , first_visit_bool  //visit_bool - 최조등록일자 있음 요청-"true"/ 없음 요청 - "false"
@@ -525,13 +526,13 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
             backBtn.setVisibility(View.VISIBLE);
             nextBtn.setVisibility(View.VISIBLE);
             emptyBtn.setVisibility(View.VISIBLE);
-            Retrofit retrofit = RetrofitHelper.getRetrofitInstanceTest();
+            Retrofit retrofit = RetrofitHelper.getRetrofitInstance();
             RetrofitAPI retrofitApi = retrofit.create(RetrofitAPI.class); //추상메소드를 객체로 만들어줌
 
-            keyDatas.put("car_num", carNumEt.getText().toString()); //대구
-            keyDatas.put("mdn", mdnEt.getText().toString());  //000
+            keyDatas.put("car_num", carNumEt.getText().toString().replace(" ","")); //대구
+            keyDatas.put("mdn", mdnEt.getText().toString().replace(" ",""));  //000
             keyDatas.put("reg_id",PreferenceManager.getString(mContext, "id"));  //reg_id
-            keyDatas.put("company_name",companyNameEt.getText().toString()); //다온
+            keyDatas.put("company_name",companyNameEt.getText().toString().replace(" ","")); //다온
             keyDatas.put("offset", offSet+"");          //불러들이는 시작점
             keyDatas.put("limit", limit+"");            //보여줄 리스트 개수
             keyDatas.put("visit_bool",first_visit_bool);   //최조등록일자 유무
