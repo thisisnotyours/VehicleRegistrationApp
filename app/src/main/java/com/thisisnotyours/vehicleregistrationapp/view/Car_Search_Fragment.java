@@ -98,12 +98,6 @@ public class Car_Search_Fragment extends Fragment implements View.OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        if (Float.parseFloat("0.03") > Float.parseFloat("0.04")) {
-//            Log.d("compare_float", "11111111111");
-//        }else if (Float.parseFloat("0.03") < Float.parseFloat("0.04")){
-//            Log.d("compare_float", "2222222222");
-//        }
-
     }
 
     @Override

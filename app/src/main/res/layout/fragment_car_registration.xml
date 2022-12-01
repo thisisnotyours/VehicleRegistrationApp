@@ -151,7 +151,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp">
-
                     <TextView
                         android:id="@+id/tv_mdn"
                         android:layout_width="wrap_content"
@@ -160,7 +159,6 @@
                         android:textColor="@color/main_background"
                         android:textSize="18dp"
                         android:textStyle="bold" />
-
                     <TextView
                         android:id="@+id/tv_mdn_cnt"
                         android:layout_width="wrap_content"
@@ -170,8 +168,8 @@
                         android:text="(11자리)"
                         android:textColor="@color/main_background"
                         android:textSize="18dp" />
-
                     <TextView
+                        android:id="@+id/___"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -181,6 +179,22 @@
                         android:textSize="18dp"
                         android:textStyle="bold" />
 
+                    <TextView
+                        android:id="@+id/change_mdn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/layout_round_red_button"
+                        android:paddingLeft="15dp"
+                        android:paddingTop="2dp"
+                        android:paddingRight="15dp"
+                        android:paddingBottom="2dp"
+                        android:text="모뎀변경"
+                        android:textColor="@color/white"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
                     <EditText
                         android:id="@+id/et_mdn"
                         android:layout_width="match_parent"
@@ -198,6 +212,9 @@
                         android:text=""
                         android:textSize="20dp" />
                 </RelativeLayout>
+
+
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -232,7 +249,6 @@
                         android:textColor="@color/red"
                         android:textSize="18dp"
                         android:textStyle="bold" />
-
                     <EditText
                         android:id="@+id/et_car_num"
                         android:layout_width="match_parent"
@@ -417,15 +433,15 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="5dp"
+                        android:background="@drawable/layout_line_light_red"
                         android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="3dp"
                         android:text="더보기"
                         android:textColor="@color/red"
-                        android:textSize="16dp"
-                        android:background="@drawable/layout_line_light_red"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:paddingTop="3dp"
-                        android:paddingBottom="3dp"/>
+                        android:textSize="16dp" />
                     <EditText
                         android:id="@+id/et_driver_id1"
                         android:layout_width="match_parent"

@@ -108,11 +108,12 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             , etStoreId
             , etUnitNum
             , etUnitSn;
+    private TextView change_mdn;
     private LinearLayout car_type_layout, installDateLayout, recentConnectDateLayout;
     private Button btnCarTypePersonal, btnCarTypeCompany, btnRegister, btnRegisterCancel;
     private ImageView ivDropDown;
     private TextView tvViewMoreDriverId, tvBarcodeScan, tvFirstInstallDate, tvRecentConnectDate;
-    private boolean isClicked = true, registerBtnClicked = true;
+    private boolean isClicked = true, registerBtnClicked = true, isChangeMdn = true;
     private RelativeLayout layoutDriverId2, layoutDriverId3, update_layout;
     private HashMap<String, String> keyDatas = new HashMap<>();
     private RetrofitAPI retrofitAPI = RetrofitHelper.getRetrofitInstance().create(RetrofitAPI.class);
@@ -270,9 +271,21 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             etUnitNum.setText(strUnitNum);
             etUnitSn.setText(strUnitSn);
 
+            //모뎀번호 edittext 비활성화/ 수정막기
+            etMdn.setClickable(false);
+            etMdn.setFocusable(false);
+            etMdn.setBackgroundResource(R.drawable.edit_box_block);
+            change_mdn.setVisibility(View.VISIBLE);
+
         }else {
             CarPageGubun.type = "등록";
             btnType = "등록";
+
+            //모뎀번호 edittext 활성화/ 수정가능하게
+            etMdn.setFocusableInTouchMode(true);
+            etMdn.setFocusable(true);
+            etMdn.setBackgroundResource(R.drawable.edit_box);
+            change_mdn.setVisibility(View.GONE);  //모뎀번호 변경버튼
 
             update_layout.setVisibility(View.GONE);
             installDateLayout.setVisibility(View.GONE);
@@ -618,6 +631,8 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         etUnitNum = v.findViewById(R.id.et_unit_num);
         etUnitSn = v.findViewById(R.id.et_unit_sn);
         etMdn = v.findViewById(R.id.et_mdn);
+        change_mdn = v.findViewById(R.id.change_mdn);
+        change_mdn.setOnClickListener(this);
 
         controlEditorAction(etCompanyName, etMdn);
         controlEditorAction(etMdn, etCarNum);
@@ -702,6 +717,26 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.change_mdn: //모뎀번호변경
+                if (isChangeMdn == true) {
+                    isChangeMdn = false;
+                    change_mdn.setText("변경취소");
+                    change_mdn.setBackgroundResource(R.drawable.layout_line_light_black);
+                    change_mdn.setTextColor(getResources().getColor(R.color.main_background));
+                    etMdn.setFocusableInTouchMode(true);
+                    etMdn.setFocusable(true);
+                    etMdn.setBackgroundResource(R.drawable.edit_box);
+                }else {
+                    isChangeMdn = true;
+                    change_mdn.setText("모뎀변경");
+                    change_mdn.setBackgroundResource(R.drawable.layout_round_red_button);
+                    change_mdn.setTextColor(getResources().getColor(R.color.white));
+                    etMdn.setFocusableInTouchMode(false);
+                    etMdn.setFocusable(false);
+                    etMdn.setBackgroundResource(R.drawable.edit_box_block);
+                    etMdn.setText(strMdn); //기존 모뎀번호
+                }
+                break;
             case R.id.btn_car_type_personal:  //차량유형[개인]버튼
                 btnCarTypePersonal.setBackgroundResource(R.drawable.btn_search_box);
                 btnCarTypePersonal.setTextColor(getResources().getColor(R.color.white));
@@ -737,8 +772,6 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
                 break;
             case R.id.tv_barcode_scan:  //[바코드스캔] 버튼
                 Toast.makeText(mContext, "바코드스캔", Toast.LENGTH_SHORT).show();
-//                IntentIntegrator integrator = new IntentIntegrator((Activity) mContext);
-//                integrator.initiateScan();
                 new IntentIntegrator((Activity) getContext()).setCaptureActivity(BarcodeScanActivity.class).initiateScan();
                 break;
 
@@ -789,7 +822,24 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
         if (etMdn.getText().toString().replace(" ","").length() < 11) {
             Toast.makeText(mContext, "모뎀번호 11자리를 다시 입력해주세요.", Toast.LENGTH_SHORT).show();
         }else {
-            keyDatas.put("mdn", etMdn.getText().toString().replace(" ","")); //모뎀번호
+
+            if (buttonType.equals("수정")) {
+                keyDatas.put("update_id", strLoginId); //업데이트 아이디
+                if (change_mdn.getText().toString().equals("변경취소")) {
+                    keyDatas.put("mdn", strMdn);  //기존 모뎀번호
+                    keyDatas.put("new_mdn", etMdn.getText().toString().replace(" ","")); //변경한 모뎀번호
+                }else if (change_mdn.getText().toString().equals("모뎀변경")) {
+                    keyDatas.put("mdn",etMdn.getText().toString().replace(" ",""));  //기존 모뎀번호
+                    keyDatas.put("new_mdn", ""); //변경안함
+                }
+
+            }else if (buttonType.equals("등록")) {
+                keyDatas.put("reg_id", strLoginId); //등록아이디
+                keyDatas.put("mdn", etMdn.getText().toString().replace(" ","")); //입력한 모뎀번호
+            }
+
+
+//            keyDatas.put("mdn", etMdn.getText().toString().replace(" ","")); //모뎀번호
             keyDatas.put("car_vin", etCarVin.getText().toString().replace(" ",""));  //차대번호 //17자리?
             keyDatas.put("car_type", strCarType);  //차량유형 //개인22/ 법인21
             keyDatas.put("car_num", etCarNum.getText().toString().replace(" ","")); //차량번호
@@ -813,14 +863,6 @@ public class Car_Registration_Fragment extends Fragment implements View.OnClickL
             keyDatas.put("daemon_id", "1");     //기본값- 1
             keyDatas.put("firmware_id", strFirmwareId); //벤사 //스피너 선택값 가져오기
             keyDatas.put("speed_factor", etSpeedFactor.getText().toString().replace(" ",""));    //감속률
-
-            if (buttonType.equals("등록")) {
-                keyDatas.put("reg_id", strLoginId);
-
-            }else if (buttonType.equals("수정")) {
-                keyDatas.put("update_id", strLoginId);
-                Log.d(log+"update_id_val", strLoginId);
-            }
 
             //펌웨어 & 대몬 업데이트 기능 전송
             keyDatas.put("firmware_update", strFirmwareUpdate);
